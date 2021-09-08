@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
-    public class RouteDb : DbContext
+    public class RouteContext : DbContext
     {
-        public RouteDb (DbContextOptions<RouteDb> options) : base(options)
+        public RouteContext (DbContextOptions<RouteContext> options) : base(options)
         {
             Database.EnsureCreated();
         }

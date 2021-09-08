@@ -4,22 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Webapplication.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Webapplication.Controllers
 {
     [Route("[controller]/[action]")]
     public class RouteController : ControllerBase
     {
-        private readonly RouteDb _routeDb;
+        private readonly RouteContext _DB;
 
-        public RouteController(RouteDb routeDb)
+        public RouteController(RouteContext DB)
         {
-            _routeDb = routeDb;
+            _DB = DB;
         }
 
-        public List<Route> GetRoutes()
+        public async Task<List<Route>> GetRoutes()
         {
-            return _routeDb.Routes.ToList();
+           return await _DB.Routes.ToListAsync();
         }
     }
 }
