@@ -6,13 +6,14 @@ Det finnes tre branches: main, testing og develop. Utviklingen skal skje på dev
 
 # Oppgave
 Prosjektoppgave for Webapplikasjoner Del 1, 2021
-Oppgave
+
+## Oppgave
 Det skal implementeres en applikasjon for bestille billetter til båtturer med f.eks Color Line eller Fjord Line.
 
-Grupper
+## Grupper
 Oppgaven skal løses i grupper med 3-5 studenter i hver gruppe. Løsningen skal leveres i Inspera som en gruppeinnlevering.
 
-Mål
+## Mål
 Lage en komplett løsning med mulighet for å foreta kjøp av billetter for oppgraderte sider for båtturer.
 Løsningen skal lages i .NET Core.
 Vise forståelse for NET Core, Javascript/JQuery og Entity Framework.
@@ -31,7 +32,8 @@ Database-struktur bruk av Entity Framework code first
 Validering
 Løsningen skal implementeres i ASP.Core med en Web-klient basert på JavaScript (Jquery). Det betyr at det ikke kreves avansert «single page application» funksjonalitet (vil kunne vises i oppgave 2).
 Forsøk å gjøre nettsidene så brukervennlige som mulig. Det gir ingen ekstrapoeng å gjøre løsningen så lik som de eksiterende løsninger. Bra design vil også bli vektlagt. Dere kan ta bilder fra eksisterende løsninger uten å referere til disse.
-Hva skal leveres:
+
+## Hva skal leveres:
 En zip. fil som inneholder hele Visual Studio prosjektet i Inspera. Dersom det er noe spesielt ved løsningen som dere vil fremheve kan dette gjøres via en kort tekstlig beskrives i løsningen f.eks kalt Readme.txt. Der kan det også refereres til evt. kode som ikke er egenutviklet eller laget av fagansvarlig.
 
 Det skal ikke leveres en komplett administrasjons-løsning for strekninger, avganger,  priser, etc. Dette er en del av neste oppgave.
