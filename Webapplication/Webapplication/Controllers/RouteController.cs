@@ -10,23 +10,16 @@ namespace Webapplication.Controllers
     [Route("[controller]/[action]")]
     public class RouteController : ControllerBase
     {
+        private readonly RouteDb _routeDb;
+
+        public RouteController(RouteDb routeDb)
+        {
+            _routeDb = routeDb;
+        }
 
         public List<Route> GetRoutes()
         {
-            var Routes = new List<Route>();
-            
-            var a = new Route();
-            a.Origin = "Oslo";
-            a.Destination = "Kiel";
-
-            var b = new Route();
-            b.Origin = "Kiel";
-            b.Destination = "Stockholm";
-
-            Routes.Add(a);
-            Routes.Add(b);
-
-            return Routes;
+            return _routeDb.Routes.ToList();
         }
     }
 }
