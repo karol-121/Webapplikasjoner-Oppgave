@@ -1,0 +1,38 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Webapplication.Models
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
+
+        public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Route> Routes { get; set; }
+
+        public DbSet<Cruise> Cruises { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        
+
+        
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+        
+    }
+}

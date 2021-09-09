@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Webapplication.Controllers
 {
     [Route("[controller]/[action]")]
-    public class CruiseController : ControllerBase
+    public class ApplicationController : ControllerBase
     {
-        private readonly CruiseContext _DB;
+        private readonly ApplicationDbContext _DB;
 
-        public CruiseController(CruiseContext DB)
+        public ApplicationController(ApplicationDbContext DB)
         {
             _DB = DB;
         }
@@ -21,6 +21,11 @@ namespace Webapplication.Controllers
         public async Task<List<Cruise>> GetCruises()
         {
            return await _DB.Cruises.ToListAsync();
+        }
+
+        public string DebugString()
+        {
+            return "this is test";
         }
     }
 }

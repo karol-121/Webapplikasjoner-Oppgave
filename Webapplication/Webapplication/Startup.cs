@@ -19,7 +19,7 @@ namespace Webapplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<CruiseContext>(options => options.UseSqlite("Data source=ApplicationDB.db"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=ApplicationDB.db"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
