@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
-    public class Route
+    public class RouteOld
     {
         public int Id { get; set; }
         public string Origin { get; set; }

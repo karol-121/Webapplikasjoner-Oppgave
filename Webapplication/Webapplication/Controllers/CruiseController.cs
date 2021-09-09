@@ -9,18 +9,18 @@ using Microsoft.EntityFrameworkCore;
 namespace Webapplication.Controllers
 {
     [Route("[controller]/[action]")]
-    public class RouteController : ControllerBase
+    public class CruiseController : ControllerBase
     {
-        private readonly RouteContext _DB;
+        private readonly CruiseContext _DB;
 
-        public RouteController(RouteContext DB)
+        public CruiseController(CruiseContext DB)
         {
             _DB = DB;
         }
 
-        public async Task<List<Route>> GetRoutes()
+        public async Task<List<Cruise>> GetCruises()
         {
-           return await _DB.Routes.ToListAsync();
+           return await _DB.Cruises.ToListAsync();
         }
     }
 }
