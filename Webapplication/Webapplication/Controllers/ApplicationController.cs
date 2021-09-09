@@ -5,27 +5,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Webapplication.Models;
 using Microsoft.EntityFrameworkCore;
+using Webapplication.DAL;
 
 namespace Webapplication.Controllers
 {
     [Route("[controller]/[action]")]
     public class ApplicationController : ControllerBase
     {
-        private readonly ApplicationDbContext _DB;
+        private readonly IApplicationRepository _Local_DB;
 
-        public ApplicationController(ApplicationDbContext DB)
+        public ApplicationController(IApplicationRepository applicationRepository)
         {
-            _DB = DB;
+            _Local_DB = applicationRepository;
         }
 
-        public async Task<List<Cruise>> GetCruises()
+        public async Task<List<Route>> GetRoutes()
         {
-           return await _DB.Cruises.ToListAsync();
+            return await _Local_DB.GetRoutes();
         }
 
-        public string DebugString()
-        {
-            return "this is test";
-        }
+        
+
+
     }
 }
