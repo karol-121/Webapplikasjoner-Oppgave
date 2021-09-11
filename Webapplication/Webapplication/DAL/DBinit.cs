@@ -24,10 +24,16 @@ namespace Webapplication.DAL
                 var Route3 = new Route { Origin = "Oslo", Destination = "Kiel" };
                 var Route4 = new Route { Origin = "Kiel", Destination = "Oslo" };
 
+
+                var Cruise1 = new Cruise { Route = Route1, Departure_DayOfWeek = 1, Departure_Hour = 9, Departure_Minute = 30, Max_Passengers = 300, Passeger_Price = 200, Passegner_Underage_Price = 150, Pet_Price = 50, Vehicle_Price = 0 };
+
+
                 Context.Routes.Add(Route1);
                 Context.Routes.Add(Route2);
                 Context.Routes.Add(Route3);
                 Context.Routes.Add(Route4);
+                Context.Cruises.Add(Cruise1);
+
 
                 Context.SaveChanges();
             }

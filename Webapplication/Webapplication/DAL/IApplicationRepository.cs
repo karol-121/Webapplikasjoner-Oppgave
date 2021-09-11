@@ -8,9 +8,10 @@ namespace Webapplication.DAL
 {
     public interface IApplicationRepository
     {
-        Task<List<Route>> GetRoutes();
+        Task<List<Route>> GetRoutes(); //henter alle ruter som finnes i databasen
 
-        //find cruises - best at den tar inn en parameter array slik at den kan være universielt. Hva som lettes etter bestemmer i controlleren
+        Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek); //returnerer alle cruiser som stemmer med gitt parameterene
+
 
         //check avaiblility - best at den teller opp antall ordrer med gitt cruise id og dato
 

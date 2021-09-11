@@ -1,11 +1,14 @@
-﻿namespace Webapplication.Models
+﻿using System;
+
+namespace Webapplication.Models
 {
     public class Cruise
     {
         public int Id { get; set; }
         public virtual Route Route { get; set; }
-        public int Departure_Weekday { get; set; }
-        public int Departure_Daytime { get; set; }
+        public int Departure_DayOfWeek { get; set; }
+        public int Departure_Hour { get; set; }
+        public int Departure_Minute { get; set; }
         public int Max_Passengers { get; set; }
         public int Passeger_Price { get; set; }
         public int Passegner_Underage_Price { get; set; }

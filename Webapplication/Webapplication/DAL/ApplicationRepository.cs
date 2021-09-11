@@ -21,6 +21,10 @@ namespace Webapplication.DAL
             return await _DB.Routes.ToListAsync();
         }
 
+        public async Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek)
+        {
+            return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == Departure_DayOfWeek).ToListAsync();
+        }
 
     }
 }
