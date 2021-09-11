@@ -25,6 +25,11 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes();
         }
 
+        public async Task<List<Cruise>> FindCruises(int RouteId, int DayOfWeek)
+        {
+            return await _Local_DB.FindCruises(RouteId, DayOfWeek);
+        }
+
         
 
 
