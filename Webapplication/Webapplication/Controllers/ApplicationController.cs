@@ -9,7 +9,8 @@ using Webapplication.DAL;
 
 namespace Webapplication.Controllers
 {
-    [Route("[controller]/[action]")]
+    //[Route("[controller]/[action]")]
+    [Route("API/[action]")]
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationRepository _Local_DB;
