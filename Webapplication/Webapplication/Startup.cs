@@ -30,6 +30,7 @@ namespace Webapplication
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                DBinit.InitializeApplicationDB(app);
             }
 
             app.UseRouting();
