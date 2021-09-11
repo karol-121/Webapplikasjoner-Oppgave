@@ -25,8 +25,11 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes();
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int DayOfWeek)
+        public async Task<List<Cruise>> FindCruises(int RouteId, int DayOfWeek) //her endre til å ta imot dato objekt og så avgjøre day of the week derfra. Samtidig bruk dato til å sjekke tilgjengelighet.
         {
+            // find cruises
+            // check avaibility on found cruises
+            // return avaible cruises
             return await _Local_DB.FindCruises(RouteId, DayOfWeek);
         }
 
