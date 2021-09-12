@@ -38,13 +38,15 @@ namespace Webapplication.DAL
             return new List<Cruise>();
         }
 
-        private async Task<bool> CheckAvailability(Cruise Cruise, int PassengersAmount, DateTime DepertureDate)
+        private async Task<bool> CheckAvailability(Cruise Cruise, int PassengersAmount, DateTime CruiseDate)
         {
             var AvailableSeats = Cruise.Max_Passengers;
 
-            // this one should first return all orders for choosen cruise. then from those choose those who either have matching cruise date or return cruise date finally from that query sum all passengers
-            // the reason for also including return cruise date is because those are also booked
-            var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise).Where(o => o.Cruise_Date == DepertureDate || o.Return_Cruise_Date == DepertureDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
+            //this should first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
+            var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise && o.Cruise_Date == CruiseDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
+
+            Console.WriteLine("Amount of booked seats: " + BookedSeats);
+
 
             return BookedSeats + PassengersAmount <= AvailableSeats;
             
