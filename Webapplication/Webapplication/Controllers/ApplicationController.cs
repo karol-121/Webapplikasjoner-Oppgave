@@ -25,12 +25,14 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes();
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int DayOfWeek) //her endre til å ta imot dato objekt og så avgjøre day of the week derfra. Samtidig bruk dato til å sjekke tilgjengelighet.
+        public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int year, int month, int day) //her endre til å ta imot dato objekt og så avgjøre day of the week derfra. Samtidig bruk dato til å sjekke tilgjengelighet.
         {
+            DateTime date = new DateTime(year, month, day);
             // find cruises
+            List<Cruise> FoundCruises = await _Local_DB.FindCruises(RouteId, ((int)date.DayOfWeek));
             // check avaibility on found cruises
             // return avaible cruises
-            return await _Local_DB.FindCruises(RouteId, DayOfWeek);
+            return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, date);
         }
 
         

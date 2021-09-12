@@ -16,36 +16,39 @@ namespace Webapplication.DAL
             _DB = DB;
         }
 
-        public async Task<List<Route>> GetRoutes()
+        public async Task<List<Route>> GetRoutes() //henter alle ruter som fantes inn i databasen/systemet
         {
             return await _DB.Routes.ToListAsync();
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek)
+        public async Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
         {
             return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == Departure_DayOfWeek).ToListAsync();
         }
 
-        //check avaiblility - best at den teller opp antall ordrer med gitt cruise id og dato
 
-        public async Task<List<Cruise>> CheckAvailability(Cruise[] Cruises, int PassengersAmount, DateTime DepartureDate )
+        public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
-            //loop through cruises
-            //for each cruise check availability
-            //exclude those who dont pass the availability check
-            //return modified list.
+            List<Cruise> AvailableCruises = new List<Cruise>();
+            foreach (var Cruise in Cruises) //loop through 
+            {
+                if (await CheckAvailability(Cruise, PassengersAmount, DepartureDate))
+                {
+                    AvailableCruises.Add(Cruise);
+                }
+            }
 
-            return new List<Cruise>();
+            return AvailableCruises;
         }
 
-        private async Task<bool> CheckAvailability(Cruise Cruise, int PassengersAmount, DateTime CruiseDate)
+        private async Task<bool> CheckAvailability(Cruise Cruise, int PassengersAmount, DateTime CruiseDate) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
         {
             var AvailableSeats = Cruise.Max_Passengers;
 
             //this should first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
             var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise && o.Cruise_Date == CruiseDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
 
-            Console.WriteLine("Amount of booked seats: " + BookedSeats);
+            Console.WriteLine("Amount of booked seats: " + BookedSeats); //debug print, delete this afterwards
 
 
             return BookedSeats + PassengersAmount <= AvailableSeats;

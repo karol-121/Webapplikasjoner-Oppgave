@@ -30,6 +30,7 @@ namespace Webapplication.DAL
 
                 var Date1 = new DateTime(2021, 9, 13);
                 var Date2 = new DateTime(2021, 9, 12);
+                var Date3 = new DateTime(2021, 9, 15);
 
 
                 var Cruise1 = new Cruise { Route = Route1, Departure_DayOfWeek = 1, Departure_Hour = 9, Departure_Minute = 30, Max_Passengers = 10, Passeger_Price = 200, Passegner_Underage_Price = 150, Pet_Price = 50, Vehicle_Price = 0 };
@@ -49,6 +50,8 @@ namespace Webapplication.DAL
                 var Cruise12 = new Cruise { Route = Route4, Departure_DayOfWeek = 4, Departure_Hour = 16, Departure_Minute = 30, Max_Passengers = 10, Passeger_Price = 500, Passegner_Underage_Price = 350, Pet_Price = 50, Vehicle_Price = 200 };
 
                 var Order1 = new Order { Order_Date = Date2, Customer = Customer1, Cruise = Cruise5, Cruise_Date = Date1, Passengers = 1, Passenger_Underage = 0, Pets = 1, Vehicles = 1};
+                var Order2 = new Order { Order_Date = Date2, Customer = Customer1, Cruise = Cruise5, Cruise_Date = Date1, Passengers = 2, Passenger_Underage = 2, Pets = 0, Vehicles = 0};
+                var Order3 = new Order { Order_Date = Date2, Customer = Customer1, Cruise = Cruise7, Cruise_Date = Date3, Passengers = 4, Passenger_Underage = 0, Pets = 1, Vehicles = 1};
                 
 
                 Context.Routes.Add(Route1);
@@ -73,6 +76,8 @@ namespace Webapplication.DAL
                 Context.Cruises.Add(Cruise12);
 
                 Context.Orders.Add(Order1);
+                Context.Orders.Add(Order2);
+                Context.Orders.Add(Order3);
 
 
                 Context.SaveChanges();

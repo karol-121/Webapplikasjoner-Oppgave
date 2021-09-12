@@ -8,12 +8,12 @@ namespace Webapplication.DAL
 {
     public interface IApplicationRepository
     {
-        Task<List<Route>> GetRoutes(); //henter alle ruter som finnes i databasen
+        Task<List<Route>> GetRoutes(); 
 
-        Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek); //returnerer alle cruiser som stemmer med gitt parameterene
+        Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek); 
 
+        Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate); 
 
-        //check avaiblility - best at den teller opp antall ordrer med gitt cruise id og dato
 
         //register order - den mest sannsynlighvis kommer å trenge register kunde if not og samme med poststed
 
