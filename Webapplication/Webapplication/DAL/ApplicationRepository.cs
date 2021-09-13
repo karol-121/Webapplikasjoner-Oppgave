@@ -45,7 +45,7 @@ namespace Webapplication.DAL
         {
             var AvailableSeats = Cruise.Max_Passengers;
 
-            //this should first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
+            //first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
             var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise && o.Cruise_Date == CruiseDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
 
             Console.WriteLine("Amount of booked seats: " + BookedSeats); //debug print, delete this afterwards
@@ -53,6 +53,34 @@ namespace Webapplication.DAL
 
             return BookedSeats + PassengersAmount <= AvailableSeats;
             
+        }
+
+        public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
+        {
+            return await _DB.Posts.FindAsync(Zip_Code);
+        }
+
+        public async Task RegisterPost(Post post) //Registrerer post objekt
+        {
+            _DB.Posts.Add(post);
+            await _DB.SaveChangesAsync();
+        }
+
+        public async Task<Customer> FindCustomer(Customer customer) //vet ikke om dette er nødvendig
+        {
+            return await _DB.Customers.FindAsync(customer);
+        }
+
+        public async Task RegisterCustomer(Customer customer) //Registrerer kunde
+        {
+            _DB.Customers.Add(customer);
+            await _DB.SaveChangesAsync();
+        }
+
+        public async Task RegisterOrder(Order order) //Registrerer order
+        {
+            _DB.Orders.Add(order);
+            await _DB.SaveChangesAsync();
         }
 
     }

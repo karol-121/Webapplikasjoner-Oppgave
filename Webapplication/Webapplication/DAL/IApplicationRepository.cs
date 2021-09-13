@@ -12,13 +12,16 @@ namespace Webapplication.DAL
 
         Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek); 
 
-        Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate); 
+        Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate);
 
+        Task<Post> FindPost(string Zip_Code);
 
-        //register order - den mest sannsynlighvis kommer å trenge register kunde if not og samme med poststed
+        Task RegisterPost(Post post);
 
-        //register customer 
+        Task<Customer> FindCustomer(Customer customer);
 
-        //register post 
+        Task RegisterCustomer(Customer customer);
+
+        Task RegisterOrder(Order order);
     }
 }

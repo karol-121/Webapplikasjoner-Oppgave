@@ -9,7 +9,6 @@ using Webapplication.DAL;
 
 namespace Webapplication.Controllers
 {
-    //[Route("[controller]/[action]")]
     [Route("API/[action]")]
     public class ApplicationController : ControllerBase
     {
@@ -33,6 +32,16 @@ namespace Webapplication.Controllers
             // check avaibility on found cruises
             // return avaible cruises
             return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, date);
+        }
+
+        public async Task RegisterOrder(Order order)
+        {
+            //find post
+            // if not found post, register
+            //find customer (probably hash comparing?), if not found register
+            //register order with previously added post and customer
+
+            
         }
 
         
