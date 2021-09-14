@@ -24,7 +24,7 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day)
+        public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
         {
             DateTime Date = new DateTime(Year, Month, Day); //Dette er ikke nødvendig, man kunne passere datetime objekt som parameter,
                                                             //men jeg vil beholde denne metoden "get friendly" slik at ingen objekt skal inn
@@ -37,7 +37,6 @@ namespace Webapplication.Controllers
         public async Task RegisterOrder(OrderInformation OrderInformation)
         {
             //her skal man validere informasjon som ligger inn i objektet OrderInformation
-
             try
             {
                 await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre

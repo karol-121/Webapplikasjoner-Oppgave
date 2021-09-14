@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Webapplication.Models;
@@ -29,6 +30,7 @@ namespace Webapplication.DAL
 
         public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
+            //add negative check as someone could bypass the check by adding negative amount of passsengers
 
             List<Cruise> AvailableCruises = new List<Cruise>();
 
@@ -81,67 +83,74 @@ namespace Webapplication.DAL
             await _DB.SaveChangesAsync();
         }
 
-        public async Task RegisterOrder(OrderInformation orderInformation) //Registrerer order
+        public async Task RegisterOrder(OrderInformation OrderInformation) //Registrerer order
         {
 
-            if (orderInformation == null) //sjekker om order information objektet eksisterer
+            if (OrderInformation == null) //sjekker om order information objektet eksisterer
             {
                 throw new ArgumentNullException("Object with order information is not found.");
-            }
+            } 
+
             
-            Cruise cruise = await FindCruise(orderInformation.Cruise_Id); //søk etter gitt cruise
+            DateTime Cruise_Date = DateTime.ParseExact(OrderInformation.Cruise_Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //konverterer streng fra klient objekt til en datetime objekt
+
+            Cruise cruise = await FindCruise(OrderInformation.Cruise_Id); //søk etter gitt cruise
+            //here maybe add the proper hour and minute so it is right with the departure time set in cruise 
 
             if (cruise == null) //dersom cruise ble ikke funnet, kast exception
             {
                 throw new ArgumentException("Illegal cruise id.");
             }
 
-
-            if (!await CheckAvailability(cruise, orderInformation.Passengers + orderInformation.Passenger_Underage, orderInformation.Cruise_Date)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
+            if (!await CheckAvailability(cruise, OrderInformation.Passengers + OrderInformation.Passenger_Underage, Cruise_Date)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
             {
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
             }
 
-            if (cruise.Departure_DayOfWeek != ((int)orderInformation.Cruise_Date.DayOfWeek)) //sjekker integritet mellom valgt cruise dato og dagene gitt cruise går.
+            if (cruise.Departure_DayOfWeek != ((int)Cruise_Date.DayOfWeek)) //sjekker integritet mellom valgt cruise dato og dagene gitt cruise går.
             {
                 throw new ArgumentException("The provided cruise date is invalid for choosen cruise.");
             }
 
-            Post post = await FindPost(orderInformation.Zip_Code); //søk etter gitt postnummer 
+            Post post = await FindPost(OrderInformation.Zip_Code); //søk etter gitt postnummer 
 
             if (post == null) //dersom gitt postnummer ble ikke funnet, lag et nytt objekt 
             {
-                post.Zip_Code = orderInformation.Zip_Code;
-                post.City = orderInformation.City;
+                post = new Post
+                {
+                    Zip_Code = OrderInformation.Zip_Code,
+                    City = OrderInformation.City
+                };
+                
             }
 
             Customer customer = new Customer 
             {
-                Name = orderInformation.Name,
-                Surname = orderInformation.Surname,
-                Age = orderInformation.Age,
-                Address = orderInformation.Address,
+                Name = OrderInformation.Name,
+                Surname = OrderInformation.Surname,
+                Age = OrderInformation.Age,
+                Address = OrderInformation.Address,
                 Post = post,
-                Phone = orderInformation.Phone,
-                Email = orderInformation.Email
+                Phone = OrderInformation.Phone,
+                Email = OrderInformation.Email
             };
 
             //todo? check if this customer allready exist, search after this specific object, if it is found, then use it.
 
             Order order = new Order
             {
-                Order_Date = orderInformation.Order_Date,
+                Order_Date = DateTime.Now,
                 Customer = customer,
                 Cruise = cruise,
-                Cruise_Date = orderInformation.Cruise_Date,
-                Passengers = orderInformation.Passengers,
-                Passenger_Underage = orderInformation.Passenger_Underage,
-                Pets = orderInformation.Pets,
-                Vehicles = orderInformation.Vehicles
+                Cruise_Date = Cruise_Date,
+                Passengers = OrderInformation.Passengers,
+                Passenger_Underage = OrderInformation.Passenger_Underage,
+                Pets = OrderInformation.Pets,
+                Vehicles = OrderInformation.Vehicles
             };
 
             //todo? check if this order allready exist, search after this specific object, if it is found, then use it.
-            
+
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
         }
