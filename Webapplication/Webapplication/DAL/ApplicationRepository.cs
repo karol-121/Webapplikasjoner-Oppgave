@@ -55,6 +55,11 @@ namespace Webapplication.DAL
             
         }
 
+        public async Task<Cruise> FindCruise(int CruiseId) //returnerer funnet cruise objekt etter cruise id
+        {
+            return await _DB.Cruises.FindAsync(CruiseId);
+        }
+
         public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
         {
             return await _DB.Posts.FindAsync(Zip_Code);
@@ -77,8 +82,55 @@ namespace Webapplication.DAL
             await _DB.SaveChangesAsync();
         }
 
-        public async Task RegisterOrder(Order order) //Registrerer order
+        public async Task RegisterOrder(OrderInformation orderInformation) //Registrerer order
         {
+            //check if order inforamtion is null?
+            
+            Cruise cruise = await FindCruise(orderInformation.Cruise_Id); //søk etter gitt cruise
+
+            if (cruise == null) //dersom cruise ble ikke funnet, kast exception
+            {
+                Console.WriteLine("damn boi this cruise id is wrong");
+                //throw new ArgumentException("Illegal cruise id");
+            }
+
+            //check the availability as the booking could change when the customer was filling its order. (it would be better to reserve seats for this customer but whatever)
+            //also check the integrity with cruise date and cruise's day of the week.
+
+            Post post = await FindPost(orderInformation.Zip_Code); //søk etter gitt postnummer 
+
+            if (post == null) //dersom gitt postnummer ble ikke funnet, lag et nytt objekt 
+            {
+                post.Zip_Code = orderInformation.Zip_Code;
+                post.City = orderInformation.City;
+            }
+
+
+            Customer customer = new Customer
+            {
+                Name = orderInformation.Name,
+                Surname = orderInformation.Surname,
+                Age = orderInformation.Age,
+                Address = orderInformation.Address,
+                Post = post,
+                Phone = orderInformation.Phone,
+                Email = orderInformation.Email
+            };
+
+            //here i should check if this created customer exist allready so i does not duplicate, however maybe this is allready feture in the orm or whatever
+
+            Order order = new Order
+            {
+                Order_Date = orderInformation.Order_Date,
+                Customer = customer,
+                Cruise = cruise,
+                Cruise_Date = orderInformation.Cruise_Date,
+                Passengers = orderInformation.Passengers,
+                Passenger_Underage = orderInformation.Passenger_Underage,
+                Pets = orderInformation.Pets,
+                Vehicles = orderInformation.Vehicles
+            };
+            
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
         }

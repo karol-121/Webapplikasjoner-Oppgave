@@ -34,14 +34,13 @@ namespace Webapplication.Controllers
             return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, date);
         }
 
-        public async Task RegisterOrder(Order order)
+        public async Task RegisterOrder(OrderInformation orderInformation)
         {
-            //find post
-            // if not found post, register
-            //find customer (probably hash comparing?), if not found register
-            //register order with previously added post and customer
+            //validate the information in order information
 
-            
+            Console.WriteLine("the object has been delivered");
+
+            await _Local_DB.RegisterOrder(orderInformation);
         }
 
         

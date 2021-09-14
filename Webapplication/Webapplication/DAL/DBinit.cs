@@ -26,7 +26,7 @@ namespace Webapplication.DAL
 
                 var Post1 = new Post { Zip_Code = "1224", City = "Bergen" };
 
-                var Customer1 = new Customer { Name = "Per", Surname = "Hansen", Age = 34, Address = "Hovedveien 3", Post = Post1, Phone = 12345678, Email = "Per@email.com" };
+                var Customer1 = new Customer { Name = "Per", Surname = "Hansen", Age = 34, Address = "Hovedveien 3", Post = Post1, Phone = "12345678", Email = "Per@email.com" };
 
                 var Date1 = new DateTime(2021, 9, 13);
                 var Date2 = new DateTime(2021, 9, 12);

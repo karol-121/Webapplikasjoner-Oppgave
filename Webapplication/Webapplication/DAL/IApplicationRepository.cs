@@ -22,6 +22,6 @@ namespace Webapplication.DAL
 
         Task RegisterCustomer(Customer customer);
 
-        Task RegisterOrder(Order order);
+        Task RegisterOrder(OrderInformation orderInformation);
     }
 }
