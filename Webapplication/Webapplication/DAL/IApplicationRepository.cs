@@ -14,14 +14,14 @@ namespace Webapplication.DAL
 
         Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate);
 
-        Task<Post> FindPost(string Zip_Code);
+        //Task<Post> FindPost(string Zip_Code);
 
-        Task RegisterPost(Post post);
+        //Task RegisterPost(Post post);
 
-        Task<Customer> FindCustomer(Customer customer);
+        //Task<Customer> FindCustomer(Customer customer);
 
-        Task RegisterCustomer(Customer customer);
+        //Task RegisterCustomer(Customer customer);
 
-        Task RegisterOrder(OrderInformation orderInformation);
+        Task RegisterOrder(OrderInformation OrderInformation);
     }
 }

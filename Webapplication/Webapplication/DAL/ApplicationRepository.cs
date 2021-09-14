@@ -26,7 +26,6 @@ namespace Webapplication.DAL
             return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == Departure_DayOfWeek).ToListAsync();
         }
 
-
         public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
             List<Cruise> AvailableCruises = new List<Cruise>();
@@ -47,9 +46,6 @@ namespace Webapplication.DAL
 
             //first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
             var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise && o.Cruise_Date == CruiseDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
-
-            Console.WriteLine("Amount of booked seats: " + BookedSeats); //debug print, delete this afterwards
-
 
             return BookedSeats + PassengersAmount <= AvailableSeats;
             
@@ -84,18 +80,29 @@ namespace Webapplication.DAL
 
         public async Task RegisterOrder(OrderInformation orderInformation) //Registrerer order
         {
-            //check if order inforamtion is null?
+
+            if (orderInformation == null) //sjekker om order information objektet eksisterer
+            {
+                throw new ArgumentNullException("Object with order information is not found.");
+            }
             
             Cruise cruise = await FindCruise(orderInformation.Cruise_Id); //søk etter gitt cruise
 
             if (cruise == null) //dersom cruise ble ikke funnet, kast exception
             {
-                Console.WriteLine("damn boi this cruise id is wrong");
-                //throw new ArgumentException("Illegal cruise id");
+                throw new ArgumentException("Illegal cruise id.");
             }
 
-            //check the availability as the booking could change when the customer was filling its order. (it would be better to reserve seats for this customer but whatever)
-            //also check the integrity with cruise date and cruise's day of the week.
+
+            if (!await CheckAvailability(cruise, orderInformation.Passengers + orderInformation.Passenger_Underage, orderInformation.Cruise_Date)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
+            {
+                throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
+            }
+
+            if (cruise.Departure_DayOfWeek != ((int)orderInformation.Cruise_Date.DayOfWeek)) //sjekker integritet mellom valgt cruise dato og dagene gitt cruise går.
+            {
+                throw new ArgumentException("The provided cruise date is invalid for choosen cruise.");
+            }
 
             Post post = await FindPost(orderInformation.Zip_Code); //søk etter gitt postnummer 
 
@@ -105,8 +112,7 @@ namespace Webapplication.DAL
                 post.City = orderInformation.City;
             }
 
-
-            Customer customer = new Customer
+            Customer customer = new Customer 
             {
                 Name = orderInformation.Name,
                 Surname = orderInformation.Surname,
@@ -117,7 +123,7 @@ namespace Webapplication.DAL
                 Email = orderInformation.Email
             };
 
-            //here i should check if this created customer exist allready so i does not duplicate, however maybe this is allready feture in the orm or whatever
+            //todo? check if this customer allready exist, search after this specific object, if it is found, then use it.
 
             Order order = new Order
             {
@@ -130,6 +136,8 @@ namespace Webapplication.DAL
                 Pets = orderInformation.Pets,
                 Vehicles = orderInformation.Vehicles
             };
+
+            //todo? check if this order allready exist, search after this specific object, if it is found, then use it.
             
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
