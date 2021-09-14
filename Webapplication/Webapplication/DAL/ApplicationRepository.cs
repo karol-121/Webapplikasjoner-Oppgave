@@ -21,14 +21,17 @@ namespace Webapplication.DAL
             return await _DB.Routes.ToListAsync();
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
+        public async Task<List<Cruise>> FindCruises(int RouteId, DateTime Date) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
         {
-            return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == Departure_DayOfWeek).ToListAsync();
+
+            return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == ((int)Date.DayOfWeek)).ToListAsync();
         }
 
         public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
+
             List<Cruise> AvailableCruises = new List<Cruise>();
+
             foreach (var Cruise in Cruises) //loop through 
             {
                 if (await CheckAvailability(Cruise, PassengersAmount, DepartureDate))

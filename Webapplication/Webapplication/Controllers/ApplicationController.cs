@@ -21,30 +21,31 @@ namespace Webapplication.Controllers
 
         public async Task<List<Route>> GetRoutes()
         {
-            return await _Local_DB.GetRoutes();
+            return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
         public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day)
         {
-            DateTime date = new DateTime(Year, Month, Day);
-            // find cruises
-            List<Cruise> FoundCruises = await _Local_DB.FindCruises(RouteId, ((int)date.DayOfWeek));
-            // check avaibility on found cruises
-            // return avaible cruises
-            return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, date);
+            DateTime Date = new DateTime(Year, Month, Day); //Dette er ikke nødvendig, man kunne passere datetime objekt som parameter,
+                                                            //men jeg vil beholde denne metoden "get friendly" slik at ingen objekt skal inn
+
+            List<Cruise> FoundCruises = await _Local_DB.FindCruises(RouteId, Date); //henter alle mulige cruiser
+
+            return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, Date); //sjekker of forkaster disse cruiser som har ikke nok plass/plasser
         }
 
         public async Task RegisterOrder(OrderInformation OrderInformation)
         {
-            //validate the information in order information
+            //her skal man validere informasjon som ligger inn i objektet OrderInformation
 
             try
             {
-                await _Local_DB.RegisterOrder(OrderInformation);
+                await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
             } 
             catch (Exception e)
             {
-                //for now just print message to console, but in future i want here to return the http code with the message.
+                // dersom det er noe feil ved registrering, kastes det exception som fanges her.
+                // for nå skrives det kun meldig til consolen, men her skal det returneres en http kode, informasjon skal også tilbake til klienten.
                 Console.WriteLine(e.Message);
             }
 

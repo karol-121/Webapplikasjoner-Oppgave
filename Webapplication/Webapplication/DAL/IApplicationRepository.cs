@@ -10,7 +10,7 @@ namespace Webapplication.DAL
     {
         Task<List<Route>> GetRoutes(); 
 
-        Task<List<Cruise>> FindCruises(int RouteId, int Departure_DayOfWeek); 
+        Task<List<Cruise>> FindCruises(int RouteId, DateTime Date); 
 
         Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate);
 
