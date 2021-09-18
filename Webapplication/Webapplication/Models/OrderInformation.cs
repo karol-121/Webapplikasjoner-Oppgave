@@ -15,10 +15,9 @@ namespace Webapplication.Models
         public string City { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public int Cruise_Id { get; set; }
-        public string Cruise_Date { get; set; }
+        public int Schedule_Id { get; set; }
         public int Passengers { get; set; }
-        public int Passenger_Underage { get; set; }
+        public int Passengers_Underage { get; set; }
         public int Pets { get; set; }
         public int Vehicles { get; set; }
     }

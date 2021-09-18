@@ -43,14 +43,18 @@ namespace Webapplication.DAL
             }
 
             return AvailableCruises;
-        }
+        }*/
 
-        private async Task<bool> CheckAvailability(Cruise Cruise, int PassengersAmount, DateTime CruiseDate) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
+        private async Task<bool> CheckAvailability(Schedule Schedule, int PassengersAmount) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
         {
-            var AvailableSeats = Cruise.Max_Passengers;
+            if (PassengersAmount < 0)// negativ antall pasasjerer er tull og defor returner false med en gang
+            {
+                return false;
+            }
+            var AvailableSeats = Schedule.Cruise.Max_Passengers;
 
-            //first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
-            var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise && o.Cruise_Date == CruiseDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
+            //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
+            var BookedSeats = await _DB.Orders.Where(o => o.Schedule == Schedule).SumAsync(o => o.Passengers + o.Passengers_Underage);
 
             return BookedSeats + PassengersAmount <= AvailableSeats;
             
@@ -59,6 +63,11 @@ namespace Webapplication.DAL
         public async Task<Cruise> FindCruise(int CruiseId) //returnerer funnet cruise objekt etter cruise id
         {
             return await _DB.Cruises.FindAsync(CruiseId);
+        }
+
+        public async Task<Schedule> FindSchedule(int ScheduleId) //returnerer funnet schedule objekt etter schedule id
+        {
+            return await _DB.Schedules.FindAsync(ScheduleId);
         }
 
         public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
@@ -89,27 +98,18 @@ namespace Webapplication.DAL
             if (OrderInformation == null) //sjekker om order information objektet eksisterer
             {
                 throw new ArgumentNullException("Object with order information is not found.");
-            } 
-
-            
-            DateTime Cruise_Date = DateTime.ParseExact(OrderInformation.Cruise_Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //konverterer streng fra klient objekt til en datetime objekt
-
-            Cruise cruise = await FindCruise(OrderInformation.Cruise_Id); //søk etter gitt cruise
-            //here maybe add the proper hour and minute so it is right with the departure time set in cruise 
-
-            if (cruise == null) //dersom cruise ble ikke funnet, kast exception
-            {
-                throw new ArgumentException("Illegal cruise id.");
             }
 
-            if (!await CheckAvailability(cruise, OrderInformation.Passengers + OrderInformation.Passenger_Underage, Cruise_Date)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
+            Schedule schedule = await FindSchedule(OrderInformation.Schedule_Id);
+
+            if (schedule == null)
+            {
+                throw new ArgumentException("Invalid schedule id: schedule not found.");
+            }
+
+            if (!await CheckAvailability(schedule, OrderInformation.Passengers + OrderInformation.Passengers_Underage)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
             {
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
-            }
-
-            if (cruise.Departure_DayOfWeek != ((int)Cruise_Date.DayOfWeek)) //sjekker integritet mellom valgt cruise dato og dagene gitt cruise går.
-            {
-                throw new ArgumentException("The provided cruise date is invalid for choosen cruise.");
             }
 
             Post post = await FindPost(OrderInformation.Zip_Code); //søk etter gitt postnummer 
@@ -135,16 +135,15 @@ namespace Webapplication.DAL
                 Email = OrderInformation.Email
             };
 
-            //todo? check if this customer allready exist, search after this specific object, if it is found, then use it.
+            //todo: check if this customer allready exist, search after this specific object, if it is found, then use it.
 
             Order order = new Order
             {
                 Order_Date = DateTime.Now,
                 Customer = customer,
-                Cruise = cruise,
-                Cruise_Date = Cruise_Date,
+                Schedule = schedule,
                 Passengers = OrderInformation.Passengers,
-                Passenger_Underage = OrderInformation.Passenger_Underage,
+                Passengers_Underage = OrderInformation.Passengers_Underage,
                 Pets = OrderInformation.Pets,
                 Vehicles = OrderInformation.Vehicles
             };
@@ -153,7 +152,7 @@ namespace Webapplication.DAL
 
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
-        }*/
+        }
 
     }
 }

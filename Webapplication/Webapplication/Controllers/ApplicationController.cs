@@ -34,7 +34,7 @@ namespace Webapplication.Controllers
             return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, Date); //sjekker of forkaster disse cruiser som har ikke nok plass/plasser
         }*/
 
-        /*public async Task RegisterOrder(OrderInformation OrderInformation)
+        public async Task RegisterOrder(OrderInformation OrderInformation)
         {
             //her skal man validere informasjon som ligger inn i objektet OrderInformation
             try
@@ -49,7 +49,7 @@ namespace Webapplication.Controllers
             }
 
             
-        }*/
+        }
 
         
 

@@ -9,10 +9,9 @@ const OrderInformation = {
     City: "Bergen",
     Phone: "12345678",
     Email: "Jenkins@mail.com",
-    Cruise_Id: 5,
-    Cruise_Date: "2021-09-13",
+    Schedule_Id: 3,
     Passengers: 1,
-    Passenger_Underage: 0,
+    Passengers_Underage: 1,
     Pets: 1,
     Vehicles: 0
 }
