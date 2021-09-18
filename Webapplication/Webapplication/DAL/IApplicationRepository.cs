@@ -10,9 +10,9 @@ namespace Webapplication.DAL
     {
         Task<List<Route>> GetRoutes(); 
 
-        Task<List<Cruise>> FindCruises(int RouteId, DateTime Date); 
+        //Task<List<Cruise>> FindCruises(int RouteId, DateTime Date); 
 
-        Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate);
+        //Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate);
 
         //Task<Post> FindPost(string Zip_Code);
 
@@ -22,6 +22,6 @@ namespace Webapplication.DAL
 
         //Task RegisterCustomer(Customer customer);
 
-        Task RegisterOrder(OrderInformation OrderInformation);
+        //Task RegisterOrder(OrderInformation OrderInformation);
     }
 }

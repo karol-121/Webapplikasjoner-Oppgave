@@ -10,10 +10,9 @@ namespace Webapplication.Models
         public int Id { get; set; }
         public DateTime Order_Date { get; set; }
         public virtual Customer Customer { get; set; }
-        public virtual Cruise Cruise { get; set; }
-        public DateTime Cruise_Date { get; set; }
+        public virtual Schedule Schedule { get; set; }
         public int Passengers { get; set; }
-        public int Passenger_Underage { get; set; }
+        public int Passengers_Underage { get; set; }
         public int Pets { get; set; }
         public int Vehicles { get; set; }
     }

@@ -22,7 +22,7 @@ namespace Webapplication.DAL
             return await _DB.Routes.ToListAsync();
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, DateTime Date) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
+        /*public async Task<List<Cruise>> FindCruises(int RouteId, DateTime Date) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
         {
 
             return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == ((int)Date.DayOfWeek)).ToListAsync();
@@ -153,7 +153,7 @@ namespace Webapplication.DAL
 
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
-        }
+        }*/
 
     }
 }

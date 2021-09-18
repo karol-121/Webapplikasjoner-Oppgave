@@ -24,7 +24,7 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
+        /*public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
         {
             DateTime Date = new DateTime(Year, Month, Day); //Dette er ikke nødvendig, man kunne passere datetime objekt som parameter,
                                                             //men jeg vil beholde denne metoden "get friendly" slik at ingen objekt skal inn
@@ -32,9 +32,9 @@ namespace Webapplication.Controllers
             List<Cruise> FoundCruises = await _Local_DB.FindCruises(RouteId, Date); //henter alle mulige cruiser
 
             return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, Date); //sjekker of forkaster disse cruiser som har ikke nok plass/plasser
-        }
+        }*/
 
-        public async Task RegisterOrder(OrderInformation OrderInformation)
+        /*public async Task RegisterOrder(OrderInformation OrderInformation)
         {
             //her skal man validere informasjon som ligger inn i objektet OrderInformation
             try
@@ -49,7 +49,7 @@ namespace Webapplication.Controllers
             }
 
             
-        }
+        }*/
 
         
 

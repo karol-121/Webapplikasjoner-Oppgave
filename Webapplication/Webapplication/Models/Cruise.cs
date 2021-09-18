@@ -6,9 +6,6 @@ namespace Webapplication.Models
     {
         public int Id { get; set; }
         public virtual Route Route { get; set; }
-        public int Departure_DayOfWeek { get; set; }
-        public int Departure_Hour { get; set; }
-        public int Departure_Minute { get; set; }
         public int Max_Passengers { get; set; }
         public int Passeger_Price { get; set; }
         public int Passegner_Underage_Price { get; set; }
