@@ -22,13 +22,12 @@ namespace Webapplication.DAL
             return await _DB.Routes.ToListAsync();
         }
 
-        /*public async Task<List<Cruise>> FindCruises(int RouteId, DateTime Date) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
+        public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
-
-            return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == ((int)Date.DayOfWeek)).ToListAsync();
+            return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
         }
 
-        public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
+        /*public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
             //add negative check as someone could bypass the check by adding negative amount of passsengers
 
@@ -79,11 +78,6 @@ namespace Webapplication.DAL
         {
             _DB.Posts.Add(post);
             await _DB.SaveChangesAsync();
-        }
-
-        public async Task<Customer> FindCustomer(Customer customer) //vet ikke om dette er nødvendig
-        {
-            return await _DB.Customers.FindAsync(customer);
         }
 
         public async Task RegisterCustomer(Customer customer) //Registrerer kunde
@@ -147,8 +141,6 @@ namespace Webapplication.DAL
                 Pets = OrderInformation.Pets,
                 Vehicles = OrderInformation.Vehicles
             };
-
-            //todo? check if this order allready exist, search after this specific object, if it is found, then use it.
 
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();

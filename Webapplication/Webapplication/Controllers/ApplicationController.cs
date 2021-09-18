@@ -27,6 +27,7 @@ namespace Webapplication.Controllers
         public async Task<List<Departure>> GetDepartures() //skal hente alle mulige cruiser med bestemt route og dato som er ikke fulle i guess?
         {
             throw new NotImplementedException();
+            
         }
 
         /*public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
@@ -51,6 +52,7 @@ namespace Webapplication.Controllers
                 // dersom det er noe feil ved registrering, kastes det exception som fanges her.
                 // for nå skrives det kun meldig til consolen, men her skal det returneres en http kode, informasjon skal også tilbake til klienten.
                 Console.WriteLine(e.Message);
+
             }
 
             
