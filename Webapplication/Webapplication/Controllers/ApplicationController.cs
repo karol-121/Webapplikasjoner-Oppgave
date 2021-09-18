@@ -40,18 +40,19 @@ namespace Webapplication.Controllers
             return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, Date); //sjekker of forkaster disse cruiser som har ikke nok plass/plasser
         }*/
 
-        public async Task RegisterOrder(OrderInformation OrderInformation)
+        public async Task<ActionResult> RegisterOrder(OrderInformation OrderInformation)
         {
-            //her skal man validere informasjon som ligger inn i objektet OrderInformation
             try
             {
+                //her skal man validere informasjon som ligger inn i objektet OrderInformation
                 await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
+                return Ok(); //returnere en ok http response status
+                
             } 
             catch (Exception e)
             {
                 // dersom det er noe feil ved registrering, kastes det exception som fanges her.
-                // for nå skrives det kun meldig til consolen, men her skal det returneres en http kode, informasjon skal også tilbake til klienten.
-                Console.WriteLine(e.Message);
+                return BadRequest(e.Message); // returnere en error http response med excepton melding.
 
             }
 
