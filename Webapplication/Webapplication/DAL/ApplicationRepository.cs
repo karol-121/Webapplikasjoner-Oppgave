@@ -45,16 +45,16 @@ namespace Webapplication.DAL
             return AvailableCruises;
         }*/
 
-        private async Task<bool> CheckAvailability(Schedule Schedule, int PassengersAmount) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
+        private async Task<bool> CheckAvailability(Departure Departure, int PassengersAmount) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
         {
             if (PassengersAmount < 0)// negativ antall pasasjerer er tull og defor returner false med en gang
             {
                 return false;
             }
-            var AvailableSeats = Schedule.Cruise.Max_Passengers;
+            var AvailableSeats = Departure.Cruise.Max_Passengers;
 
             //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
-            var BookedSeats = await _DB.Orders.Where(o => o.Schedule == Schedule).SumAsync(o => o.Passengers + o.Passengers_Underage);
+            var BookedSeats = await _DB.Orders.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
 
             return BookedSeats + PassengersAmount <= AvailableSeats;
             
@@ -65,9 +65,9 @@ namespace Webapplication.DAL
             return await _DB.Cruises.FindAsync(CruiseId);
         }
 
-        public async Task<Schedule> FindSchedule(int ScheduleId) //returnerer funnet schedule objekt etter schedule id
+        public async Task<Departure> FindDeparture(int Departure_Id) //returnerer funnet schedule objekt etter schedule id
         {
-            return await _DB.Schedules.FindAsync(ScheduleId);
+            return await _DB.Departures.FindAsync(Departure_Id);
         }
 
         public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
@@ -97,17 +97,17 @@ namespace Webapplication.DAL
 
             if (OrderInformation == null) //sjekker om order information objektet eksisterer
             {
-                throw new ArgumentNullException("Object with order information is not found.");
+                throw new ArgumentNullException("Invalid order information object: order information object is null.");
             }
 
-            Schedule schedule = await FindSchedule(OrderInformation.Schedule_Id);
+            Departure departure = await FindDeparture(OrderInformation.Departure_Id);
 
-            if (schedule == null)
+            if (departure == null)
             {
-                throw new ArgumentException("Invalid schedule id: schedule not found.");
+                throw new ArgumentException("Invalid departure id: departure not found.");
             }
 
-            if (!await CheckAvailability(schedule, OrderInformation.Passengers + OrderInformation.Passengers_Underage)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
+            if (!await CheckAvailability(departure, OrderInformation.Passengers + OrderInformation.Passengers_Underage)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
             {
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
             }
@@ -141,7 +141,7 @@ namespace Webapplication.DAL
             {
                 Order_Date = DateTime.Now,
                 Customer = customer,
-                Schedule = schedule,
+                Departure = departure,
                 Passengers = OrderInformation.Passengers,
                 Passengers_Underage = OrderInformation.Passengers_Underage,
                 Pets = OrderInformation.Pets,

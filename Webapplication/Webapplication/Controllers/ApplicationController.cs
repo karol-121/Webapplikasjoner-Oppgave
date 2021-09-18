@@ -24,6 +24,11 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
+        public async Task<List<Departure>> GetDepartures() //skal hente alle mulige cruiser med bestemt route og dato som er ikke fulle i guess?
+        {
+            throw new NotImplementedException();
+        }
+
         /*public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
         {
             DateTime Date = new DateTime(Year, Month, Day); //Dette er ikke nødvendig, man kunne passere datetime objekt som parameter,

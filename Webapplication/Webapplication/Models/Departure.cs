@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
-    public class Schedule
+    public class Departure
     {
         public int Id { get; set; }
         public virtual Cruise Cruise { get; set; }

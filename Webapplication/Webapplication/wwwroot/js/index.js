@@ -9,7 +9,7 @@ const OrderInformation = {
     City: "Bergen",
     Phone: "12345678",
     Email: "Jenkins@mail.com",
-    Schedule_Id: 3,
+    Departure_Id: 3,
     Passengers: 1,
     Passengers_Underage: 1,
     Pets: 1,

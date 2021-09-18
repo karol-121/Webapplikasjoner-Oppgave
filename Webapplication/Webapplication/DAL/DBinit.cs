@@ -38,16 +38,16 @@ namespace Webapplication.DAL
                 var Cruise5 = new Cruise { Route = Route3, Max_Passengers = 15, Passeger_Price = 300, Passegner_Underage_Price = 100, Pet_Price = 30, Vehicle_Price = 500 };
                 var Cruise6 = new Cruise { Route = Route4, Max_Passengers = 15, Passeger_Price = 300, Passegner_Underage_Price = 100, Pet_Price = 30, Vehicle_Price = 500 };
 
-                var Schedule1 = new Schedule { Cruise = Cruise1, Date = Departure1 };
-                var Schedule2 = new Schedule { Cruise = Cruise2, Date = Departure1 };
-                var Schedule3 = new Schedule { Cruise = Cruise1, Date = Departure2 };
-                var Schedule4 = new Schedule { Cruise = Cruise2, Date = Departure2 };
-                var Schedule5 = new Schedule { Cruise = Cruise1, Date = Departure3 };
-                var Schedule6 = new Schedule { Cruise = Cruise2, Date = Departure3 };
-                var Schedule7 = new Schedule { Cruise = Cruise1, Date = Departure4 };
-                var Schedule8 = new Schedule { Cruise = Cruise2, Date = Departure4 };
-                var Schedule9 = new Schedule { Cruise = Cruise5, Date = Departure5 };
-                var Schedule10 = new Schedule { Cruise = Cruise6, Date = Departure5 };
+                var Schedule1 = new Departure { Cruise = Cruise1, Date = Departure1 };
+                var Schedule2 = new Departure { Cruise = Cruise2, Date = Departure1 };
+                var Schedule3 = new Departure { Cruise = Cruise1, Date = Departure2 };
+                var Schedule4 = new Departure { Cruise = Cruise2, Date = Departure2 };
+                var Schedule5 = new Departure { Cruise = Cruise1, Date = Departure3 };
+                var Schedule6 = new Departure { Cruise = Cruise2, Date = Departure3 };
+                var Schedule7 = new Departure { Cruise = Cruise1, Date = Departure4 };
+                var Schedule8 = new Departure { Cruise = Cruise2, Date = Departure4 };
+                var Schedule9 = new Departure { Cruise = Cruise5, Date = Departure5 };
+                var Schedule10 = new Departure { Cruise = Cruise6, Date = Departure5 };
 
                 
 
@@ -63,16 +63,16 @@ namespace Webapplication.DAL
                 Context.Cruises.Add(Cruise5);
                 Context.Cruises.Add(Cruise6);
 
-                Context.Schedules.Add(Schedule1);
-                Context.Schedules.Add(Schedule2);
-                Context.Schedules.Add(Schedule3);
-                Context.Schedules.Add(Schedule4);
-                Context.Schedules.Add(Schedule5);
-                Context.Schedules.Add(Schedule6);
-                Context.Schedules.Add(Schedule7);
-                Context.Schedules.Add(Schedule8);
-                Context.Schedules.Add(Schedule9);
-                Context.Schedules.Add(Schedule10);
+                Context.Departures.Add(Schedule1);
+                Context.Departures.Add(Schedule2);
+                Context.Departures.Add(Schedule3);
+                Context.Departures.Add(Schedule4);
+                Context.Departures.Add(Schedule5);
+                Context.Departures.Add(Schedule6);
+                Context.Departures.Add(Schedule7);
+                Context.Departures.Add(Schedule8);
+                Context.Departures.Add(Schedule9);
+                Context.Departures.Add(Schedule10);
                 
 
                 Context.SaveChanges();
