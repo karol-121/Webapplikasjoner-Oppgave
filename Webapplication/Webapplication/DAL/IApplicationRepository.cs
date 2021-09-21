@@ -8,20 +8,9 @@ namespace Webapplication.DAL
 {
     public interface IApplicationRepository
     {
-        Task<List<Route>> GetRoutes(); 
-
-        //Task<List<Cruise>> FindCruises(int RouteId, DateTime Date); 
-
-        //Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate);
-
-        //Task<Post> FindPost(string Zip_Code);
-
-        //Task RegisterPost(Post post);
-
-        //Task<Customer> FindCustomer(Customer customer);
-
-        //Task RegisterCustomer(Customer customer);
-
+        Task<List<Route>> GetRoutes();
+        Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to);
+        Task<List<Departure>> CheckAvailability(List<Departure> Departures, int PassengersAmount);
         Task RegisterOrder(OrderInformation OrderInformation);
     }
 }

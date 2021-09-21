@@ -27,29 +27,25 @@ namespace Webapplication.DAL
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
         }
 
-        /*public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
+        public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int PassengersAmount) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
-            //add negative check as someone could bypass the check by adding negative amount of passsengers
 
-            List<Cruise> AvailableCruises = new List<Cruise>();
+            List<Departure> AvailableDepartures = new List<Departure>();
 
-            foreach (var Cruise in Cruises) //loop through 
+            foreach (var Departure in Departures)
             {
-                if (await CheckAvailability(Cruise, PassengersAmount, DepartureDate))
+                if (await CheckAvailability(Departure, PassengersAmount))
                 {
-                    AvailableCruises.Add(Cruise);
+                    AvailableDepartures.Add(Departure);
                 }
             }
 
-            return AvailableCruises;
-        }*/
+            return AvailableDepartures;
+        }
 
         private async Task<bool> CheckAvailability(Departure Departure, int PassengersAmount) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
         {
-            if (PassengersAmount < 0)// negativ antall pasasjerer er tull og defor returner false med en gang
-            {
-                return false;
-            }
+
             var AvailableSeats = Departure.Cruise.Max_Passengers;
 
             //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 

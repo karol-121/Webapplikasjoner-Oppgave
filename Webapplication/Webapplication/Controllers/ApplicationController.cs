@@ -25,42 +25,26 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
-        public async Task<List<Departure>> GetDepartures(string date) 
+        public async Task<List<Departure>> GetDepartures(int RouteId, string Date, int Passengers) 
         {
-            var a = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var b = a.AddDays(3);
+            //todo: validate passengers, return http response codes
 
-            var c = b.Subtract(a);
-
-            var d = a.Subtract(c);
-
-            Console.WriteLine(d.ToString());
-            Console.WriteLine(a.ToString());
-            Console.WriteLine(b.ToString());
-            
-            
-            //var from_date = DateTimeOffset.FromUnixTimeSeconds(timestamp).DateTime; //henter dato fra timestampen i parameteren
+            var Orginal_Date = DateTime.ParseExact(Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
+            var To_Date = Orginal_Date.AddDays(3); //lager max-dato verdi
+            var Interval = To_Date.Subtract(Orginal_Date); //danner et time span objekt som datetime trenger for å subtrakhere fra et gitt dato
+            var From_Date = Orginal_Date.Subtract(Interval); //lager min-dato verdi
 
             
-            return new List<Departure>(); //to calm the fuck out of the complier 
+            var Departures = await _Local_DB.GetDepartures(RouteId, From_Date, To_Date); //henter alle utreiser i gitt intervall 
+            return await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser
             
         }
-
-        /*public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
-        {
-            DateTime Date = new DateTime(Year, Month, Day); //Dette er ikke nødvendig, man kunne passere datetime objekt som parameter,
-                                                            //men jeg vil beholde denne metoden "get friendly" slik at ingen objekt skal inn
-
-            List<Cruise> FoundCruises = await _Local_DB.FindCruises(RouteId, Date); //henter alle mulige cruiser
-
-            return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, Date); //sjekker of forkaster disse cruiser som har ikke nok plass/plasser
-        }*/
 
         public async Task<ActionResult> RegisterOrder(OrderInformation OrderInformation)
         {
             try
             {
-                //her skal man validere informasjon som ligger inn i objektet OrderInformation
+                //her skal man validere informasjon som ligger inn i objektet OrderInformation, også passenger amount
                 await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
                 return Ok(); //returnere en ok http response status
                 
