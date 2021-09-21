@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Webapplication.Models;
 using Microsoft.EntityFrameworkCore;
 using Webapplication.DAL;
+using System.Globalization;
 
 namespace Webapplication.Controllers
 {
@@ -24,9 +25,24 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
-        public async Task<List<Departure>> GetDepartures() //skal hente alle mulige cruiser med bestemt route og dato som er ikke fulle i guess?
+        public async Task<List<Departure>> GetDepartures(string date) 
         {
-            throw new NotImplementedException();
+            var a = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            var b = a.AddDays(3);
+
+            var c = b.Subtract(a);
+
+            var d = a.Subtract(c);
+
+            Console.WriteLine(d.ToString());
+            Console.WriteLine(a.ToString());
+            Console.WriteLine(b.ToString());
+            
+            
+            //var from_date = DateTimeOffset.FromUnixTimeSeconds(timestamp).DateTime; //henter dato fra timestampen i parameteren
+
+            
+            return new List<Departure>(); //to calm the fuck out of the complier 
             
         }
 
