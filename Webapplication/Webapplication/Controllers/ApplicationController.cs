@@ -27,16 +27,18 @@ namespace Webapplication.Controllers
 
         public async Task<ActionResult<List<Departure>>> GetDepartures(int Route, string Date, int Passengers) 
         {
-            
-            
-            //det er ikke så viktig at man kan få tilgang til biletter som er full booked, du kan ikke bestille dem uansett siden det sjekkes før registrering
             try
             {
-                //todo, gjør slik at dersom date er gamlere enn dato i dag så set den til dagens dato.
                 var Orginal_Date = DateTime.ParseExact(Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
                 var To_Date = Orginal_Date.AddDays(3); //lager max-dato verdi
                 var Interval = To_Date.Subtract(Orginal_Date); //danner et time span objekt som datetime trenger for å subtrahere fra et gitt dato
                 var From_Date = Orginal_Date.Subtract(Interval); //lager min-dato verdi
+
+
+                if (From_Date.CompareTo(DateTime.Now) < 0) //dersom fra dato er eldre enn nåværende dato, endre den til nåværende dato, det er ikke vits å vise gamle utreiser.
+                {
+                    From_Date = DateTime.Now;
+                }
 
                 var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
                 return await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser

@@ -25,13 +25,15 @@ namespace Webapplication.DAL
 
         public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
+            //test for om date from er ikke gamlere enn nåtiden, dette er ikke kritisk men kan stanse data leak 
+
             //todo: order etter dato 
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
         }
 
         public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int Passengers) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
-            if (Passengers < 0)
+            if (Passengers < 1)
             {
                 throw new ArgumentOutOfRangeException("passenger amount is too low");
             }
@@ -49,7 +51,7 @@ namespace Webapplication.DAL
             return AvailableDepartures;
         }
 
-        private async Task<bool> CheckAvailability(Departure Departure, int PassengersAmount) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
+        private async Task<bool> CheckAvailability(Departure Departure, int Passengers) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
         {
 
             var AvailableSeats = Departure.Cruise.Max_Passengers;
@@ -57,7 +59,7 @@ namespace Webapplication.DAL
             //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
             var BookedSeats = await _DB.Orders.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
 
-            return BookedSeats + PassengersAmount <= AvailableSeats;
+            return BookedSeats + Passengers <= AvailableSeats;
             
         }
 
@@ -81,9 +83,19 @@ namespace Webapplication.DAL
                 throw new ArgumentException("Invalid departure id: departure not found.");
             }
 
-            //todo: hvis departure date er gamlere enn den som er idag, kast exception.
+            if (departure.Date.CompareTo(DateTime.Now) < 0)
+            {
+                throw new ArgumentOutOfRangeException("Invalid departure: This departure is older than present");
+            }
 
-            if (!await CheckAvailability(departure, OrderInformation.Passengers + OrderInformation.Passengers_Underage)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
+            int Passengers = OrderInformation.Passengers + OrderInformation.Passengers_Underage;
+
+            if (Passengers < 1)
+            {
+                throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 0");
+            }
+
+            if (!await CheckAvailability(departure, Passengers)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
             {
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
             }
