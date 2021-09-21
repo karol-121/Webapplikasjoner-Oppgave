@@ -81,6 +81,8 @@ namespace Webapplication.DAL
                 throw new ArgumentException("Invalid departure id: departure not found.");
             }
 
+            //todo: hvis departure date er gamlere enn den som er idag, kast exception.
+
             if (!await CheckAvailability(departure, OrderInformation.Passengers + OrderInformation.Passengers_Underage)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
             {
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");

@@ -32,6 +32,7 @@ namespace Webapplication.Controllers
             //det er ikke så viktig at man kan få tilgang til biletter som er full booked, du kan ikke bestille dem uansett siden det sjekkes før registrering
             try
             {
+                //todo, gjør slik at dersom date er gamlere enn dato i dag så set den til dagens dato.
                 var Orginal_Date = DateTime.ParseExact(Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
                 var To_Date = Orginal_Date.AddDays(3); //lager max-dato verdi
                 var Interval = To_Date.Subtract(Orginal_Date); //danner et time span objekt som datetime trenger for å subtrahere fra et gitt dato
@@ -57,7 +58,8 @@ namespace Webapplication.Controllers
             try
             {
                 await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
-                return Ok(); //returnere en ok http response status
+                return Ok("Ticket has been registered"); //returnere en ok http response status
+                
                 
             } 
             catch (Exception e)
