@@ -19,22 +19,28 @@ namespace Webapplication.DAL
 
         public async Task<List<Route>> GetRoutes() //henter alle ruter som fantes inn i databasen/systemet
         {
+            //todo: order etter departures alfabetisk
             return await _DB.Routes.ToListAsync();
         }
 
         public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
+            //todo: order etter dato 
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
         }
 
-        public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int PassengersAmount) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
+        public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int Passengers) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
+            if (Passengers < 0)
+            {
+                throw new ArgumentOutOfRangeException("passenger amount is too low");
+            }
 
             List<Departure> AvailableDepartures = new List<Departure>();
 
             foreach (var Departure in Departures)
             {
-                if (await CheckAvailability(Departure, PassengersAmount))
+                if (await CheckAvailability(Departure, Passengers))
                 {
                     AvailableDepartures.Add(Departure);
                 }
@@ -55,11 +61,6 @@ namespace Webapplication.DAL
             
         }
 
-        public async Task<Cruise> FindCruise(int CruiseId) //returnerer funnet cruise objekt etter cruise id
-        {
-            return await _DB.Cruises.FindAsync(CruiseId);
-        }
-
         public async Task<Departure> FindDeparture(int Departure_Id) //returnerer funnet schedule objekt etter schedule id
         {
             return await _DB.Departures.FindAsync(Departure_Id);
@@ -70,25 +71,8 @@ namespace Webapplication.DAL
             return await _DB.Posts.FindAsync(Zip_Code);
         }
 
-        public async Task RegisterPost(Post post) //Registrerer post objekt
-        {
-            _DB.Posts.Add(post);
-            await _DB.SaveChangesAsync();
-        }
-
-        public async Task RegisterCustomer(Customer customer) //Registrerer kunde
-        {
-            _DB.Customers.Add(customer);
-            await _DB.SaveChangesAsync();
-        }
-
         public async Task RegisterOrder(OrderInformation OrderInformation) //Registrerer order
         {
-
-            if (OrderInformation == null) //sjekker om order information objektet eksisterer
-            {
-                throw new ArgumentNullException("Invalid order information object: order information object is null.");
-            }
 
             Departure departure = await FindDeparture(OrderInformation.Departure_Id);
 
