@@ -19,29 +19,28 @@ namespace Webapplication.DAL
 
         public async Task<List<Route>> GetRoutes() //henter alle ruter som fantes inn i databasen/systemet
         {
-            //todo: order etter departures alfabetisk
-            return await _DB.Routes.ToListAsync();
+            return await _DB.Routes.OrderBy(r => r.Origin).ToListAsync();
         }
 
         public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
-            if (Date_from < DateTime.Today || Date_to < DateTime.Today)
+            if (Date_from < DateTime.Today || Date_to < DateTime.Today)// dersom det spørs om dato som har vært
             {
                 throw new ArgumentOutOfRangeException("date/dates can not be earlier than presents");
             }
 
-            if (Date_to < Date_from)
+            if (Date_to < Date_from) // dersom det spørs om intervallet som er negativ, noe som gir ikke mening
             {
-                throw new ArgumentException("the interval is null");
+                throw new ArgumentException("the interval is negative, which is not allowed");
             }
 
-            //todo: order etter dato 
-            return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
+            //den brude nå returnere listen etter dato men dette kan ikke virkelig sjekkes med data som er i databasen dersom de er allerede etter order.
+            return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).OrderBy(d => d.Date).ToListAsync();
         }
 
         public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int Passengers) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
         {
-            if (Passengers < 1)
+            if (Passengers < 1) //0 eller mindre personer er ikke tilgjengelig dersom dette kunne føre til bypassing sjekk (negativ antall ville subtrahere antall plasser som er booked)
             {
                 throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 1");
             }
@@ -88,7 +87,7 @@ namespace Webapplication.DAL
 
             if (departure == null)
             {
-                throw new ArgumentException("Invalid departure id: departure not found.");
+                throw new ArgumentException("Invalid departure id: Departure not found.");
             }
 
             if (departure.Date.CompareTo(DateTime.Now) < 0)
