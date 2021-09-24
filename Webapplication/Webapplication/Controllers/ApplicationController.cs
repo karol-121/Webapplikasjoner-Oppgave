@@ -30,15 +30,23 @@ namespace Webapplication.Controllers
             try
             {
                 var Orginal_Date = DateTime.ParseExact(Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
-                var To_Date = Orginal_Date.AddDays(3); //lager max-dato verdi
-                var Interval = To_Date.Subtract(Orginal_Date); //danner et time span objekt som datetime trenger for å subtrahere fra et gitt dato
-                var From_Date = Orginal_Date.Subtract(Interval); //lager min-dato verdi
+                
+                DateTime From_Date;
+                DateTime To_Date;
 
+                var a = Orginal_Date.Subtract(DateTime.Today); //assuming that the provided date is greater than presents, otherwise it may return negative numbers
 
-                if (From_Date.CompareTo(DateTime.Now) < 0) //dersom fra dato er eldre enn nåværende dato, endre den til nåværende dato, det er ikke vits å vise gamle utreiser.
+                if (a.Days > 4) //sjekkes om det er plass for å plassere gitt dato i midten av intervallet
                 {
-                    From_Date = DateTime.Now;
+                    To_Date = Orginal_Date.AddDays(3); //lager max-dato verdi
+                    var Interval = To_Date.Subtract(Orginal_Date); //danner et time span objekt som datetime trenger for å subtrahere fra et gitt dato
+                    From_Date = Orginal_Date.Subtract(Interval); //lager min-dato verdi
+                } else // ellers start intervalet fra dato i dag og vis neste 7 dager.
+                {
+                    From_Date = DateTime.Today;
+                    To_Date = From_Date.AddDays(7);
                 }
+                
 
                 var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
                 return await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser

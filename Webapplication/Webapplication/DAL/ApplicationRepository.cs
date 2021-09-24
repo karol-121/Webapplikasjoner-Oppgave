@@ -25,7 +25,7 @@ namespace Webapplication.DAL
 
         public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
-            //test for om date from er ikke gamlere enn nåtiden, dette er ikke kritisk men kan stanse data leak 
+            //todo: add check that will assume that dates are not earlier than presents
 
             //todo: order etter dato 
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
@@ -35,7 +35,7 @@ namespace Webapplication.DAL
         {
             if (Passengers < 1)
             {
-                throw new ArgumentOutOfRangeException("passenger amount is too low");
+                throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 1");
             }
 
             List<Departure> AvailableDepartures = new List<Departure>();
@@ -92,7 +92,7 @@ namespace Webapplication.DAL
 
             if (Passengers < 1)
             {
-                throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 0");
+                throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 1");
             }
 
             if (!await CheckAvailability(departure, Passengers)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
