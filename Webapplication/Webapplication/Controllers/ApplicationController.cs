@@ -25,28 +25,12 @@ namespace Webapplication.Controllers
             return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
         }
 
-        public async Task<ActionResult<List<Departure>>> GetDepartures(int Route, string Date, int Passengers) 
+        public async Task<ActionResult<List<Departure>>> GetDepartures(int Route, string From, string To, int Passengers) 
         {
             try
             {
-                var Orginal_Date = DateTime.ParseExact(Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
-                
-                DateTime From_Date;
-                DateTime To_Date;
-
-                var a = Orginal_Date.Subtract(DateTime.Today); //assuming that the provided date is greater than presents, otherwise it may return negative numbers
-
-                if (a.Days > 4) //sjekkes om det er plass for å plassere gitt dato i midten av intervallet
-                {
-                    To_Date = Orginal_Date.AddDays(3); //lager max-dato verdi
-                    var Interval = To_Date.Subtract(Orginal_Date); //danner et time span objekt som datetime trenger for å subtrahere fra et gitt dato
-                    From_Date = Orginal_Date.Subtract(Interval); //lager min-dato verdi
-                } else // ellers start intervalet fra dato i dag og vis neste 7 dager.
-                {
-                    From_Date = DateTime.Today;
-                    To_Date = From_Date.AddDays(7);
-                }
-                
+                var From_Date = DateTime.ParseExact(From, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
+                var To_Date = DateTime.ParseExact(To, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
 
                 var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
                 return await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser

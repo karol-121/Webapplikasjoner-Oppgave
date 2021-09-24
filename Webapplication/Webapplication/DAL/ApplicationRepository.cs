@@ -25,7 +25,15 @@ namespace Webapplication.DAL
 
         public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
-            //todo: add check that will assume that dates are not earlier than presents
+            if (Date_from < DateTime.Today || Date_to < DateTime.Today)
+            {
+                throw new ArgumentOutOfRangeException("date/dates can not be earlier than presents");
+            }
+
+            if (Date_to < Date_from)
+            {
+                throw new ArgumentException("the interval is null");
+            }
 
             //todo: order etter dato 
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).ToListAsync();
