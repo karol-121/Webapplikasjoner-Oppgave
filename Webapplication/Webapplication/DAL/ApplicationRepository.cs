@@ -75,6 +75,13 @@ namespace Webapplication.DAL
             return await _DB.Departures.FindAsync(Departure_Id);
         }
 
+
+        //summary: finner kunde etter alle attriubtter bortsatt av id (noe som er ikke viktig her), hvis det er flere like, så returneres det den første.
+        public async Task<Customer> FindCustomer(Customer customer) 
+        {
+            return await _DB.Customers.Where(c => c.Name == customer.Name && c.Surname == customer.Surname && c.Age == customer.Age && c.Address == customer.Address && c.Post == customer.Post && c.Phone == customer.Phone && c.Email == customer.Email).FirstOrDefaultAsync();
+        }
+
         public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
         {
             return await _DB.Posts.FindAsync(Zip_Code);
@@ -85,19 +92,19 @@ namespace Webapplication.DAL
 
             Departure departure = await FindDeparture(OrderInformation.Departure_Id);
 
-            if (departure == null)
+            if (departure == null) //sjekkes om utreise som det kjøpes bilett for faktisk eksisterer.
             {
                 throw new ArgumentException("Invalid departure id: Departure not found.");
             }
 
-            if (departure.Date.CompareTo(DateTime.Now) < 0)
+            if (departure.Date.CompareTo(DateTime.Now) < 0) // sjekkes om det kjøpes ikke bilett for et reise som har skjedd.
             {
                 throw new ArgumentOutOfRangeException("Invalid departure: This departure is older than present");
             }
 
             int Passengers = OrderInformation.Passengers + OrderInformation.Passengers_Underage;
 
-            if (Passengers < 1)
+            if (Passengers < 1) //sjekkes for negative antall personer, dette må gjøres her igjen dersom herfra akseseres det kun privat hjelpe metode "checkAvailability"
             {
                 throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 1");
             }
@@ -114,23 +121,28 @@ namespace Webapplication.DAL
                 post = new Post
                 {
                     Zip_Code = OrderInformation.Zip_Code,
-                    City = OrderInformation.City
+                    City = OrderInformation.City.ToUpper()
                 };
                 
             }
 
             Customer customer = new Customer 
             {
-                Name = OrderInformation.Name,
-                Surname = OrderInformation.Surname,
+                Name = OrderInformation.Name.ToUpper(),
+                Surname = OrderInformation.Surname.ToUpper(),
                 Age = OrderInformation.Age,
-                Address = OrderInformation.Address,
+                Address = OrderInformation.Address.ToUpper(),
                 Post = post,
-                Phone = OrderInformation.Phone,
-                Email = OrderInformation.Email
+                Phone = OrderInformation.Phone.ToUpper(),
+                Email = OrderInformation.Email.ToUpper()
             };
 
-            //todo: check if this customer allready exist, search after this specific object, if it is found, then use it.
+            var customer_duplicate = await FindCustomer(customer);
+
+            if (customer_duplicate != null) //hvis det finnes en lik customer fra før, bruk den istedenfor å lagre et nytt.
+            {
+                customer = customer_duplicate;
+            }
 
             Order order = new Order
             {
