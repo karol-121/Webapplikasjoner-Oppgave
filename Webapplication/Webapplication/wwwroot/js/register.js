@@ -3,6 +3,7 @@
 });
 
 
+
 function registerOrder() {
 
     const OrderInformation = {
@@ -28,8 +29,18 @@ function registerOrder() {
         alert("error!")
     });
 
+    
+
+
 }
 
+
+
+
+
+const a = new DateInterval(4);
+console.log(a.getStartInterval());
+console.log(a.getEndInterval());
 
 
 
