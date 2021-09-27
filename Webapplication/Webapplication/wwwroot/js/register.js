@@ -37,10 +37,10 @@ function registerOrder() {
 
 
 
+//this is only some debugging/testing, will be deleted later
+const a = new Date(2021, 8, 1); //months are 0 indexed
+console.log(DateInterval.toApiDateString(a));
 
-const a = new DateInterval(4);
-console.log(a.getStartInterval());
-console.log(a.getEndInterval());
 
 
 
