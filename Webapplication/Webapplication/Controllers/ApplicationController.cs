@@ -24,24 +24,30 @@ namespace Webapplication.Controllers
             _Local_Log = logger;
         }
 
-        public async Task<List<Route>> GetRoutes()
+        public async Task<ActionResult> GetRoutes()
         {
+            var Routes = await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
             _Local_Log.LogInformation("Requested routes");
-            return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
+            return Ok(Routes);
         }
 
-        public async Task<ActionResult<List<Departure>>> GetDepartures(int Route, string From, string To, int Passengers) 
+        public async Task<ActionResult> GetDepartures(int Route, string From, string To, int Passengers) 
         {
             try
             {
                 var From_Date = DateTime.ParseExact(From, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
                 var To_Date = DateTime.ParseExact(To, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
 
-                var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
-                _Local_Log.LogInformation("Requested departures");
-                return await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser
+                Console.WriteLine(From_Date);
+                Console.WriteLine(To_Date);
 
-            } catch (Exception e)
+                var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
+                var AvailableDep = await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser
+                
+                _Local_Log.LogInformation("Requested departures");
+                return Ok(AvailableDep); 
+            } 
+            catch (Exception e)
             {
                 _Local_Log.LogError(e.Message);
                 return BadRequest(e.Message);
@@ -62,22 +68,13 @@ namespace Webapplication.Controllers
                 await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
                 _Local_Log.LogInformation("Order has been registered");
                 return Ok("Ticket has been registered"); //returnere en ok http response status
-                
-                
             } 
             catch (Exception e)
             {
                 // dersom det er noe feil ved registrering, kastes det exception som fanges her.
                 _Local_Log.LogError(e.Message);
                 return BadRequest(e.Message); // returnere en error http response med excepton melding.
-
             }
-
-            
         }
-
-        
-
-
     }
 }

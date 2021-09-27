@@ -17,14 +17,19 @@ namespace Webapplication.DAL
             _DB = DB;
         }
 
-        public async Task<List<Route>> GetRoutes() //henter alle ruter som fantes inn i databasen/systemet
+        //summary: henter alle ruter sortert alfabetisk etter utreise by.
+        //returns: sortert liste med rute objekter.
+        public async Task<List<Route>> GetRoutes() 
         {
             return await _DB.Routes.OrderBy(r => r.Origin).ToListAsync();
         }
 
+        //summary: henter alle utreiser for bestemt route i gitt intervall inklusivt sortert etter utreise dato.
+        //parameters: int Route_Id - id for route, DateTime Date_from - fra og med dato, DateTime Date_to - til og med dato.
+        //returns: sortert liste med departure objekter som oppfyller krav.
         public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
-            if (Date_from < DateTime.Today || Date_to < DateTime.Today)// dersom det spørs om dato som har vært
+            if (Date_from < DateTime.Today || Date_to < DateTime.Today) // dersom det spørs om dato som har vært
             {
                 throw new ArgumentOutOfRangeException("date/dates can not be earlier than presents");
             }
@@ -34,11 +39,14 @@ namespace Webapplication.DAL
                 throw new ArgumentException("the interval is negative, which is not allowed");
             }
 
-            //den brude nå returnere listen etter dato men dette kan ikke virkelig sjekkes med data som er i databasen dersom de er allerede etter order.
-            return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date <= Date_to).OrderBy(d => d.Date).ToListAsync();
+            //tocheck: den brude nå returnere listen etter dato men dette kan ikke virkelig sjekkes med data som er i databasen dersom de er allerede etter order.
+            return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date < Date_to.AddDays(1)).OrderBy(d => d.Date).ToListAsync();
         }
 
-        public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int Passengers) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
+        //summary: sjekker tilgjenglihet for hver departure i listen og returnerer kun de som har plass for gitt antall personer.
+        //parameters: List<Departure> Departures - liste med departure objekter som skal sjekkes, int Passengers - antall personer som det skal sjekkes plass for.
+        //returns: liste med departure objekter som oppfyller krav.
+        public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int Passengers) 
         {
             if (Passengers < 1) //0 eller mindre personer er ikke tilgjengelig dersom dette kunne føre til bypassing sjekk (negativ antall ville subtrahere antall plasser som er booked)
             {
@@ -58,7 +66,10 @@ namespace Webapplication.DAL
             return AvailableDepartures;
         }
 
-        private async Task<bool> CheckAvailability(Departure Departure, int Passengers) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
+        //summary: hjelpe metode for CheckAvailability som sjekker tilgjenglighet for et departure objekt.
+        //parameters: Departure Departure - departure objekt som skal sjekkes, int Passengers - antall personer som det skal sjekkes plass for.
+        //returns: bool; true - hvis det er plass, false - hvis det er ikke plass.
+        private async Task<bool> CheckAvailability(Departure Departure, int Passengers)
         {
 
             var AvailableSeats = Departure.Cruise.Max_Passengers;
@@ -70,23 +81,33 @@ namespace Webapplication.DAL
             
         }
 
-        public async Task<Departure> FindDeparture(int Departure_Id) //returnerer funnet schedule objekt etter schedule id
+        //summary: finner departure objekt etter dens id.
+        //parameters: int Departure_Id - id for departure objekt som skal finnes.
+        //returns: departure objekt, null - hvis objektet ble ikke funnet.
+        public async Task<Departure> FindDeparture(int Departure_Id)
         {
             return await _DB.Departures.FindAsync(Departure_Id);
         }
 
 
-        //summary: finner kunde etter alle attriubtter bortsatt av id (noe som er ikke viktig her), hvis det er flere like, så returneres det den første.
+        //summary: finner kunde etter dens attriubtter ekskludert "id". Dersom det er flere samsvarende objekter, returners den første.
+        //parameters: Customer customer - kunde objekt som skal finnes
+        //returns: Customer objekt, null - hvis objektet ble ikke funnet.
         public async Task<Customer> FindCustomer(Customer customer) 
         {
             return await _DB.Customers.Where(c => c.Name == customer.Name && c.Surname == customer.Surname && c.Age == customer.Age && c.Address == customer.Address && c.Post == customer.Post && c.Phone == customer.Phone && c.Email == customer.Email).FirstOrDefaultAsync();
         }
 
+        //summary: finner post objekt etter postnummer
+        //parameters: string Zip_Code - postnummer som er postens primary key
+        //returns: Post objekt, null - hvis objektet ble ikke funnet.
         public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
         {
             return await _DB.Posts.FindAsync(Zip_Code);
         }
 
+        //summary: registrerer ordre med informasjon fra OrderInformation objektet
+        //parameters: OrderInformation OrderInformation - objektet som inneholder informasjon nødvendig for registrering
         public async Task RegisterOrder(OrderInformation OrderInformation) //Registrerer order
         {
 
