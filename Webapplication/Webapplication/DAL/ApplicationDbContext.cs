@@ -26,6 +26,8 @@ namespace Webapplication.DAL
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Departure> Departures { get; set; }
+
         
 
         

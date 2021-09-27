@@ -6,53 +6,80 @@ using System.Threading.Tasks;
 using Webapplication.Models;
 using Microsoft.EntityFrameworkCore;
 using Webapplication.DAL;
+using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace Webapplication.Controllers
 {
     [Route("API/[action]")]
     public class ApplicationController : ControllerBase
     {
-        private readonly IApplicationRepository _Local_DB;
+        private readonly IApplicationRepository _Local_DB; //database objekt
 
-        public ApplicationController(IApplicationRepository applicationRepository)
+        private ILogger<ApplicationController> _Local_Log; //log objekt
+        
+        public ApplicationController(IApplicationRepository applicationRepository, ILogger<ApplicationController> logger)
         {
             _Local_DB = applicationRepository;
+            _Local_Log = logger;
         }
 
-        public async Task<List<Route>> GetRoutes()
+        //summary: henter alle ruter som finnes
+        //returns: liste med rute objekter
+        public async Task<ActionResult> GetRoutes()
         {
-            return await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
+            var Routes = await _Local_DB.GetRoutes(); //henter alle ruter som finnes i databasen
+            _Local_Log.LogInformation("Requested routes."); //logge informasjon om forespørsel
+            return Ok(Routes); //returnere liste med http ok response status
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, int PassengerAmount, int Year, int Month, int Day) //her tenker jeg om endre dette til string
+        //summary: henter alle samsvarende departures bestemt av parameters
+        //parameters: int Route - bestemmer ruten til departures, string From - dato string i format yyyy-MM-dd som bestemmer fra og med dato,
+        //string To - dato string i format yyyy-MM-dd som bestemmer til og med dato, int Passengers - antall personer som det skal være plass for
+        //returns: liste med samsvarende departure objekter, http Bad request - dersom parameter/parameterene er invalid
+        public async Task<ActionResult> GetDepartures(int Route, string From, string To, int Passengers) 
         {
-            DateTime Date = new DateTime(Year, Month, Day); //Dette er ikke nødvendig, man kunne passere datetime objekt som parameter,
-                                                            //men jeg vil beholde denne metoden "get friendly" slik at ingen objekt skal inn
-
-            List<Cruise> FoundCruises = await _Local_DB.FindCruises(RouteId, Date); //henter alle mulige cruiser
-
-            return await _Local_DB.CheckAvailability(FoundCruises, PassengerAmount, Date); //sjekker of forkaster disse cruiser som har ikke nok plass/plasser
-        }
-
-        public async Task RegisterOrder(OrderInformation OrderInformation)
-        {
-            //her skal man validere informasjon som ligger inn i objektet OrderInformation
             try
             {
-                await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
+                var From_Date = DateTime.ParseExact(From, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
+                var To_Date = DateTime.ParseExact(To, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
+
+                var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
+                var AvailableDep = await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser
+                
+                _Local_Log.LogInformation("Requested departures for route "+Route+", from "+From_Date+" to "+To_Date+" for "+Passengers+" passenger(s)."); //logge informasjon om forespørsel
+                return Ok(AvailableDep); //returnere liste med http ok response status
             } 
             catch (Exception e)
             {
-                // dersom det er noe feil ved registrering, kastes det exception som fanges her.
-                // for nå skrives det kun meldig til consolen, men her skal det returneres en http kode, informasjon skal også tilbake til klienten.
-                Console.WriteLine(e.Message);
+                _Local_Log.LogError("Exception thrown while requesting departures: "+e.Message); //logge feilmelding
+                return BadRequest(e.Message); //returnere en http bad request response
             }
-
             
         }
 
-        
+        //summary: validerer informasjon og registrerer ordre
+        //parameters: OrderInformation OrderInformation - objekt som holder informasjon om ordre
+        //returns: http Ok - ved vellykket registrering, http Bad request - dersom informasjon er invalid
+        public async Task<ActionResult> RegisterOrder(OrderInformation OrderInformation)
+        {
+            if (!ModelState.IsValid) //sjekkes om data send inn har riktig format som er definert i modellen.
+            {
+                _Local_Log.LogError("Information for order register are of invalid type");
+                return BadRequest("Wrong information format"); //hvis de ikke er riktige, return med en bad request response
+            }
 
-
+            try
+            {
+                await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
+                _Local_Log.LogInformation("Order has been registered."); //logger informasjon om vellykket registrering
+                return Ok("Ticket has been registered"); //returnere en ok http response status
+            } 
+            catch (Exception e)
+            {
+                _Local_Log.LogError("Exception thrown while order registration: "+e.Message); //logge feilmelding
+                return BadRequest(e.Message); // returnere en error http response med excepton melding.
+            }
+        }
     }
 }

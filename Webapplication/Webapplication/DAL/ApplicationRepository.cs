@@ -17,99 +17,122 @@ namespace Webapplication.DAL
             _DB = DB;
         }
 
-        public async Task<List<Route>> GetRoutes() //henter alle ruter som fantes inn i databasen/systemet
+        //summary: henter alle ruter sortert alfabetisk etter utreise by.
+        //returns: sortert liste med rute objekter.
+        public async Task<List<Route>> GetRoutes() 
         {
-            return await _DB.Routes.ToListAsync();
+            return await _DB.Routes.OrderBy(r => r.Origin).ToListAsync();
         }
 
-        public async Task<List<Cruise>> FindCruises(int RouteId, DateTime Date) //finner cruiser på bestemt rute og uke dag (man antar at disse cruiser skjer hver uke derfor dato er ikke viktig her)
+        //summary: henter alle utreiser for bestemt route i gitt intervall inklusivt sortert etter utreise dato.
+        //parameters: int Route_Id - id for route, DateTime Date_from - fra og med dato, DateTime Date_to - til og med dato.
+        //returns: sortert liste med departure objekter som oppfyller krav.
+        public async Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to)
         {
-
-            return await _DB.Cruises.Where(c => c.Route.Id == RouteId && c.Departure_DayOfWeek == ((int)Date.DayOfWeek)).ToListAsync();
-        }
-
-        public async Task<List<Cruise>> CheckAvailability(List<Cruise> Cruises, int PassengersAmount, DateTime DepartureDate ) //sjekker tilgjengelighet for liste med utvalgte cruiser og forkaster disse som er fulle
-        {
-            //add negative check as someone could bypass the check by adding negative amount of passsengers
-
-            List<Cruise> AvailableCruises = new List<Cruise>();
-
-            foreach (var Cruise in Cruises) //loop through 
+            if (Date_from < DateTime.Today || Date_to < DateTime.Today) // dersom det spørs om dato som har vært
             {
-                if (await CheckAvailability(Cruise, PassengersAmount, DepartureDate))
+                throw new ArgumentOutOfRangeException("date/dates can not be earlier than presents");
+            }
+
+            if (Date_to < Date_from) // dersom det spørs om intervallet som er negativ, noe som gir ikke mening
+            {
+                throw new ArgumentException("the interval is negative, which is not allowed");
+            }
+
+            //tocheck: den brude nå returnere listen etter dato men dette kan ikke virkelig sjekkes med data som er i databasen dersom de er allerede etter order.
+            return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date < Date_to.AddDays(1)).OrderBy(d => d.Date).ToListAsync();
+        }
+
+        //summary: sjekker tilgjenglihet for hver departure i listen og returnerer kun de som har plass for gitt antall personer.
+        //parameters: List<Departure> Departures - liste med departure objekter som skal sjekkes, int Passengers - antall personer som det skal sjekkes plass for.
+        //returns: liste med departure objekter som oppfyller krav.
+        public async Task<List<Departure>> CheckAvailability(List<Departure> Departures, int Passengers) 
+        {
+            if (Passengers < 1) //0 eller mindre personer er ikke tilgjengelig dersom dette kunne føre til bypassing sjekk (negativ antall ville subtrahere antall plasser som er booked)
+            {
+                throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 1");
+            }
+
+            List<Departure> AvailableDepartures = new List<Departure>();
+
+            foreach (var Departure in Departures)
+            {
+                if (await CheckAvailability(Departure, Passengers))
                 {
-                    AvailableCruises.Add(Cruise);
+                    AvailableDepartures.Add(Departure);
                 }
             }
 
-            return AvailableCruises;
+            return AvailableDepartures;
         }
 
-        private async Task<bool> CheckAvailability(Cruise Cruise, int PassengersAmount, DateTime CruiseDate) //hjelpe metode som sjekker tilgjengelighet for bestemt cruise på bestemt dato
+        //summary: hjelpe metode for CheckAvailability som sjekker tilgjenglighet for et departure objekt.
+        //parameters: Departure Departure - departure objekt som skal sjekkes, int Passengers - antall personer som det skal sjekkes plass for.
+        //returns: bool; true - hvis det er plass, false - hvis det er ikke plass.
+        private async Task<bool> CheckAvailability(Departure Departure, int Passengers)
         {
-            var AvailableSeats = Cruise.Max_Passengers;
 
-            //first return list of orders on this specific cruise and this specific date. The amount of booked seats are calculated by suming total registered passengers and underage passengers
-            var BookedSeats = await _DB.Orders.Where(o => o.Cruise == Cruise && o.Cruise_Date == CruiseDate).SumAsync(o => o.Passengers + o.Passenger_Underage);
+            var AvailableSeats = Departure.Cruise.Max_Passengers;
 
-            return BookedSeats + PassengersAmount <= AvailableSeats;
+            //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
+            var BookedSeats = await _DB.Orders.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
+
+            return BookedSeats + Passengers <= AvailableSeats;
             
         }
 
-        public async Task<Cruise> FindCruise(int CruiseId) //returnerer funnet cruise objekt etter cruise id
+        //summary: finner departure objekt etter dens id.
+        //parameters: int Departure_Id - id for departure objekt som skal finnes.
+        //returns: departure objekt, null - hvis objektet ble ikke funnet.
+        public async Task<Departure> FindDeparture(int Departure_Id)
         {
-            return await _DB.Cruises.FindAsync(CruiseId);
+            return await _DB.Departures.FindAsync(Departure_Id);
         }
 
+
+        //summary: finner kunde etter dens attriubtter ekskludert "id". Dersom det er flere samsvarende objekter, returners den første.
+        //parameters: Customer customer - kunde objekt som skal finnes
+        //returns: Customer objekt, null - hvis objektet ble ikke funnet.
+        public async Task<Customer> FindCustomer(Customer customer) 
+        {
+            return await _DB.Customers.Where(c => c.Name == customer.Name && c.Surname == customer.Surname && c.Age == customer.Age && c.Address == customer.Address && c.Post == customer.Post && c.Phone == customer.Phone && c.Email == customer.Email).FirstOrDefaultAsync();
+        }
+
+        //summary: finner post objekt etter postnummer
+        //parameters: string Zip_Code - postnummer som er postens primary key
+        //returns: Post objekt, null - hvis objektet ble ikke funnet.
         public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
         {
             return await _DB.Posts.FindAsync(Zip_Code);
         }
 
-        public async Task RegisterPost(Post post) //Registrerer post objekt
-        {
-            _DB.Posts.Add(post);
-            await _DB.SaveChangesAsync();
-        }
-
-        public async Task<Customer> FindCustomer(Customer customer) //vet ikke om dette er nødvendig
-        {
-            return await _DB.Customers.FindAsync(customer);
-        }
-
-        public async Task RegisterCustomer(Customer customer) //Registrerer kunde
-        {
-            _DB.Customers.Add(customer);
-            await _DB.SaveChangesAsync();
-        }
-
+        //summary: registrerer ordre med informasjon fra OrderInformation objektet
+        //parameters: OrderInformation OrderInformation - objektet som inneholder informasjon nødvendig for registrering
         public async Task RegisterOrder(OrderInformation OrderInformation) //Registrerer order
         {
 
-            if (OrderInformation == null) //sjekker om order information objektet eksisterer
+            Departure departure = await FindDeparture(OrderInformation.Departure_Id);
+
+            if (departure == null) //sjekkes om utreise som det kjøpes bilett for faktisk eksisterer.
             {
-                throw new ArgumentNullException("Object with order information is not found.");
-            } 
-
-            
-            DateTime Cruise_Date = DateTime.ParseExact(OrderInformation.Cruise_Date, "yyyy-MM-dd", CultureInfo.InvariantCulture); //konverterer streng fra klient objekt til en datetime objekt
-
-            Cruise cruise = await FindCruise(OrderInformation.Cruise_Id); //søk etter gitt cruise
-            //here maybe add the proper hour and minute so it is right with the departure time set in cruise 
-
-            if (cruise == null) //dersom cruise ble ikke funnet, kast exception
-            {
-                throw new ArgumentException("Illegal cruise id.");
+                throw new ArgumentException("Invalid departure id: Departure not found.");
             }
 
-            if (!await CheckAvailability(cruise, OrderInformation.Passengers + OrderInformation.Passenger_Underage, Cruise_Date)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
+            if (departure.Date.CompareTo(DateTime.Now) < 0) // sjekkes om det kjøpes ikke bilett for et reise som har skjedd.
+            {
+                throw new ArgumentOutOfRangeException("Invalid departure: This departure is older than present");
+            }
+
+            int Passengers = OrderInformation.Passengers + OrderInformation.Passengers_Underage;
+
+            if (Passengers < 1) //sjekkes for negative antall personer, dette må gjøres her igjen dersom herfra akseseres det kun privat hjelpe metode "checkAvailability"
+            {
+                throw new ArgumentOutOfRangeException("Amount of passengers can not be lower than 1");
+            }
+
+            if (!await CheckAvailability(departure, Passengers)) //sjekker tilgjenglighet igjen dersom antall fri plass kunne bli endret underveis
             {
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
-            }
-
-            if (cruise.Departure_DayOfWeek != ((int)Cruise_Date.DayOfWeek)) //sjekker integritet mellom valgt cruise dato og dagene gitt cruise går.
-            {
-                throw new ArgumentException("The provided cruise date is invalid for choosen cruise.");
             }
 
             Post post = await FindPost(OrderInformation.Zip_Code); //søk etter gitt postnummer 
@@ -119,37 +142,39 @@ namespace Webapplication.DAL
                 post = new Post
                 {
                     Zip_Code = OrderInformation.Zip_Code,
-                    City = OrderInformation.City
+                    City = OrderInformation.City.ToUpper()
                 };
                 
             }
 
             Customer customer = new Customer 
             {
-                Name = OrderInformation.Name,
-                Surname = OrderInformation.Surname,
+                Name = OrderInformation.Name.ToUpper(),
+                Surname = OrderInformation.Surname.ToUpper(),
                 Age = OrderInformation.Age,
-                Address = OrderInformation.Address,
+                Address = OrderInformation.Address.ToUpper(),
                 Post = post,
-                Phone = OrderInformation.Phone,
-                Email = OrderInformation.Email
+                Phone = OrderInformation.Phone.ToUpper(),
+                Email = OrderInformation.Email.ToUpper()
             };
 
-            //todo? check if this customer allready exist, search after this specific object, if it is found, then use it.
+            var customer_duplicate = await FindCustomer(customer);
+
+            if (customer_duplicate != null) //hvis det finnes en lik customer fra før, bruk den istedenfor å lagre et nytt.
+            {
+                customer = customer_duplicate;
+            }
 
             Order order = new Order
             {
                 Order_Date = DateTime.Now,
                 Customer = customer,
-                Cruise = cruise,
-                Cruise_Date = Cruise_Date,
+                Departure = departure,
                 Passengers = OrderInformation.Passengers,
-                Passenger_Underage = OrderInformation.Passenger_Underage,
+                Passengers_Underage = OrderInformation.Passengers_Underage,
                 Pets = OrderInformation.Pets,
                 Vehicles = OrderInformation.Vehicles
             };
-
-            //todo? check if this order allready exist, search after this specific object, if it is found, then use it.
 
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
