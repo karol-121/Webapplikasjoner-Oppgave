@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <title>register-proto</title>
     <script src="js/utilities.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -9,45 +10,72 @@
 </head>
 <body>
     <form onsubmit="return false">
-        <label for="name">name:</label>
-        <input id="name" type="text" />
-        <br />
-        <label for="surname">surname:</label>
-        <input id="surname" type="text" />
-        <br />
-        <label for="age">age:</label>
-        <input id="age" type="number" />
-        <br />
-        <label for="address">address:</label>
-        <input id="address" type="text" />
-        <br />
-        <label for="zip">zipcode:</label>
-        <input id="zip" type="number" />
-        <br />
-        <label for="city">city:</label>
-        <input id="city" type="text" />
-        <br />
-        <label for="phone">phone:</label>
-        <input id="phone" type="tel" />
-        <br />
-        <label for="email">email:</label>
-        <input id="email" type="email" />
-        <br />
-        <label for="dep">departure:</label>
-        <input id="dep" type="number" />
-        <br />
-        <label for="adults">adults:</label>
-        <input id="adults" type="number" />
-        <br />
-        <label for="underage">children:</label>
-        <input id="underage" type="number" />
-        <br />
-        <label for="pets">pets:</label>
-        <input id="pets" type="number" />
-        <br />
-        <label for="vehicles">vehicles:</label>
-        <input id="vehicles" type="number" />
-        <br />
+        <div class="form-group">
+            <label for="name">name:</label>
+            <input id="name" type="text" />
+        </div>
+        
+        <div class="form-group">
+            <label for="surname">surname:</label>
+            <input id="surname" type="text" />
+        </div>
+        
+        <div class="form-group">
+            <label for="age">age:</label>
+            <input id="age" type="number" />
+        </div>
+        
+        <div class="form-group">
+            <label for="address">address:</label>
+            <input id="address" type="text" />
+        </div>
+        
+        <div class="form-group">
+            <label for="zip">zipcode:</label>
+            <input id="zip" type="number" />
+        </div>
+        
+        <div class="form-group">
+            <label for="city">city:</label>
+            <input id="city" type="text" />
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">phone:</label>
+            <input id="phone" type="tel" />
+        </div>
+        
+        <div class="form-group">
+            <label for="email">email:</label>
+            <input id="email" type="email" />
+        </div>
+        
+        <div class="form-group">
+            <label for="dep">departure:</label>
+            <input id="dep" type="number" />
+        </div>
+        
+        <div class="form-group">
+            <label for="adults">adults:</label>
+            <input id="adults" type="number" />
+        </div>
+        
+        <div class="form-group">
+            <label for="underage">children:</label>
+            <input id="underage" type="number" />
+        </div>
+        
+        <div class="form-group">
+            <label for="pets">pets:</label>
+            <input id="pets" type="number" />
+        </div>
+        
+        <div class="form-group">
+            <label for="vehicles">vehicles:</label>
+            <input id="vehicles" type="number" />
+        </div>
+        
+ 
         <input type="submit" value="enter" onclick="registerOrder()" />
     </form>
 
