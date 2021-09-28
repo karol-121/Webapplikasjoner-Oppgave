@@ -1,69 +1,71 @@
-﻿//this class contains logic to determine the start and end interval based on one date.
+﻿//summary: Objekt som genererer fra og til dato basert på inn dato og har noen statiske hjelpe metoder.
+//Interval skal være 7 dager lang med start dato 3 dager før inn dato og slutt dato 3 dager etter inn dato.
+//dersom inn dato er tidligere enn 3 dager fra dagens dato, skal intervalen starte fra dagens dato og slutte 7 dager etter.
 class DateInterval {
-    #x = new Date();
-    #y; //start date
-    #z; //end date
-    #a = 604800000; //7 days represented in miliseconds
-    #b = 259200000; //3 days represented in miliseconds
+    #nowDate = new Date();
+    #startInterval;
+    #endInterval; 
+    #maxInterval = 604800000; //7 dager representert i millisekunder
+    #intervalOffset = 259200000; //3 dager representer i millisekunder
 
-    constructor(y) {
+    constructor(requestDate) {
 
-        this.#x.setHours(0, 0, 0, 0); //restet time
-        if (y.getTime() - this.#x.getTime() > this.#b) {
+        this.#nowDate.setHours(0, 0, 0, 0); //nullstiller tid for nå-dato for å ekskludere det som en variabel ved videre kalkulasjoner.
 
-            //if difference between today and given date is more than 3 days
-            this.#y = new Date(y.getTime() - this.#b); //start interval 3 days before given date
-            this.#z = new Date(y.getTime() + this.#b); //end interval 3 day later given date
+        //hvis forskjellen mellom nå-dato og inn-dato er større enn 3 dager.
+        if (requestDate.getTime() - this.#nowDate.getTime() > this.#intervalOffset) {
 
-            console.log("difference is more than 3 days");
-            
+            this.#startInterval = new Date(requestDate.getTime() - this.#intervalOffset); //start-intervall = 3 dager før inn-dato
+            this.#endInterval = new Date(requestDate.getTime() + this.#intervalOffset); //slutt-intervall = 3 dager etter inn-dato
 
         } else {
 
-            //if difference between today and given date is less than 3 days
-            this.#y = new Date(this.#x.getTime()); //start interval on current date
-            this.#z = new Date(this.#x.getTime() + this.#a); //end interval 7 days later.
-
-            console.log("difference is less than 3 days");
+            //hvis forskjellen mellom nå-dato og inn-dato er mindre enn 3 dager.
+            this.#startInterval = new Date(this.#nowDate.getTime()); //start-intervall = nå-dato
+            this.#endInterval = new Date(this.#nowDate.getTime() + this.#maxInterval); //slutt-intervall = 7 dager etter nå-dato
 
         }
     }
 
+    //summary: metode som returnerer beregnet start intervall dato
+    //returns: Date objekt
     getStartInterval() {
-        //return start date
-        return this.#y;
+        return this.#startInterval;
     }
 
+    //summary: metode som returnerer beregnet slutt intervall dato
+    //returns: Date objekt
     getEndInterval() {
-        //return end date
-        return this.#z;
+        return this.#endInterval;
     }
 
-    static toApiDateString(f) {
-        //TODO: here is some kind of error that exist.
+    //summary: metode som konverterer dato objekt til string i format "yyyy-mm-dd" som api ønsker.
+    //returns: string med fomatert dato
+    static toApiDateString(dateObject) {
 
-        //convert and return date object to date string that api likes
-        let h = f.getDay();
-        let g = f.getMonth() + 1;
+        let day = dateObject.getDate();
+        let month = dateObject.getMonth() + 1; //konvertering til 1-indeks månder (1 = januar)
 
-        if (h < 10) { // if day is lover than 10, append 0 to convert it to 2 digit
-            h = "0" + h;
+        //konvertering til 2-digit dag verdi, nødvendig for formatering
+        if (day < 10) { 
+            day = "0" + day;
         }
 
-        if (g < 10) { // if month is lower than 10, append 0 to convert it to 2 digit
-            g = "0" + g;
+        //konvertering til 2-digit måned verdi, nødvendig for formatering
+        if (month < 10) {
+            month = "0" + month;
         }
 
-        return f.getFullYear() + "-" + g + "-" + h;
+        return dateObject.getFullYear() + "-" + month + "-" + day;
     }
 
-    //function that should convert date in string format yyyy-mm-dd and return an date object
-    static parseDate(a) {
-        //maybe regex check the a parameter, it should be a string.
+    //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
+    //returns: Date objekt.
+    static parseDate(dateString) {
 
-        const year = Number(a.substring(0, 4));
-        const month = Number(a.substring(5, 7)) -1;
-        const day = Number(a.substring(8, 10));
+        const year = Number(dateString.substring(0, 4));
+        const month = Number(dateString.substring(5, 7)) -1; //konvertering til 0-indeks månder (0 = januar)
+        const day = Number(dateString.substring(8, 10));
 
         return new Date(year, month, day);
     }
