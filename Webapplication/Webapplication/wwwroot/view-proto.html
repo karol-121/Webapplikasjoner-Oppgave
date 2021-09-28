@@ -19,7 +19,9 @@
             <form onsubmit="return false">
                 <div class="form-group">
                     <label for="route">Route Id:</label>
-                    <input id="route" type="number" />
+                    <select id="route">
+                        <!--options will be added by js.-->
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="date">Date:</label>
@@ -35,11 +37,24 @@
             </form>
         </div>
         <div class="row">
+            <h3 id="timetable-header"></h3>
             <!-- table that showes the departures goes here -->
             
-            <table class="table table-bordered">
-                <tr id="timetable-head">
-                </tr>
+            <table class="table table-bordered" >
+                <tbody id="timetable">
+                    <tr><th>29.09.2021</th><th></th></tr>
+                    <tr><td>10:00</td><td>345</td></tr>
+                    <tr><td>19:00</td><td>355</td></tr>
+                    <tr><th>01.10.2021</th></tr>
+                    <tr><td>09:00</td><td>289</td></tr>
+                    <tr><th>03.10.2021</th></tr>
+                    <tr><td>08:00</td><td>287</td></tr>
+                    <tr><td>15:00</td><td>347</td></tr>
+
+
+                </tbody>
+                
+
             </table>
         </div>
     </div>
