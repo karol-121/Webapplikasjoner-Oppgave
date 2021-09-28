@@ -40,6 +40,8 @@ class DateInterval {
     }
 
     static toApiDateString(f) {
+        //TODO: here is some kind of error that exist.
+
         //convert and return date object to date string that api likes
         let h = f.getDay();
         let g = f.getMonth() + 1;
@@ -53,5 +55,16 @@ class DateInterval {
         }
 
         return f.getFullYear() + "-" + g + "-" + h;
+    }
+
+    //function that should convert date in string format yyyy-mm-dd and return an date object
+    static parseDate(a) {
+        //maybe regex check the a parameter, it should be a string.
+
+        const year = Number(a.substring(0, 4));
+        const month = Number(a.substring(5, 7)) -1;
+        const day = Number(a.substring(8, 10));
+
+        return new Date(year, month, day);
     }
 }
