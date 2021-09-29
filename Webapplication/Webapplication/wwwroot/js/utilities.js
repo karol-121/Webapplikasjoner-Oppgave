@@ -48,11 +48,10 @@ class DateUtilities {
 
     }
 
-    //todo: make help method so these two methods under do not have to extract date themselvs
-
-    //summary: metode som konverterer dato objekt til string i format "yyyy-mm-dd" som api ønsker.
-    //returns: string med fomatert dato
-    static toApiDateString(dateObject) {
+    //summary: metode som tar dag, måned og år verdi ut av et date objekt
+    //parameters: Date dateObject - dato objekt hvorfra verdiene skal tas ut
+    //returs: array med dag, måned og år verdi 
+    static #disassembleDateObject(dateObject) {
 
         let day = dateObject.getDate();
         let month = dateObject.getMonth() + 1; //konvertering til 1-indeks månder (1 = januar)
@@ -68,28 +67,25 @@ class DateUtilities {
             month = "0" + month;
         }
 
-        return year + "-" + month + "-" + day; //return attributer i ønskende format
+        return [day, month, year];
+    }
+
+    //summary: metode som konverterer dato objekt til string i format "yyyy-mm-dd" som api ønsker.
+    //returns: string med fomatert dato
+    static toApiDateString(dateObject) {
+
+        const date = this.#disassembleDateObject(dateObject);
+
+        return date[2] + "-" + date[1] + "-" + date[0]; //return attributer i ønskende format
     }
 
     //summary: metode som konverterer dato objekt til string i format "dd.mm.yyyy" som er vanlig lokal tid notasjon.
     //returns: string med fomatert dato
     static toLocalDateString(dateObject) {
 
-        let day = dateObject.getDate();
-        let month = dateObject.getMonth() + 1; //konvertering til 1-indeks månder (1 = januar)
-        const year = dateObject.getFullYear()
+        const date = this.#disassembleDateObject(dateObject);
 
-        //konvertering til 2-digit dag verdi, nødvendig for formatering
-        if (day < 10) {
-            day = "0" + day;
-        }
-
-        //konvertering til 2-digit måned verdi, nødvendig for formatering
-        if (month < 10) {
-            month = "0" + month;
-        }
-
-        return day + "." + month + "." + year //return attributer i ønskende format
+        return date[0] + "." + date[1] + "." + date[2] //return attributer i ønskende format
     }
 
 
@@ -109,6 +105,7 @@ class DateUtilities {
     //parameters: String dateString - dato i json "yyyy-mm-ddThh:MM:ss" streng format
     //returns: String med dato i format "dd.mm.yyyy HH:MM"
     static isoToLocalDateString(dateString) {
+
         const day = dateString.substring(8, 10);
         const month = dateString.substring(5, 7);
         const year = dateString.substring(0, 4);
