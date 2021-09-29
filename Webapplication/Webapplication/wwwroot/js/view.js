@@ -1,8 +1,14 @@
-﻿$(function () {
-    //dette er jquery funksjonen som kjøres med en gang siden loader, holder den for å ikke glemme syntaksen
+﻿let tourType; //variable thats hold value of tour type, one way or two way
+
+
+//function that runs by default
+$(function () {
+    
     fetchRoutes();
+    updateType();
 });
 
+//function that gets and populates the dropdown with routes 
 function fetchRoutes() {
     const url = "API/GetRoutes";
     $.get(url, function (data) {
@@ -20,28 +26,43 @@ function fetchRoutes() {
     })
 }
 
+//funtcion that updates the disabled, enabled return date based on tour type
+function updateType() {
+    tourType = $("#type").val();
 
+    if (tourType == 0) {
+        $("#date2").prop('disabled', true);
+    } else {
+        $("#date2").prop('disabled', false);
+    }
+    
+    
+}
+
+
+//function that shows all departures 
 function show() {
 
-    //this function shall fetch data from server and show it.
     const route = $("#route").val();
     const day = $("#date").val();
     const passengers = $("#passengers").val();
 
-    const b = new DateInterval(DateInterval.parseDate(day));
+    new DateUtilities();// oppretter objekt fra classen slik at den er defined
+
+    const b = new DateInterval(DateUtilities.parseDate(day));
     
     //url som henter utreiser.
-    const url = "API/GetDepartures?Route=" + route + "&From=" + DateInterval.toApiDateString(b.getStartInterval()) +
-        "&To=" + DateInterval.toApiDateString(b.getEndInterval()) + "&Passengers=" + passengers;
+    const url = "API/GetDepartures?Route=" + route + "&From=" + DateUtilities.toApiDateString(b.getStartInterval()) +
+        "&To=" + DateUtilities.toApiDateString(b.getEndInterval()) + "&Passengers=" + passengers;
 
     $.get(url, function (data) {
 
-        const header = DateInterval.toApiDateString(b.getStartInterval()) + " - " + DateInterval.toApiDateString(b.getEndInterval());
+        const header = "Utreise " + DateUtilities.toApiDateString(b.getStartInterval()) + " - " + DateUtilities.toApiDateString(b.getEndInterval());
         $("#timetable-header").html(header);
 
-        let tableContent = "<tr><th>date:</th><th>price:</th><th></th></tr>";
+        let tableContent = "<tr><th>dato:</th><th>pris</th><th></th></tr>";
         for (let t of data) {
-            tableContent += "<tr><td>" + t.date + "</td><td>" + t.cruise.passeger_Price + "</td><td><a href='index.html'>velg</a></td</tr>";
+            tableContent += "<tr><td>" + t.date + "</td><td>" + t.cruise.passeger_Price + "</td><td><a href='index.html'> velg</a></td</tr>";
         }
         $("#timetable").html(tableContent);
 
@@ -51,7 +72,13 @@ function show() {
 }
 
 
-//proto function that prints table header dates from interval.
+
+
+
+
+
+
+//proto function that prints table header dates from interval, probably will not be used
 function a(startdate) {
     let c = new String();
     let b = startdate;

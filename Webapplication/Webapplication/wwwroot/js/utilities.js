@@ -1,4 +1,4 @@
-﻿//summary: Objekt som genererer fra og til dato basert på inn dato og har noen statiske hjelpe metoder.
+﻿//summary: Objekt som genererer fra og til dato basert på inn dato.
 //Interval skal være 7 dager lang med start dato 3 dager før inn dato og slutt dato 3 dager etter inn dato.
 //dersom inn dato er tidligere enn 3 dager fra dagens dato, skal intervalen starte fra dagens dato og slutte 7 dager etter.
 class DateInterval {
@@ -38,25 +38,61 @@ class DateInterval {
     getEndInterval() {
         return this.#endInterval;
     }
+}
+
+//summary: Objekt som har statiske hjelpe metoder som konverterer dato objekter og strenger til ulike formater
+class DateUtilities {
+    static #day;
+    static #month;
+    static #year;
+
+    static #hour;
+    static #minute;
+
+    constructor() {
+
+    }
+
+    //summary: Hjelpe metode som tar imot date objekt og tar ut dens attributer og lagrer dem som eksterne attributer slik at andre metoder kan bruke dem videre.
+    static #disassembleDate(dateObject) {
+
+        this.#day = dateObject.getDate();
+        this.#month = dateObject.getMonth() + 1; //konvertering til 1-indeks månder (1 = januar)
+        this.#year = dateObject.getFullYear()
+
+        this.#hour = dateObject.getHours();
+        this.#minute = dateObject.getMinutes();
+
+        //konvertering til 2-digit dag verdi, nødvendig for formatering
+        if (this.#day < 10) {
+            this.#day = "0" + this.#day;
+        }
+
+        //konvertering til 2-digit måned verdi, nødvendig for formatering
+        if (this.#month < 10) {
+            this.#month = "0" + this.#month;
+        }
+
+    }
 
     //summary: metode som konverterer dato objekt til string i format "yyyy-mm-dd" som api ønsker.
     //returns: string med fomatert dato
     static toApiDateString(dateObject) {
 
-        let day = dateObject.getDate();
-        let month = dateObject.getMonth() + 1; //konvertering til 1-indeks månder (1 = januar)
+        this.#disassembleDate(dateObject); //ta ut attributter
 
-        //konvertering til 2-digit dag verdi, nødvendig for formatering
-        if (day < 10) { 
-            day = "0" + day;
-        }
+        return this.#year + "-" + this.#month + "-" + this.#day; //return attributer i ønskende format
+    }
 
-        //konvertering til 2-digit måned verdi, nødvendig for formatering
-        if (month < 10) {
-            month = "0" + month;
-        }
 
-        return dateObject.getFullYear() + "-" + month + "-" + day;
+    //for now this one is not needed, this thing here will need som reforamtig.
+    //summary: metode som konverterer dato objekt til string i format "dd.mm.yyyy hh:mm" som er vanlig lokalt.
+    //returns: string med formatert dato
+    static toLocalDateString(dateObject) {
+
+        this.#disassembleDate(dateObject);
+
+        return this.#day + "." + this.#month + "." + this.#year + " " + this.#hour + ":" + this.#minute
     }
 
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
@@ -64,9 +100,10 @@ class DateInterval {
     static parseDate(dateString) {
 
         const year = Number(dateString.substring(0, 4));
-        const month = Number(dateString.substring(5, 7)) -1; //konvertering til 0-indeks månder (0 = januar)
+        const month = Number(dateString.substring(5, 7)) - 1; //konvertering til 0-indeks månder (0 = januar)
         const day = Number(dateString.substring(8, 10));
 
         return new Date(year, month, day);
     }
+
 }

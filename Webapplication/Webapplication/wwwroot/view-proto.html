@@ -2,12 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>application</title>
-
+    <title>Meget dyre biletter som en brude ikke kjøpe</title>
     <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    
-
+   
     <script src="js/utilities.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="js/view.js"></script>
@@ -23,19 +21,19 @@
                     <div class="col-md-6">
                         <label for="route" class="form-label">Strekning:</label>
                         <select class="form-control" id="route">
-                            <!--options will be added by js.-->
+                            <!--options are added by js-->
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label for="type" class="form-label">Type:</label>
-                        <select class="form-control" id="type">
-                            <option>tur</option>
-                            <option>tur-retur</option>
+                        <select class="form-control" id="type" onchange="updateType()">
+                            <option value="0">En vei</option>
+                            <option value="1">Fram og tilbake</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label" for="passengers">Passengers:</label>
-                        <input class="form-control" id="passengers" type="number" />
+                        <label class="form-label" for="passengers">Personer:</label>
+                        <input class="form-control" id="passengers" type="number" min="0" />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="date">Utreise:</label>
@@ -47,7 +45,7 @@
                     </div>
 
                     <div class="col-md-12">
-                        <button class="btn btn-primary" onclick="show()">plz work</button>
+                        <button class="btn btn-primary" onclick="show()">Søk</button>
                     </div>
 
                 </form>
@@ -56,24 +54,22 @@
         <div class="row mt-4">
             <div class="col-md-6">
                 <h3 id="timetable-header"></h3>
-                <!-- table that showes the departures goes here -->
-
                 <table class="table table-bordered">
                     <tbody id="timetable">
-                        <tr><th>date:</th><th>time:</th><th>price:</th></tr>
-                        <tr><td>29.09.2021</td><td> 10:30</td><td>143</td></tr>
-                        <tr><td>29.09.2021</td><td> 15:20</td><td>173</td></tr>
-                        <tr><td>01.10.2021</td><td> 09:10</td><td>382</td></tr>
-
-
-
+                        <!--content populated by js-->
                     </tbody>
-
-
                 </table>
-
             </div>
-            
+            <div class="col-md-6">
+                <h3 id="timetable-header2">Tilbake</h3>
+                <table class="table table-bordered">
+                    <thead><tr><th>dato:</th><th>pris:</th></tr></thead>
+                    <tbody id="timetable2">
+                        <tr><td>19.10.2021 10:30</td><td>734</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 
