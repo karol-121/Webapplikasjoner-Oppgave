@@ -1,41 +1,48 @@
-﻿let tourType; //variable thats hold value of tour type, one way or two way
+﻿//global attributes
+let tourType; //variable thats hold value of tour type, one way or two way
+new DateUtilities();// oppretter objekt fra classen slik at den er defined
 
-
-//function that runs by default
+//summary: autostart funksjon som kaller på nødvendige funksjoner
 $(function () {
-    
     fetchRoutes();
-    updateType();
+    updateTourType();
 });
 
-//function that gets and populates the dropdown with routes 
+//summary: funksjon som henter og populerer dropdown meny for strekninger
 function fetchRoutes() {
+
     const url = "API/GetRoutes";
-    $.get(url, function (data) {
 
-        let s = new String();
+    $.get(url, function (routes) {
 
-        for (let r of data) {
-            s += "<option value='"+r.id+"'>"+r.origin+" - "+r.destination+"</option>"
+        console.log("route fetch ok")
+
+        let string = new String();
+
+        for (let route of routes) {
+            string += "<option value='"+route.id+"'>"+route.origin+" - "+route.destination+"</option>"
         }
 
-        $("#route").html(s);
+        $("#route").html(string);
 
     }).fail(function () {
-        alert("error!");
+
+        console.log("route fetch failed!");
+
     })
 }
 
-//funtcion that updates the disabled, enabled return date based on tour type
-function updateType() {
+//summary: funksjon som oppdaterer verdier til tur type og styrer avhenge input elemeter
+function updateTourType() {
     tourType = $("#type").val();
 
     if (tourType == 0) {
         $("#date2").prop('disabled', true);
+
     } else {
         $("#date2").prop('disabled', false);
+
     }
-    
     
 }
 
@@ -47,32 +54,52 @@ function show() {
     const day = $("#date").val();
     const passengers = $("#passengers").val();
 
-    new DateUtilities();// oppretter objekt fra classen slik at den er defined
+    //input validering klient skal gaa her i guess
 
-    const b = new DateInterval(DateUtilities.parseDate(day));
+    const dateInterval = new DateInterval(DateUtilities.parseDate(day));
+
+    fetchDepartures(route, dateInterval, passengers);
+
     
-    //url som henter utreiser.
-    const url = "API/GetDepartures?Route=" + route + "&From=" + DateUtilities.toApiDateString(b.getStartInterval()) +
-        "&To=" + DateUtilities.toApiDateString(b.getEndInterval()) + "&Passengers=" + passengers;
-
-    $.get(url, function (data) {
-
-        const header = "Utreise " + DateUtilities.toApiDateString(b.getStartInterval()) + " - " + DateUtilities.toApiDateString(b.getEndInterval());
-        $("#timetable-header").html(header);
-
-        let tableContent = "<tr><th>dato:</th><th>pris</th><th></th></tr>";
-        for (let t of data) {
-            tableContent += "<tr><td>" + t.date + "</td><td>" + t.cruise.passeger_Price + "</td><td><a href='index.html'> velg</a></td</tr>";
-        }
-        $("#timetable").html(tableContent);
-
-    }).fail(function () {
-        alert("error!");
-    });
 }
 
+//summary: lager spørring og henter data fra serveren
+//parameters: route - id til route, from - Date objekt fra dato, to - Date objekt til dato, passengers - antall personer
+//returns: json data, null ved feil/mangel
+function fetchDepartures(route, dateInterval, passengers) {
 
+    const from = dateInterval.getStartInterval();
+    const to = dateInterval.getEndInterval();
 
+    //url for api call
+    const url = "API/GetDepartures?Route=" + route + "&From=" + DateUtilities.toApiDateString(from) +
+        "&To=" + DateUtilities.toApiDateString(to) + "&Passengers=" + passengers;
+
+    $.get(url, function (data) {
+        console.log("departure fetch ok");
+
+        displayData(data, dateInterval);
+
+    }).fail(function () {
+        console.log("departure fetch failed!");
+        //her skal det vises noe alert tingy.
+
+    });
+
+}
+
+function displayData(Departures, dateInterval) {
+
+    const header = "Utreise " + DateUtilities.toApiDateString(dateInterval.getStartInterval()) + " - " + DateUtilities.toApiDateString(dateInterval.getEndInterval());
+    $("#timetable-header").html(header);
+
+    let tableContent = "<tr><th>dato:</th><th>pris</th><th></th></tr>";
+    for (let t of Departures) {
+        tableContent += "<tr><td>" + t.date + "</td><td>" + t.cruise.passeger_Price + "</td><td><a href='index.html'> velg</a></td</tr>";
+    }
+    $("#timetable").html(tableContent);
+
+}
 
 
 

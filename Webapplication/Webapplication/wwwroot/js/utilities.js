@@ -85,10 +85,9 @@ class DateUtilities {
     }
 
 
-    //for now this one is not needed, this thing here will need som reforamtig.
     //summary: metode som konverterer dato objekt til string i format "dd.mm.yyyy hh:mm" som er vanlig lokalt.
     //returns: string med formatert dato
-    static toLocalDateString(dateObject) {
+    static toLocalDateString(dateObject) { //not needed for now at least
 
         this.#disassembleDate(dateObject);
 
@@ -96,6 +95,7 @@ class DateUtilities {
     }
 
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
+    //parameters: String dateString - dato i "yyyy-mm-dd" streng 
     //returns: Date objekt.
     static parseDate(dateString) {
 
@@ -104,6 +104,13 @@ class DateUtilities {
         const day = Number(dateString.substring(8, 10));
 
         return new Date(year, month, day);
+    }
+
+    //summary: metode som formaterer json dato streng til lokal tid notasjon
+    //parameters: String dateString - dato i json "yyyy-mm-ddThh:MM:ss" streng format
+    //returns: String med dato i format "dd.mm.yyyy HH:MM"
+    static convertJsonToLocalDateString(dateString) {
+        //not implemented
     }
 
 }
