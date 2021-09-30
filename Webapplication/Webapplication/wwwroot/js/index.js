@@ -4,16 +4,25 @@ let Routes; //denne skal holde array med departures.
 let DeparturesLeave; //holder utreiser for en vei eller tur
 let DeparturesReturn; //holder utreiser for tilbake tur
 
-//todo: it would be nice if all html dom objects would be defined here as variables, 
-//but this has to happend somewhere later in code or something, othervise they are just empty useless objects
-
 new DateUtilities();// oppretter objekt fra classen slik at den er defined
 
 //summary: autostart funksjon som kaller på nødvendige funksjoner
 $(function () {
     fetchRoutes();
     updateTourType();
+    updateDOM_inputDate();
 });
+
+//summary: funksjon som oppdaterer attributer til dom input date slik at de viser dagens dato.
+function updateDOM_inputDate() {
+    const a = new Date();
+    $("#dateLeave").val(DateUtilities.toApiDateString(a));
+    //$("#dateLeave").attr("min",DateUtilities.toApiDateString(a));
+
+    $("#dateReturn").val(DateUtilities.toApiDateString(a));
+    //$("#dateReturn").attr("min",DateUtilities.toApiDateString(a));
+
+}
 
 //summary: funksjon som henter og populerer dropdown meny for strekninger
 function fetchRoutes() {
@@ -45,19 +54,23 @@ function fetchRoutes() {
 function updateTourType() {
     TourType = $("#tourType").val(); //update the global variable with current state
 
+    //her skal man også legge til loggikken angående den proceed knappen
+    //hvis det er kun utreise, så det er nok at utreise er valgt,
+    //hvis det er utreise og tilbake, så må begge være valgt for å enable knappen
+
     if (TourType == 0) {
         $("#dateReturn").prop('disabled', true);
+        $("#timetable-return").hide();
 
     } else {
         $("#dateReturn").prop('disabled', false);
-
+        $("#timetable-return").show();
     }
     
 }
 
-
-//function that shows all departures 
-function show() {
+//summary: funksjonen som samler data og bestemmer hvilke utreiser skal fetches fra serveren
+function dispatchDepartureFetching() {
     //this basicly needs refactoring
     const routes_index = $("#route").val();
 
@@ -80,9 +93,17 @@ function show() {
 
     fetchDepartures(route, dateIntervalLeave, passengers, processLeaveDepartures);
 
+
     if (TourType == 1) {
-        //if both tours are choosed, fetch also the returns
-        fetchDepartures(routeReverse, dateIntervalReturn, passengers, processReturnDepartures);
+        //dersom det skal vises retur utreiser
+        fetchDepartures(routeReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
+        
+    } else {
+
+        //dersom det skal ikke vises retur utreiser
+        cleanDepartures($("#timetable-return"));    //fjen tidligere infromasjon siden denne runden forventes det ingen data. 
+                                                    //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
+
     }
 
 }
@@ -110,38 +131,62 @@ function fetchDepartures(route, dateInterval, passengers, dataProcessingFunction
     });
 }
 
+//summary: funksjon som videre prosesserer utreiser, den bestemmer ting som hvor data skal printes osv.
+//parameters: interval - dateinterval objekt som inneholder intervalet, departures - liste med utreiser
 function processLeaveDepartures(interval, departures) {
     DeparturesLeave = departures;
 
-    //her skal printes, endres dom elementer som er spesifike for leave departure
+    const route = "Bergen - Oslo"; //for now tho
 
-    displayDepartures(interval, DeparturesLeave, $("#timetable-leave-title"), $("#timetable-leave-header"), $("#timetable-leave-body"));
+    
+    displayDepartures(route, interval, DeparturesLeave, $("#timetable-leave"));
     //print Departures Leave
 }
 
+//summary: funksjon som videre prosesserer tilbake utreiser, den bestemmer ting som hvor data skal printes osv.
+//parameters: interval - dateinterval objekt som inneholder intervalet, departures - liste med utreiser
 function processReturnDepartures(interval, departures) {
     DeparturesReturn = departures;
 
-    //her skal printes, endres dom elementer som er spesifike for return departure
+    const route = "Oslo - Bergen"; //for now tho
 
-    displayDepartures(interval, DeparturesReturn, $("#timetable-return-title"), $("#timetable-return-header"), $("#timetable-return-body"));
+    //her skal printes, endres dom elementer som er spesifike for return departure
+    displayDepartures(route, interval, DeparturesReturn, $("#timetable-return"));
     //print Departures Return
 }
 
+//summary: funksjon som populerer tabell objekt med inn data. Html objekt må ha spesifik oppsett.
+//parameters: route - route objekt, interval - interval objekt, departures - liste med departure objekter, DOM_Source - parent node
+function displayDepartures(route, interval, departures, DOM_Source) {
 
+    const title = route;
+    DOM_Source.children("h3").html(title);
 
-function displayDepartures(interval, items, DOM_title, DOM_tableHeader, DOM_tableBody) {
-
-    const title = "fra " + DateUtilities.toLocalDateString(interval.getStartInterval()) + " til " + DateUtilities.toLocalDateString(interval.getEndInterval()) + "";
-    DOM_title.html(title);
+    const subtitle = DateUtilities.toLocalDateString(interval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(interval.getEndInterval());
+    DOM_Source.children("h4").html(subtitle);
 
     const header = "<tr><th>dato:</th><th>pris:</th></tr>";
-    DOM_tableHeader.html(header);
+    DOM_Source.children("table").children("thead").html(header);
 
     let tableContent = new String();
-    for (let i of items) {
+    for (let i of departures) {
         tableContent += "<tr><td>" + DateUtilities.isoToLocalDateString(i.date) + "</td><td>" + i.cruise.passeger_Price + "</td></tr>";
     }
-    DOM_tableBody.html(tableContent);
+    DOM_Source.children("table").children("tbody").html(tableContent);
 
 }
+
+//summary: funksjon som fjerner innhold inn i tabell objekt, den er spesielt formatert så html oppsett må stemme
+//parameters: DOM_Source - parent node til objektet som skal renses
+function cleanDepartures(DOM_Source) {
+
+    DOM_Source.children("h3").html("");
+
+    DOM_Source.children("h4").html("");
+
+    DOM_Source.children("table").children("thead").html("");
+
+    DOM_Source.children("table").children("tbody").html("");
+
+}
+

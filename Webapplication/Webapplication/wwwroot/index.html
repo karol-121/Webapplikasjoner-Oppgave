@@ -2,10 +2,84 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>application</title>
+    <title>VIP cruises</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+   
+    <script src="js/utilities.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/index.js"></script>
 </head>
 <body>
-    Hello world!
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <h2>Bestill</h2>
+                <form class="row g-3" onsubmit="return false">
+
+                    <div class="col-md-6">
+                        <label for="route" class="form-label">Strekning:</label>
+                        <select class="form-control" id="route">
+                            <!--options are added by js-->
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="type" class="form-label">Type:</label>
+                        <select class="form-control" id="tourType" onchange="updateTourType()">
+                            <option value="0">En vei</option>
+                            <option value="1">Fram og tilbake</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="passengers">Personer:</label>
+                        <input class="form-control" id="passengers" type="number" value="1" min="1" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="dateLeave">Utreise:</label>
+                        <input class="form-control" id="dateLeave" type="date" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="dateReturn">Tilbake:</label>
+                        <input class="form-control" id="dateReturn" type="date" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" onclick="dispatchDepartureFetching()">Søk</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6" id="timetable-leave">
+                <h3><!--title populated by js--></h3>
+                <h4><!--subtitle populated by js--></h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <!--table header populated by js-->
+                    </thead>
+                    <tbody>
+                        <!--content here is populated by js-->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6" id="timetable-return">
+                <h3><!--title populated by js--></h3>
+                <h4><!--subtitle populated by js--></h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <!--table header populated by js-->
+                    </thead>
+                    <tbody>
+                        <!--content here is populated by js-->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    
 </body>
 </html>
