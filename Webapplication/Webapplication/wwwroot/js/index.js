@@ -4,6 +4,9 @@ let Routes; //denne skal holde array med departures.
 let DeparturesLeave; //holder utreiser for en vei eller tur
 let DeparturesReturn; //holder utreiser for tilbake tur
 
+//todo this should be a object that react upon changes.
+const Cart = []; //array som holder rede på departures som klienten velger
+
 new DateUtilities();// oppretter objekt fra classen slik at den er defined
 
 //summary: autostart funksjon som kaller på nødvendige funksjoner
@@ -66,12 +69,24 @@ function updateTourType() {
         $("#dateReturn").prop('disabled', false);
         $("#timetable-return").show();
     }
+
     
+}
+
+//summary: funksjon som oppdaterer knappen
+//this should be subscribed to array and then the check will update itself whenever array state changes.
+function updateProceed() {
+    if ((TourType == 1 && Cart.length === 2) || (TourType == 0 && Cart.length >= 1)) {
+        $('#button-proceed').show();
+    } else {
+        $('#button-proceed').hide();
+    }
 }
 
 //summary: funksjonen som samler data og bestemmer hvilke utreiser skal fetches fra serveren
 function dispatchDepartureFetching() {
-    //this basicly needs refactoring
+
+    //todo: maybe make it so it does not fetch new values if nothing changed
     const routes_index = $("#route").val();
 
     const routeId = Routes[routes_index].id;
@@ -105,6 +120,8 @@ function dispatchDepartureFetching() {
                                                     //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
 
     }
+
+    //todo: clean the cart here as dispaching new routes can make current choosen irrelenat.
 
 }
 
@@ -168,14 +185,17 @@ function displayDepartures(routeObj, interval, departures, DOM_Source) {
     DOM_Source.children("table").children("thead").html(header);
 
     let tableContent = new String();
-    for (let i of departures) {
-        tableContent += "<tr><td>" + DateUtilities.isoToLocalDateString(i.date) + "</td><td>" + i.cruise.passeger_Price + "</td></tr>";
+
+    for (var d = 0; d < departures.length; d++) {
+        tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.passeger_Price + " kr</td></tr>";
     }
     DOM_Source.children("table").children("tbody").html(tableContent);
 
+    registerTableEventListeners();
+
 }
 
-//summary: funksjon som fjerner innhold inn i tabell objekt, den er spesielt formatert så html oppsett må stemme
+//summary: funksjon som fjerner innhold inn i tabell objekt, den vil kun fungere på spesielt formatert html struktur
 //parameters: DOM_Source - parent node til objektet som skal renses
 function cleanDepartures(DOM_Source) {
 
@@ -201,4 +221,39 @@ function findRoute(routeId) {
 
     return null;
 }
+
+
+//summary: disse jquery funksjoner må være kjørt etter at tabellen er populert eller vil de ikke reagere på rowsa
+//det er mulig å om formattere det men det er ikke bare bare her.
+function registerTableEventListeners() {
+
+    $("#table-leave tr").click(function () {
+
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+        const value = $(this).data('value');
+        Cart[0] = DeparturesLeave[value]; //add departure til cart
+    });
+
+
+    $("#table-return tr").click(function () {
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+        const value = $(this).data('value');
+        Cart[1] = DeparturesReturn[value]; //add departure til cart
+    });
+
+    
+}
+
+//summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
+function Proceed() {
+    if (TourType == 0) { //uansett hva som skjedde tidligere, her dersom tour type er "tur", andre elementet slettes
+        Cart.splice(1, 1)//fjerner siste elementet som i dette tilfelle er retur utreiser
+        //Cart[0] = null, dersom vi forventer at dette array skal ha 2 elementer uansett
+    }
+    console.log(Cart);
+
+    //gå videre, serialize eller no.
+}
+
+
 
