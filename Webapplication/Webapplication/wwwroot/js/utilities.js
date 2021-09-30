@@ -88,7 +88,6 @@ class DateUtilities {
         return date[0] + "." + date[1] + "." + date[2] //return attributer i ønskende format
     }
 
-
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
     //parameters: String dateString - dato i "yyyy-mm-dd" streng 
     //returns: Date objekt.

@@ -99,7 +99,7 @@ function fetchDepartures(route, dateInterval, passengers, dataProcessingFunction
 
     $.get(url, function (data) {
         console.log("departure fetch ok");
-        dataProcessingFunction(data);
+        dataProcessingFunction(dateInterval, data);
 
     }).fail(function () {
         console.log("departure fetch failed!");
@@ -108,17 +108,21 @@ function fetchDepartures(route, dateInterval, passengers, dataProcessingFunction
     });
 }
 
-function processLeaveDepartures(departures) {
+function processLeaveDepartures(interval, departures) {
     DeparturesLeave = departures;
 
-    displayDepartures(DeparturesLeave, $("#timetable-leave-title"), $("#timetable-leave-header"), $("#timetable-leave-body"));
+    //her skal printes, endres dom elementer som er spesifike for leave departure
+
+    displayDepartures(interval, DeparturesLeave, $("#timetable-leave-title"), $("#timetable-leave-header"), $("#timetable-leave-body"));
     //print Departures Leave
 }
 
-function processReturnDepartures(departures) {
+function processReturnDepartures(interval, departures) {
     DeparturesReturn = departures;
 
-    displayDepartures(DeparturesReturn, $("#timetable-return-title"), $("#timetable-return-header"), $("#timetable-return-body"));
+    //her skal printes, endres dom elementer som er spesifike for return departure
+
+    displayDepartures(interval, DeparturesReturn, $("#timetable-return-title"), $("#timetable-return-header"), $("#timetable-return-body"));
     //print Departures Return
 }
 
@@ -126,10 +130,10 @@ function processReturnDepartures(departures) {
 
 
 
-function displayDepartures(items, DOM_title, DOM_tableHeader, DOM_tableBody) {
+function displayDepartures(interval, items, DOM_title, DOM_tableHeader, DOM_tableBody) {
 
-    //const title = "Utreise (" + DateUtilities.toLocalDateString(dateInterval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(dateInterval.getEndInterval()) + ")";
-    DOM_title.html("boi");
+    const title = "fra " + DateUtilities.toLocalDateString(interval.getStartInterval()) + " til " + DateUtilities.toLocalDateString(interval.getEndInterval()) + "";
+    DOM_title.html(title);
 
     const header = "<tr><th>dato:</th><th>pris:</th></tr>";
     DOM_tableHeader.html(header);
