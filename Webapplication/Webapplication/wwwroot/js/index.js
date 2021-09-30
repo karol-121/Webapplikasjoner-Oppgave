@@ -74,8 +74,8 @@ function dispatchDepartureFetching() {
     //this basicly needs refactoring
     const routes_index = $("#route").val();
 
-    const route = Routes[routes_index].id;
-    const routeReverse = Routes[routes_index].return_id;
+    const routeId = Routes[routes_index].id;
+    const routeIdReverse = Routes[routes_index].return_id;
 
     const dateLeave = $("#dateLeave").val();
     const dateReturn = $("#dateReturn").val();
@@ -91,12 +91,12 @@ function dispatchDepartureFetching() {
     const dateIntervalLeave = new DateInterval(DateUtilities.inputToDateObject(dateLeave));
     const dateIntervalReturn = new DateInterval(DateUtilities.inputToDateObject(dateReturn));
 
-    fetchDepartures(route, dateIntervalLeave, passengers, processLeaveDepartures);
+    fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures);
 
 
     if (TourType == 1) {
         //dersom det skal vises retur utreiser
-        fetchDepartures(routeReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
+        fetchDepartures(routeIdReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
         
     } else {
 
@@ -111,18 +111,18 @@ function dispatchDepartureFetching() {
 //summary: lager spørring og henter data fra serveren
 //parameters: route - id til route, from - Date objekt fra dato, to - Date objekt til dato, passengers - antall personer, 
 //dataProcessingFunction - funksjonen hvor resultat data vil bli sendt til for videre prosessering.
-function fetchDepartures(route, dateInterval, passengers, dataProcessingFunction) {
+function fetchDepartures(routeId, dateInterval, passengers, dataProcessingFunction) {
 
     const from = dateInterval.getStartInterval();
     const to = dateInterval.getEndInterval();
 
     //url for api call
-    const url = "API/GetDepartures?Route=" + route + "&From=" + DateUtilities.toApiDateString(from) +
+    const url = "API/GetDepartures?Route=" + routeId + "&From=" + DateUtilities.toApiDateString(from) +
         "&To=" + DateUtilities.toApiDateString(to) + "&Passengers=" + passengers;
 
     $.get(url, function (data) {
         console.log("departure fetch ok");
-        dataProcessingFunction(dateInterval, data);
+        dataProcessingFunction(routeId, dateInterval, data);
 
     }).fail(function () {
         console.log("departure fetch failed!");
@@ -133,33 +133,32 @@ function fetchDepartures(route, dateInterval, passengers, dataProcessingFunction
 
 //summary: funksjon som videre prosesserer utreiser, den bestemmer ting som hvor data skal printes osv.
 //parameters: interval - dateinterval objekt som inneholder intervalet, departures - liste med utreiser
-function processLeaveDepartures(interval, departures) {
+function processLeaveDepartures(routeId, interval, departures) {
     DeparturesLeave = departures;
 
-    const route = "Bergen - Oslo"; //for now tho
-
+    const routeObj = findRoute(routeId);
     
-    displayDepartures(route, interval, DeparturesLeave, $("#timetable-leave"));
+    displayDepartures(routeObj, interval, DeparturesLeave, $("#timetable-leave"));
     //print Departures Leave
 }
 
 //summary: funksjon som videre prosesserer tilbake utreiser, den bestemmer ting som hvor data skal printes osv.
 //parameters: interval - dateinterval objekt som inneholder intervalet, departures - liste med utreiser
-function processReturnDepartures(interval, departures) {
+function processReturnDepartures(routeId, interval, departures) {
     DeparturesReturn = departures;
 
-    const route = "Oslo - Bergen"; //for now tho
+    const routeObj = findRoute(routeId)
 
     //her skal printes, endres dom elementer som er spesifike for return departure
-    displayDepartures(route, interval, DeparturesReturn, $("#timetable-return"));
+    displayDepartures(routeObj, interval, DeparturesReturn, $("#timetable-return"));
     //print Departures Return
 }
 
 //summary: funksjon som populerer tabell objekt med inn data. Html objekt må ha spesifik oppsett.
 //parameters: route - route objekt, interval - interval objekt, departures - liste med departure objekter, DOM_Source - parent node
-function displayDepartures(route, interval, departures, DOM_Source) {
+function displayDepartures(routeObj, interval, departures, DOM_Source) {
 
-    const title = route;
+    const title = routeObj.origin + " - " + routeObj.destination;
     DOM_Source.children("h3").html(title);
 
     const subtitle = DateUtilities.toLocalDateString(interval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(interval.getEndInterval());
@@ -188,5 +187,18 @@ function cleanDepartures(DOM_Source) {
 
     DOM_Source.children("table").children("tbody").html("");
 
+}
+
+//summary: funksjon som finner route etter dens routeId (ikke Routes array index) i global Routes array
+//parameters: routeId id til route objekt
+//returns: route objekt, null hvis den ble ikke funnet.
+function findRoute(routeId) {
+    for (let r of Routes) {
+        if (r.id == routeId) {
+            return r;
+        } 
+    }
+
+    return null;
 }
 
