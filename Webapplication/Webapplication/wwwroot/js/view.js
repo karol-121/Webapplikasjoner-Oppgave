@@ -26,10 +26,10 @@ function fetchRoutes() {
 
         let string = new String();
 
-        Routes = routes;
+        Routes = routes; //populate lokal variable som vil holde fetched routes, noe som kan akseseres senere
 
-        for (let route of routes) {
-            string += "<option value='"+route.id+"'>"+route.origin+" - "+route.destination+"</option>"
+        for (var i = 0; i < routes.length; i++) {
+            string += "<option value='" + i + "'>" + routes[i].origin + " - " + routes[i].destination + "</option>"
         }
 
         $("#route").html(string);
@@ -59,9 +59,11 @@ function updateTourType() {
 //function that shows all departures 
 function show() {
     //this basicly needs refactoring
+    const routes_index = $("#route").val();
 
-    const route = $("#route").val();
-    const routeReverse = route //here the reverse route id should be get from Routes 
+    const route = Routes[routes_index].id;
+    const routeReverse = Routes[routes_index].return_id;
+
     const dateLeave = $("#dateLeave").val();
     const dateReturn = $("#dateReturn").val();
     const passengers = $("#passengers").val();
@@ -125,8 +127,6 @@ function processReturnDepartures(interval, departures) {
     displayDepartures(interval, DeparturesReturn, $("#timetable-return-title"), $("#timetable-return-header"), $("#timetable-return-body"));
     //print Departures Return
 }
-
-
 
 
 
