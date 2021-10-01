@@ -4,8 +4,7 @@ let Routes; //denne skal holde array med departures.
 let DeparturesLeave; //holder utreiser for en vei eller tur
 let DeparturesReturn; //holder utreiser for tilbake tur
 
-//todo this should be a object that react upon changes.
-const Cart = []; //array som holder rede på departures som klienten velger
+const cart = new Cart(updateProceed);
 
 new DateUtilities();// oppretter objekt fra classen slik at den er defined
 
@@ -70,13 +69,15 @@ function updateTourType() {
         $("#timetable-return").show();
     }
 
-    
+    updateProceed();
 }
+
+//todo: det blir kanskje bedre at update tour type og update proceed funksjoner blir slått sammen siden de gjør det samme ish.
 
 //summary: funksjon som oppdaterer knappen
 //this should be subscribed to array and then the check will update itself whenever array state changes.
 function updateProceed() {
-    if ((TourType == 1 && Cart.length === 2) || (TourType == 0 && Cart.length >= 1)) {
+    if ((TourType == 1 && cart.getItemCount() === 2) || (TourType == 0 && cart.getItemCount() >= 1)) {
         $('#button-proceed').show();
     } else {
         $('#button-proceed').hide();
@@ -121,7 +122,8 @@ function dispatchDepartureFetching() {
 
     }
 
-    //todo: clean the cart here as dispaching new routes can make current choosen irrelenat.
+    cart.emptyCart();
+    //clean the cart here as dispaching new routes can make current choosen irrelenat.
 
 }
 
@@ -231,14 +233,17 @@ function registerTableEventListeners() {
 
         $(this).addClass('table-active').siblings().removeClass('table-active');
         const value = $(this).data('value');
-        Cart[0] = DeparturesLeave[value]; //add departure til cart
+
+        cart.addToCart(0, DeparturesLeave[value]); //add departure til cart
     });
 
 
     $("#table-return tr").click(function () {
         $(this).addClass('table-active').siblings().removeClass('table-active');
         const value = $(this).data('value');
-        Cart[1] = DeparturesReturn[value]; //add departure til cart
+
+        cart.addToCart(1, DeparturesReturn[value]); //add departure til cart
+
     });
 
     
@@ -247,10 +252,11 @@ function registerTableEventListeners() {
 //summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
 function Proceed() {
     if (TourType == 0) { //uansett hva som skjedde tidligere, her dersom tour type er "tur", andre elementet slettes
-        Cart.splice(1, 1)//fjerner siste elementet som i dette tilfelle er retur utreiser
+        cart.removeFromCart(1);
         //Cart[0] = null, dersom vi forventer at dette array skal ha 2 elementer uansett
     }
-    console.log(Cart);
+    console.log(cart.getItem(0));
+    console.log(cart.getItem(1));
 
     //gå videre, serialize eller no.
 }

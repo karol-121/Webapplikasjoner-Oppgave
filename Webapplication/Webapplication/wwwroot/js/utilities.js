@@ -115,3 +115,47 @@ class DateUtilities {
     }
 
 }
+
+//summary: Objekt som representerer et abstrakt versjon av shopping cart. 
+//Hovedsaklig er det vanlig array men i tilegg er det mulig å koble på funksjon som vil kjøres etter at det er endring i kurven
+class Cart {
+    #cart = [];
+    #subscriber;
+
+    constructor(subscriber) {
+        this.#subscriber = subscriber; //lagre referanse til subscriber funksjon
+    }
+
+    //summary: legger til et objekt på spesifikt plass
+    //parameters: index - plass hvor objektet skal legges på, obj - objektet som skal legges inn.
+    addToCart(index, obj) {
+        this.#cart[index] = obj;
+        this.#subscriber();
+    }
+
+    //summary: fjerner objekt på spesifik plass
+    //parameters: index - plass på hvilken et objekt skal fjernes
+    removeFromCart(index) {
+        this.#cart.splice(index, 1);
+        this.#subscriber();
+    }
+
+    //summary: nullstiller carten
+    emptyCart() {
+        this.#cart = [];
+        this.#subscriber();
+    }
+
+    //summary: returnerer objekt på spesifik plass
+    //prameters: index - plass til objektet som skal returneres
+    //reutrns: objekt 
+    getItem(index) {
+        return this.#cart[index];
+    }
+
+    //summary: returnerer antall objekter som finnes i carten
+    //returns: int med antall objekter
+    getItemCount() {
+        return this.#cart.length;
+    }
+}
