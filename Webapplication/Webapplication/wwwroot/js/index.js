@@ -253,6 +253,7 @@ function registerTableEventListeners() {
 function Proceed() {
     if (TourType == 0) { //uansett hva som skjedde tidligere, her dersom tour type er "tur", andre elementet slettes
         cart.removeFromCart(1);
+        //dette her får den button til å henge seg, men det burde ikke være problem dersom man skal gå videre etter at knappen har blitt trukket
         //Cart[0] = null, dersom vi forventer at dette array skal ha 2 elementer uansett
     }
     console.log(cart.getItem(0));

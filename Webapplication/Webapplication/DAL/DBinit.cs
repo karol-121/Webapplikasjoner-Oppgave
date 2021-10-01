@@ -32,63 +32,63 @@ namespace Webapplication.DAL
                 var Route6 = new Route { Origin = "Bergen", Destination = "Stavanger", Return_id = 5 };
 
                 //Cruise1 
-                var Departure1 = new DateTime(2021, 9, 27, 8, 00, 0);
-                var Departure2 = new DateTime(2021, 9, 27, 17, 00, 0);
+                var Departure1 = new DateTime(2021, 10, 4, 8, 00, 0);
+                var Departure2 = new DateTime(2021, 10, 4, 17, 00, 0);
 
-                var Departure3 = new DateTime(2021, 9, 29, 8, 00, 0);
-                var Departure4 = new DateTime(2021, 9, 29, 17, 00, 0);
+                var Departure3 = new DateTime(2021, 10, 6, 8, 00, 0);
+                var Departure4 = new DateTime(2021, 10, 6, 17, 00, 0);
 
-                var Departure5 = new DateTime(2021, 10, 1, 8, 00, 0);
-                var Departure6 = new DateTime(2021, 10, 1, 17, 00, 0);
+                var Departure5 = new DateTime(2021, 10, 8, 8, 00, 0);
+                var Departure6 = new DateTime(2021, 10, 8, 17, 00, 0);
 
                 //Cruise2
-                var Departure7 = new DateTime(2021, 9, 27, 14, 00, 0);
-                var Departure8 = new DateTime(2021, 10, 1, 14, 00, 0);
-                var Departure9 = new DateTime(2021, 10, 2, 14, 00, 0);
-                var Departure10 = new DateTime(2021, 10, 3, 14, 00, 0);
+                var Departure7 = new DateTime(2021, 10, 4, 14, 00, 0);
+                var Departure8 = new DateTime(2021, 10, 8, 14, 00, 0);
+                var Departure9 = new DateTime(2021, 10, 9, 14, 00, 0);
+                var Departure10 = new DateTime(2021, 10, 10, 14, 00, 0);
 
                 //Cruise3
-                var Departure11 = new DateTime(2021, 9, 27, 12, 00, 0);
-                var Departure12 = new DateTime(2021, 9, 27, 22, 00, 0);
+                var Departure11 = new DateTime(2021, 10, 4, 12, 00, 0);
+                var Departure12 = new DateTime(2021, 10, 4, 22, 00, 0);
                 
-                var Departure13 = new DateTime(2021, 9, 30, 12, 00, 0);
-                var Departure14 = new DateTime(2021, 9, 30, 22, 00, 0);
+                var Departure13 = new DateTime(2021, 10, 7, 12, 00, 0);
+                var Departure14 = new DateTime(2021, 10, 7, 22, 00, 0);
                 
-                var Departure15 = new DateTime(2021, 10, 2, 12, 00, 0);
-                var Departure16 = new DateTime(2021, 10, 2, 22, 00, 0);
+                var Departure15 = new DateTime(2021, 10, 9, 12, 00, 0);
+                var Departure16 = new DateTime(2021, 10, 9, 22, 00, 0);
 
                 //Cruise4
-                var Departure17 = new DateTime(2021, 9, 27, 9, 00, 0);
-                var Departure18 = new DateTime(2021, 9, 27, 16, 00, 0);
+                var Departure17 = new DateTime(2021, 10, 4, 9, 00, 0);
+                var Departure18 = new DateTime(2021, 10, 4, 16, 00, 0);
                 
-                var Departure19 = new DateTime(2021, 9, 29, 9, 00, 0);
-                var Departure20 = new DateTime(2021, 9, 29, 16, 00, 0);
+                var Departure19 = new DateTime(2021, 10, 6, 9, 00, 0);
+                var Departure20 = new DateTime(2021, 10, 6, 16, 00, 0);
                 
-                var Departure21 = new DateTime(2021, 10, 1, 9, 00, 0);
-                var Departure22 = new DateTime(2021, 10, 1, 16, 00, 0);
+                var Departure21 = new DateTime(2021, 10, 8, 9, 00, 0);
+                var Departure22 = new DateTime(2021, 10, 8, 16, 00, 0);
                 
-                var Departure23 = new DateTime(2021, 10, 3, 9, 00, 0);
-                var Departure24 = new DateTime(2021, 10, 3, 16, 00, 0);
+                var Departure23 = new DateTime(2021, 10, 10, 9, 00, 0);
+                var Departure24 = new DateTime(2021, 10, 10, 16, 00, 0);
 
                 //Cruise5
-                var Departure25 = new DateTime(2021, 9, 27, 7, 00, 0);
-                var Departure26 = new DateTime(2021, 9, 27, 15, 00, 0);
+                var Departure25 = new DateTime(2021, 10, 4, 7, 00, 0);
+                var Departure26 = new DateTime(2021, 10, 4, 15, 00, 0);
                 
-                var Departure27 = new DateTime(2021, 9, 28, 7, 00, 0);
-                var Departure28 = new DateTime(2021, 9, 28, 15, 00, 0);
+                var Departure27 = new DateTime(2021, 10, 5, 7, 00, 0);
+                var Departure28 = new DateTime(2021, 10, 5, 15, 00, 0);
                 
-                var Departure29 = new DateTime(2021, 9, 29, 7, 00, 0);
-                var Departure30 = new DateTime(2021, 9, 29, 15, 00, 0);
+                var Departure29 = new DateTime(2021, 10, 8, 7, 00, 0);
+                var Departure30 = new DateTime(2021, 10, 8, 15, 00, 0);
                 
-                var Departure31 = new DateTime(2021, 9, 30, 7, 00, 0);
-                var Departure32 = new DateTime(2021, 9, 30, 15, 00, 0);
+                var Departure31 = new DateTime(2021, 10, 7, 7, 00, 0);
+                var Departure32 = new DateTime(2021, 10, 7, 15, 00, 0);
                 
-                var Departure33 = new DateTime(2021, 10, 1, 7, 00, 0);
-                var Departure34 = new DateTime(2021, 10, 1, 15, 00, 0);
+                var Departure33 = new DateTime(2021, 10, 8, 7, 00, 0);
+                var Departure34 = new DateTime(2021, 10, 8, 15, 00, 0);
 
                 //Cruise6
-                var Departure35 = new DateTime(2021, 9, 28, 14, 00, 0);
-                var Departure36 = new DateTime(2021, 9, 30, 14, 00, 0);
+                var Departure35 = new DateTime(2021, 10, 5, 14, 00, 0);
+                var Departure36 = new DateTime(2021, 10, 7, 14, 00, 0);
                 //Cruise2 - departure9, dato er lik, samtidig det er eneste dato som gjentar seg fordi blerton har gjort bra jobb med unikate utreiser :)
            
 
