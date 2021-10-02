@@ -1,11 +1,10 @@
 ﻿//global attributes
-let TourType; //variable thats hold value of tour type, one way or two way
 let Routes; //denne skal holde array med departures.
+let TourType; //variable thats hold value of tour type, one way or two 
 let DeparturesLeave; //holder utreiser for en vei eller tur
 let DeparturesReturn; //holder utreiser for tilbake tur
 
-
-const cart = new Cart(updateProceed);
+const cart = new Cart(updateProceed); //cart objekt som holder rede på departures som velges
 
 new DateUtilities();// oppretter objekt fra classen slik at den er defined
 
@@ -53,33 +52,25 @@ function fetchRoutes() {
 
 //summary: funksjon som oppdaterer verdier til tur type og styrer avhenge input elemeter
 function updateTourType() {
-    TourType = $("#tourType").val(); //update the global variable with current state
-
-    //her skal man også legge til loggikken angående den proceed knappen
-    //hvis det er kun utreise, så det er nok at utreise er valgt,
-    //hvis det er utreise og tilbake, så må begge være valgt for å enable knappen
-
-    if (TourType == 0) {
+    
+    if ($("#tourType").val() == 1) {
         $('#dateReturn').prop('disabled', true);
-        //$('#timetable-return').hide();
 
     } else {
         $('#dateReturn').prop('disabled', false);
-        //$('#timetable-return').show();
     }
 
-    updateProceed();
 }
-
-//todo: det blir kanskje bedre at update tour type og update proceed funksjoner blir slått sammen siden de gjør det samme ish.
 
 //summary: funksjon som oppdaterer knappen, den er subscriberen til cart objekt, så den blir kjøret hver gang cart items tilstand endres
 function updateProceed() {
-    if (cart.getItemCount() >= 1) {
+
+    if (cart.getItemCount() == TourType) { //sammenlike antall items og tur type, det forventes 1 item for tur type 1 og 2 for 2.
         $('#button-proceed').show();
     } else {
         $('#button-proceed').hide();
     }
+
 }
 
 //summary: funksjonen som samler data og bestemmer hvilke utreiser skal fetches fra serveren
@@ -93,18 +84,20 @@ function dispatchDepartureFetching() {
 
     const dateLeave = $('#dateLeave').val();
     const dateReturn = $('#dateReturn').val();
+
     const passengers = $('#passengers').val();
 
-    const deatils = $("#tourType option:selected").text() + " for " + $('#passengers').val() + " personer:";
-
-    $('#order-details').html(deatils);
-
-
-    //input validation goes here i guess, just do not verify the date return and route reverse if one way is choosen
+      //input validation goes here i guess, just do not verify the date return and route reverse if one way is choosen
     //question is if the date should be validated, as currently it will default to todays date anyway.
     //could be also nice if route reverse if wrong, do not allow for two way orders
 
     //also check if the return date is greater than leave, otherwise it is a error as you can not return before you go.
+
+    TourType = $("#tourType").val(); //oppdater global verdi med den som har blitt søkt for
+
+    //printe titell for resultat 
+    const deatils = $("#tourType option:selected").text() + " for " + $('#passengers').val() + " personer:"; //den skal printe person og personer avhengig av antall
+    $('#order-details').html(deatils);
 
     const dateIntervalLeave = new DateInterval(DateUtilities.inputToDateObject(dateLeave));
     const dateIntervalReturn = new DateInterval(DateUtilities.inputToDateObject(dateReturn));
@@ -112,7 +105,7 @@ function dispatchDepartureFetching() {
     fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures); //fetch tur utreise 
 
 
-    if (TourType == 1) {
+    if (TourType == 2) {
         //dersom det skal vises retur utreiser
         fetchDepartures(routeIdReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
         
@@ -178,10 +171,10 @@ function processReturnDepartures(routeId, interval, departures) {
 function displayDepartures(routeObj, interval, departures, DOM_Source) {
 
     const title = routeObj.origin + " - " + routeObj.destination;
-    DOM_Source.children('h3').html(title);
+    DOM_Source.children('#timetable-route').html(title);
 
     const subtitle = DateUtilities.toLocalDateString(interval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(interval.getEndInterval());
-    DOM_Source.children('h4').html(subtitle);
+    DOM_Source.children('#timetable-interval').html(subtitle);
 
     const header = "<tr><th>dato:</th><th>pris:</th></tr>";
     DOM_Source.children('table').children('thead').html(header);
@@ -227,9 +220,7 @@ function registerTableEventListeners() {
 //parameters: DOM_Source - parent node til objektet som skal renses
 function cleanDepartures(DOM_Source) {
 
-    DOM_Source.children('h3').html("");
-
-    DOM_Source.children('h4').html("");
+    DOM_Source.children('h5').html("");
 
     DOM_Source.children('table').children('thead').html("");
 

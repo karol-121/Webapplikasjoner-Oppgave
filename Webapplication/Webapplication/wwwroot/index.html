@@ -17,10 +17,10 @@
     <div class="container">
         <div class="row mt-4">
 
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <!--<div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Kanskje det fungerer</strong> ay, ikke lag tull her 
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            </div>-->
 
             <div class="col-md-8">
                 <h2>Bestill ⛵</h2>
@@ -35,8 +35,8 @@
                     <div class="col-md-3">
                         <label for="type" class="form-label">Type:</label>
                         <select class="form-control" id="tourType" onchange="updateTourType()">
-                            <option value="0">En vei</option>
-                            <option value="1">Fram og tilbake</option>
+                            <option value="1">En vei</option>
+                            <option value="2">Fram og tilbake</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -59,12 +59,13 @@
                 </form>
             </div>
         </div>
-        <div class="row mt-4">
-            <h2 id="order-details"></h2>
+        <hr />
+        <div class="row mt-4 mb-4">
+            <h3 id="order-details"></h3>
             <div class="col-md-6" id="timetable-leave">
                 <!--jquery stoler på tagene her, dersom man fjerner/endrer dem så må man også gjøre det i js -->
-                <h3><!--js--></h3>
-                <h4><!--js--></h4>
+                <h5 id="timetable-route"><!--js--></h5>
+                <h5 id="timetable-interval"><!--js--></h5>
                 <table class="table table-bordered table-hover" id="table-leave">
                     <thead>
                         <!--js-->
@@ -76,8 +77,8 @@
             </div>
             <div class="col-md-6" id="timetable-return">
                 <!--jquery stoler på tagene her, dersom man fjerner/endrer dem så må man også gjøre det i js -->
-                <h3></h3>
-                <h4><!--js--></h4>
+                <h5 id="timetable-route"></h5>
+                <h5 id="timetable-interval"><!--js--></h5>
                 <table class="table table-bordered table-hover" id="table-return">
                     <thead>
                         <!--js-->
@@ -89,7 +90,7 @@
             </div>
             <div class="row mt-4">
                 <div class="col-md-3">
-                    <button id="button-proceed" class="btn btn-primary" onclick="Proceed()">Forsett</button>
+                    <button id="button-proceed" class="btn btn-primary" onclick="Proceed()" style="display: none;">Forsett</button>
                 </div>
 
             </div>

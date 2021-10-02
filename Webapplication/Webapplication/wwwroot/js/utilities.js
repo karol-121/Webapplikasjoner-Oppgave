@@ -129,6 +129,7 @@ class Cart {
     //summary: legger til et objekt på spesifikt plass
     //parameters: index - plass hvor objektet skal legges på, obj - objektet som skal legges inn.
     addToCart(index, obj) {
+            
         this.#cart[index] = obj;
         this.#subscriber();
     }
@@ -136,12 +137,14 @@ class Cart {
     //summary: fjerner objekt på spesifik plass
     //parameters: index - plass på hvilken et objekt skal fjernes
     removeFromCart(index) {
+
         this.#cart.splice(index, 1);
         this.#subscriber();
     }
 
     //summary: nullstiller carten
     emptyCart() {
+
         this.#cart = [];
         this.#subscriber();
     }
@@ -150,12 +153,22 @@ class Cart {
     //prameters: index - plass til objektet som skal returneres
     //reutrns: objekt 
     getItem(index) {
+
         return this.#cart[index];
     }
 
-    //summary: returnerer antall objekter som finnes i carten
-    //returns: int med antall objekter
+    //summary: returnerer antall elementer som finnes i carten.
+    //reutrns: integer med antall elementer 
     getItemCount() {
-        return this.#cart.length;
+
+        let count = 0;
+        for (let item of this.#cart) {
+            if (item != null) {
+                count++
+            }
+        }
+
+        return count;
     }
+
 }
