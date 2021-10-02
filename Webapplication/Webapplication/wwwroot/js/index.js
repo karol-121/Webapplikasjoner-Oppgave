@@ -4,6 +4,7 @@ let Routes; //denne skal holde array med departures.
 let DeparturesLeave; //holder utreiser for en vei eller tur
 let DeparturesReturn; //holder utreiser for tilbake tur
 
+
 const cart = new Cart(updateProceed);
 
 new DateUtilities();// oppretter objekt fra classen slik at den er defined
@@ -18,11 +19,9 @@ $(function () {
 //summary: funksjon som oppdaterer attributer til dom input date slik at de viser dagens dato.
 function updateDOM_inputDate() {
     const a = new Date();
-    $("#dateLeave").val(DateUtilities.toApiDateString(a));
-    //$("#dateLeave").attr("min",DateUtilities.toApiDateString(a));
+    $('#dateLeave').val(DateUtilities.toApiDateString(a));
 
-    $("#dateReturn").val(DateUtilities.toApiDateString(a));
-    //$("#dateReturn").attr("min",DateUtilities.toApiDateString(a));
+    $('#dateReturn').val(DateUtilities.toApiDateString(a));
 
 }
 
@@ -33,17 +32,17 @@ function fetchRoutes() {
 
     $.get(url, function (routes) {
 
-        console.log("route fetch ok")
+        Routes = routes; //populate lokal variable som vil holde fetched routes, noe som kan akseseres senere
 
         let string = new String();
-
-        Routes = routes; //populate lokal variable som vil holde fetched routes, noe som kan akseseres senere
 
         for (var i = 0; i < routes.length; i++) {
             string += "<option value='" + i + "'>" + routes[i].origin + " - " + routes[i].destination + "</option>"
         }
 
-        $("#route").html(string);
+        $('#route').html(string);
+
+        console.log("route fetch ok");
 
     }).fail(function () {
 
@@ -61,12 +60,12 @@ function updateTourType() {
     //hvis det er utreise og tilbake, så må begge være valgt for å enable knappen
 
     if (TourType == 0) {
-        $("#dateReturn").prop('disabled', true);
-        $("#timetable-return").hide();
+        $('#dateReturn').prop('disabled', true);
+        //$('#timetable-return').hide();
 
     } else {
-        $("#dateReturn").prop('disabled', false);
-        $("#timetable-return").show();
+        $('#dateReturn').prop('disabled', false);
+        //$('#timetable-return').show();
     }
 
     updateProceed();
@@ -74,10 +73,9 @@ function updateTourType() {
 
 //todo: det blir kanskje bedre at update tour type og update proceed funksjoner blir slått sammen siden de gjør det samme ish.
 
-//summary: funksjon som oppdaterer knappen
-//this should be subscribed to array and then the check will update itself whenever array state changes.
+//summary: funksjon som oppdaterer knappen, den er subscriberen til cart objekt, så den blir kjøret hver gang cart items tilstand endres
 function updateProceed() {
-    if ((TourType == 1 && cart.getItemCount() === 2) || (TourType == 0 && cart.getItemCount() >= 1)) {
+    if (cart.getItemCount() >= 1) {
         $('#button-proceed').show();
     } else {
         $('#button-proceed').hide();
@@ -88,14 +86,18 @@ function updateProceed() {
 function dispatchDepartureFetching() {
 
     //todo: maybe make it so it does not fetch new values if nothing changed
-    const routes_index = $("#route").val();
+    const routes_index = $('#route').val();
 
     const routeId = Routes[routes_index].id;
     const routeIdReverse = Routes[routes_index].return_id;
 
-    const dateLeave = $("#dateLeave").val();
-    const dateReturn = $("#dateReturn").val();
-    const passengers = $("#passengers").val();
+    const dateLeave = $('#dateLeave').val();
+    const dateReturn = $('#dateReturn').val();
+    const passengers = $('#passengers').val();
+
+    const deatils = $("#tourType option:selected").text() + " for " + $('#passengers').val() + " personer:";
+
+    $('#order-details').html(deatils);
 
 
     //input validation goes here i guess, just do not verify the date return and route reverse if one way is choosen
@@ -107,7 +109,7 @@ function dispatchDepartureFetching() {
     const dateIntervalLeave = new DateInterval(DateUtilities.inputToDateObject(dateLeave));
     const dateIntervalReturn = new DateInterval(DateUtilities.inputToDateObject(dateReturn));
 
-    fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures);
+    fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures); //fetch tur utreise 
 
 
     if (TourType == 1) {
@@ -117,7 +119,7 @@ function dispatchDepartureFetching() {
     } else {
 
         //dersom det skal ikke vises retur utreiser
-        cleanDepartures($("#timetable-return"));    //fjen tidligere infromasjon siden denne runden forventes det ingen data. 
+        cleanDepartures($('#timetable-return'));    //fjen tidligere infromasjon siden denne runden forventes det ingen data. 
                                                     //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
 
     }
@@ -155,22 +157,20 @@ function fetchDepartures(routeId, dateInterval, passengers, dataProcessingFuncti
 function processLeaveDepartures(routeId, interval, departures) {
     DeparturesLeave = departures;
 
-    const routeObj = findRoute(routeId);
+    const routeObj = findRoute(routeId); //finne route for disse departures ut av departure id siden den returneres ikke av server
     
-    displayDepartures(routeObj, interval, DeparturesLeave, $("#timetable-leave"));
-    //print Departures Leave
+    displayDepartures(routeObj, interval, DeparturesLeave, $('#timetable-leave')); // kjøre print metode
 }
 
 //summary: funksjon som videre prosesserer tilbake utreiser, den bestemmer ting som hvor data skal printes osv.
 //parameters: interval - dateinterval objekt som inneholder intervalet, departures - liste med utreiser
 function processReturnDepartures(routeId, interval, departures) {
-    DeparturesReturn = departures;
+    DeparturesReturn = departures; //lagre departures som global objekt som kan akseseres senere
 
-    const routeObj = findRoute(routeId)
+    const routeObj = findRoute(routeId); // finne route for disse departures ut av departure id siden den returneres ikke av server
 
-    //her skal printes, endres dom elementer som er spesifike for return departure
-    displayDepartures(routeObj, interval, DeparturesReturn, $("#timetable-return"));
-    //print Departures Return
+    displayDepartures(routeObj, interval, DeparturesReturn, $('#timetable-return')); // kjøre print metode
+
 }
 
 //summary: funksjon som populerer tabell objekt med inn data. Html objekt må ha spesifik oppsett.
@@ -178,22 +178,48 @@ function processReturnDepartures(routeId, interval, departures) {
 function displayDepartures(routeObj, interval, departures, DOM_Source) {
 
     const title = routeObj.origin + " - " + routeObj.destination;
-    DOM_Source.children("h3").html(title);
+    DOM_Source.children('h3').html(title);
 
     const subtitle = DateUtilities.toLocalDateString(interval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(interval.getEndInterval());
-    DOM_Source.children("h4").html(subtitle);
+    DOM_Source.children('h4').html(subtitle);
 
     const header = "<tr><th>dato:</th><th>pris:</th></tr>";
-    DOM_Source.children("table").children("thead").html(header);
+    DOM_Source.children('table').children('thead').html(header);
 
     let tableContent = new String();
 
     for (var d = 0; d < departures.length; d++) {
         tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.passeger_Price + " kr</td></tr>";
     }
-    DOM_Source.children("table").children("tbody").html(tableContent);
+    DOM_Source.children('table').children('tbody').html(tableContent);
 
-    registerTableEventListeners();
+    registerTableEventListeners(); // kjøre funksjon som vil registrere event listeners til tabell rekorder som har blitt lager her.
+
+}
+
+//summary: disse jquery funksjoner må være kjørt etter at tabellen er populert eller vil de ikke reagere på rowsa
+//det er mulig å om formattere det men det er ikke bare bare her.
+function registerTableEventListeners() {
+
+    $('#table-leave tr').click(function () {
+
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+        const value = $(this).data('value');
+
+        cart.addToCart(0, DeparturesLeave[value]); //add departure til cart
+        
+    });
+
+
+    $('#table-return tr').click(function () {
+
+        $(this).addClass('table-active').siblings().removeClass('table-active');
+        const value = $(this).data('value');
+
+        cart.addToCart(1, DeparturesReturn[value]); //add departure til cart
+
+    });
+
 
 }
 
@@ -201,13 +227,13 @@ function displayDepartures(routeObj, interval, departures, DOM_Source) {
 //parameters: DOM_Source - parent node til objektet som skal renses
 function cleanDepartures(DOM_Source) {
 
-    DOM_Source.children("h3").html("");
+    DOM_Source.children('h3').html("");
 
-    DOM_Source.children("h4").html("");
+    DOM_Source.children('h4').html("");
 
-    DOM_Source.children("table").children("thead").html("");
+    DOM_Source.children('table').children('thead').html("");
 
-    DOM_Source.children("table").children("tbody").html("");
+    DOM_Source.children('table').children('tbody').html("");
 
 }
 
@@ -222,31 +248,6 @@ function findRoute(routeId) {
     }
 
     return null;
-}
-
-
-//summary: disse jquery funksjoner må være kjørt etter at tabellen er populert eller vil de ikke reagere på rowsa
-//det er mulig å om formattere det men det er ikke bare bare her.
-function registerTableEventListeners() {
-
-    $("#table-leave tr").click(function () {
-
-        $(this).addClass('table-active').siblings().removeClass('table-active');
-        const value = $(this).data('value');
-
-        cart.addToCart(0, DeparturesLeave[value]); //add departure til cart
-    });
-
-
-    $("#table-return tr").click(function () {
-        $(this).addClass('table-active').siblings().removeClass('table-active');
-        const value = $(this).data('value');
-
-        cart.addToCart(1, DeparturesReturn[value]); //add departure til cart
-
-    });
-
-    
 }
 
 //summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
