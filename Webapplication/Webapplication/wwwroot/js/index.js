@@ -18,9 +18,9 @@ $(function () {
 //summary: funksjon som oppdaterer attributer til dom input date slik at de viser dagens dato.
 function updateDOM_inputDate() {
     const a = new Date();
-    $('#dateLeave').val(DateUtilities.toApiDateString(a));
+    $('#date-leave').val(DateUtilities.toApiDateString(a));
 
-    $('#dateReturn').val(DateUtilities.toApiDateString(a));
+    $('#date-return').val(DateUtilities.toApiDateString(a));
 
 }
 
@@ -66,7 +66,9 @@ function updateProceed() {
     if (cart.getItemCount() == TourType) { //sammenlike antall items og tur type, det forventes 1 item for tur type 1 og 2 for 2.
         $('#button-proceed').show();
 
-        //make it so the side scroll to the button as it may not be obvious that the button appeared when there is scrollable content
+        $('html').scrollTop($('#button-proceed').offset().top); //scroller til knappen når den viser seg slik at brukeren vet at den befinner seg der
+        //Det er ikke git at brukeren merker at knappen ble vist dersom det er content som skal scrolles.
+
     } else {
         $('#button-proceed').hide();
     }
@@ -82,8 +84,8 @@ function dispatchDepartureFetching() {
     const routeId = Routes[routes_index].id;
     const routeIdReverse = Routes[routes_index].return_id;
 
-    const dateLeave = $('#dateLeave').val();
-    const dateReturn = $('#dateReturn').val();
+    const dateLeave = $('#date-leave').val();
+    const dateReturn = $('#date-return').val();
 
     const passengers = $('#passengers').val();
 
@@ -93,7 +95,7 @@ function dispatchDepartureFetching() {
 
     //also check if the return date is greater than leave, otherwise it is a error as you can not return before you go.
 
-    TourType = $("#tourType").val(); //oppdater global verdi med den som har blitt søkt for
+    TourType = $("#tour-type").val(); //oppdater global verdi med den som har blitt søkt for
 
     //printe titell for resultat 
     const deatils = $("#tourType option:selected").text() + " for " + $('#passengers').val() + " personer:"; //den skal printe person og personer avhengig av antall
@@ -117,8 +119,7 @@ function dispatchDepartureFetching() {
 
     }
 
-    cart.emptyCart();
-    //clean the cart here as dispaching new routes can make current choosen irrelenat.
+    cart.emptyCart(); //nullstiller carten etter at nye utreiser skal vises som betyr at de gamle er irrelevante.
 
 }
 
@@ -243,11 +244,7 @@ function findRoute(routeId) {
 
 //summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
 function Proceed() {
-    if (TourType == 0) { //uansett hva som skjedde tidligere, her dersom tour type er "tur", andre elementet slettes
-        cart.removeFromCart(1);
-        //dette her får den button til å henge seg, men det burde ikke være problem dersom man skal gå videre etter at knappen har blitt trukket
-        //Cart[0] = null, dersom vi forventer at dette array skal ha 2 elementer uansett
-    }
+
     console.log(cart.getItem(0));
     console.log(cart.getItem(1));
 

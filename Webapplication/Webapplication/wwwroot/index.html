@@ -20,11 +20,6 @@
                 <!--boks for eventuelle notifikasjoner som printes her-->
             </div>
 
-            <!--<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ay, ikke lag tull her 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>-->
-
             <div class="col-md-8">
                 <h2>Bestill ⛵</h2>
                 <form class="row g-3" onsubmit="return false">
@@ -37,7 +32,7 @@
                     </div>
                     <div class="col-md-3">
                         <label for="type" class="form-label">Type:</label>
-                        <select class="form-control" id="tourType" onchange="updateTourType()">
+                        <select class="form-control" id="tour-type" onchange="updateTourType()">
                             <option value="1">En vei</option>
                             <option value="2">Fram og tilbake</option>
                         </select>
@@ -47,12 +42,12 @@
                         <input class="form-control" id="passengers" type="number" value="1" min="1" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="dateLeave">Utreise:</label>
-                        <input class="form-control" id="dateLeave" type="date" />
+                        <label class="form-label" for="date-leave">Utreise:</label>
+                        <input class="form-control" id="date-leave" type="date" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label" for="dateReturn">Tilbake:</label>
-                        <input class="form-control" id="dateReturn" type="date" />
+                        <label class="form-label" for="date-return">Tilbake:</label>
+                        <input class="form-control" id="date-return" type="date" />
                     </div>
 
                     <div class="col-md-12">
