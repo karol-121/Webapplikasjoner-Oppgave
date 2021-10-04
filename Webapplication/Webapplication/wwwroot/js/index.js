@@ -1,12 +1,12 @@
 ﻿//global attributes
 let Routes; //denne skal holde array med departures.
-let TourType; //variable thats hold value of tour type, one way or two 
+let TourType; //variable som holder verdi om det søkes tur - retur eller kun tur
 let DeparturesLeave; //holder utreiser for en vei eller tur
 let DeparturesReturn; //holder utreiser for tilbake tur
 
 const cart = new Cart(updateProceed); //cart objekt som holder rede på departures som velges
 
-new DateUtilities();// oppretter objekt fra classen slik at den er defined
+new DateUtilities();// oppretter objekt fra classen slik at den er defined og kan refereres dens metoder
 
 //summary: autostart funksjon som kaller på nødvendige funksjoner
 $(function () {
@@ -78,21 +78,23 @@ function updateProceed() {
 //summary: funksjonen som samler data og bestemmer hvilke utreiser skal fetches fra serveren
 function dispatchDepartureFetching() {
 
-    $('.form-control').removeClass('is-invalid'); //fjerner tidligere feilmeldinger 
-
     let isValid = true; //flag som bestemmer om data til sammen er valide eller ikke 
-    let isDateNull = false;
+    let isDateNull = false; //hjelpe variabel som holder rede på om dato objekter er null eller ikke
 
-    const routes_index = $('#route').val(); 
+    $('.form-control').removeClass('is-invalid'); //fjerner tidligere 
 
-    const routeId = Routes[routes_index].id; 
-    const routeIdReverse = Routes[routes_index].return_id;
+    const routes_index = $('#route').val(); //henter index fra input
+
+    const routeId = Routes[routes_index].id; //henter route id fra lokal array
+    const routeIdReverse = Routes[routes_index].return_id; //henter retur route id fra lokal array
 
     const passengers = $('#passengers').val(); //henter personer verdi fra input 
 
     if (passengers < 1) { //antall personer er invalid hvis tallet er mindre enn 1
+
         isValid = false;
         $('#passengers').addClass('is-invalid');
+
     }
 
     const type = $("#tour-type").val(); //henter tour type verdi fra input
@@ -100,27 +102,31 @@ function dispatchDepartureFetching() {
     const dateLeave = DateUtilities.inputToDateObject($('#date-leave').val()); //henter utreise dato fra input og konverterer til dato objekt
     const dateReturn = DateUtilities.inputToDateObject($('#date-return').val()); //henter retur dato fra input og konverterer til dato objekt
 
-    if (dateLeave === null) {
+    if (dateLeave === null) { //hvis utreise dato er null, det betyr at den er invalid
+
         isValid = false;
         isDateNull = true;
         $('#date-leave').addClass('is-invalid');
+
     }
 
-    if (type == 2) {
-        if (dateReturn === null) {
+    if (type == 2) { //validering av verdier relevant kun for tur - retur søk 
+        if (dateReturn === null) { // hvis retur dato er null, betyr det at den er invalid
+
             isValid = false;
             isDateNull = true;
             $('#date-return').addClass('is-invalid');
+
         }
 
-        if (!isDateNull && dateReturn.getTime() < dateLeave.getTime()) {
+        if (!isDateNull && dateReturn.getTime() < dateLeave.getTime()) {    //hvis retur dato er tidligere enn utreise, noe som er feil
+                                                                            //dette utføres kun hvis begge verdier er ikke null, ellers er .gettime() ikke tilgjengelig
             isValid = false;
             $('#date-leave').addClass('is-invalid');
             $('#date-return').addClass('is-invalid');
+
         }
     }
-
-
 
     if (isValid) { //hvis data er valide, skal man fetche data.
 
@@ -129,14 +135,14 @@ function dispatchDepartureFetching() {
 
         fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures); //fetch tur utreise 
 
-        if (type == 2) {
-            //dersom det skal vises retur utreiser
+        if (type == 2) { //dersom det skal vises retur utreiser
+            
             fetchDepartures(routeIdReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
 
-        } else {
+        } else { //dersom det skal ikke vises retur utreiser
 
-            //dersom det skal ikke vises retur utreiser
-            cleanDepartures($('#timetable-return'));    //fjen tidligere infromasjon siden denne runden forventes det ingen data. 
+            cleanDepartures($('#timetable-return'));    
+            //fjen tidligere infromasjon siden denne runden forventes det ingen data
             //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
 
         }
@@ -177,8 +183,16 @@ function processLeaveDepartures(routeId, interval, departures) {
 
 
     TourType = $("#tour-type").val(); //oppdatere global verdi med nå søkt verdi.
- 
-    const details = $("#tour-type option:selected").text() + " for " + $('#passengers').val() + " personer:"; //den skal printe person og personer avhengig av antall
+
+    let p = $('#passengers').val(); 
+
+    if (p > 1) { // bøye person etter antall, 1 = person, 2 = personer.
+        p = p + " personer:";
+    } else {
+        p = p + " person:"
+    }
+
+    const details = $("#tour-type option:selected").text() + " for " + p; //den skal printe person og personer avhengig av antall
     $('#order-details').html(details); //vises titell for søket 
 
     //grunnet til at tour type og details er oppdatert/printet her er at disse skal utføres etter vellykket fetch. Samtidig leave departures skal skje altid ved søket.
@@ -279,12 +293,16 @@ function findRoute(routeId) {
 //summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
 function Proceed() {
 
-    //sjekk for session storage, hvis det ikke finnes, vis feil melding
+    if (window.sessionStorage) {//sjekk om session storage er tilgjengelig
+        window.sessionStorage.setItem("choosed-departures", JSON.stringify(cart.getItems())); //legg cart innholdet til session storage slik at andre undersiden kan bruke det.
+        //go to en annen side.
+    } else {
+        //dersom session storage er ikke tilgjengelig, vis feilmelding.
+        console.log("session storage er ikke tilgjengelig");
+        Alert("alert-container", "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
+    }
 
-    //ellers serialise begge elementer, hvis de er ikke null og så flytt til et annen location.
 
-    console.log(cart.getItem(0));
-    console.log(cart.getItem(1));
 
 }
 

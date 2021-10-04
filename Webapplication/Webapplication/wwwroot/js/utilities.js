@@ -99,15 +99,13 @@ class DateUtilities {
 
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
     //parameters: String dateString - dato i "yyyy-mm-dd" streng 
-    //returns: Date objekt. Returnerer nå dato ved ugyldig date string
+    //returns: Date objekt. Returnerer null ved ugyldig verdi
     static inputToDateObject(dateString) {
 
-        //regex validation.
-
-        const regexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+        const regexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/; //valid input string
 
         if (!regexp.test(dateString)) {
-            return null;
+            return null; //returner null ved invalid string
         }
 
         const year = Number(dateString.substring(0, 4));
@@ -115,7 +113,7 @@ class DateUtilities {
         const day = Number(dateString.substring(8, 10));
 
 
-        return new Date(year, month, day);
+        return new Date(year, month, day); //returner et date objekt
     }
 
     //summary: metode som formaterer json dato streng til lokal tid notasjon
@@ -187,6 +185,12 @@ class Cart {
         }
 
         return count;
+    }
+
+    //summary: returnerer elementer som finnes i carten.
+    //reutrns: array med objekter
+    getItems() {
+        return this.#cart;
     }
 
 }
