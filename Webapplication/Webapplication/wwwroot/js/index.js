@@ -43,7 +43,7 @@ function fetchRoutes() {
 
     }).fail(function () {
 
-        Alert($('#alert-container'), "danger", "Henting av ruter gikk galt. Prøv igjen senere."); //print alert til brukeren
+        BootstrapAlert($('#alert-container'), "danger", "Henting av ruter gikk galt. Prøv igjen senere."); //print alert til brukeren
 
     })
 }
@@ -167,11 +167,11 @@ function fetchDepartures(routeId, dateInterval, passengers, dataProcessingFuncti
 
     $.get(url, function (data) {
 
-        dataProcessingFunction(routeId, dateInterval, data);
+        dataProcessingFunction(routeId, dateInterval, data); //sende result data til videre processering funksjoner
 
     }).fail(function () {
         
-        Alert($('#alert-container'), "danger", "Henting av data gikk galt. Prøv igjen senere."); //print alert til brukeren
+        BootstrapAlert($('#alert-container'), "danger", "Henting av data gikk galt. Prøv igjen senere."); //print alert til brukeren
 
     });
 }
@@ -181,18 +181,17 @@ function fetchDepartures(routeId, dateInterval, passengers, dataProcessingFuncti
 function processLeaveDepartures(routeId, interval, departures) {
     DeparturesLeave = departures;
 
-
     TourType = $("#tour-type").val(); //oppdatere global verdi med nå søkt verdi.
 
-    let p = $('#passengers').val(); 
+    let passengers = $('#passengers').val(); //hente verdi på nytt 
 
-    if (p > 1) { // bøye person etter antall, 1 = person, 2 = personer.
-        p = p + " personer:";
+    if (passengers > 1) { // bøye person etter antall, 1 = person, 2 = personer.
+        passengers = passengers + " personer:"; //flertall
     } else {
-        p = p + " person:"
+        passengers = passengers + " person:" //entall
     }
 
-    const details = $("#tour-type option:selected").text() + " for " + p; //den skal printe person og personer avhengig av antall
+    const details = $("#tour-type option:selected").text() + " for " + passengers; //den skal printe person og personer avhengig av antall
     $('#order-details').html(details); //vises titell for søket 
 
     //grunnet til at tour type og details er oppdatert/printet her er at disse skal utføres etter vellykket fetch. Samtidig leave departures skal skje altid ved søket.
@@ -219,23 +218,24 @@ function processReturnDepartures(routeId, interval, departures) {
 //parameters: route - route objekt, interval - interval objekt, departures - liste med departure objekter, DOM_Source - parent node
 function displayDepartures(routeObj, interval, departures, DOM_Source) {
 
-    const title = routeObj.origin + " - " + routeObj.destination;
+    const title = routeObj.origin + " - " + routeObj.destination; //route tittel
     DOM_Source.children('#timetable-route').html(title);
 
-    const subtitle = DateUtilities.toLocalDateString(interval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(interval.getEndInterval());
+    const subtitle = DateUtilities.toLocalDateString(interval.getStartInterval()) + " - " + DateUtilities.toLocalDateString(interval.getEndInterval()); //dato interval tittel
     DOM_Source.children('#timetable-interval').html(subtitle);
 
-    const header = "<tr><th>dato:</th><th>pris:</th></tr>";
+    const header = "<tr><th>dato:</th><th>pris:</th></tr>"; //tabel header 
     DOM_Source.children('table').children('thead').html(header);
 
     let tableContent = new String();
 
-    for (var d = 0; d < departures.length; d++) {
+    for (var d = 0; d < departures.length; d++) { //tabell rader
         tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.passeger_Price + " kr</td></tr>";
     }
     DOM_Source.children('table').children('tbody').html(tableContent);
 
-    registerTableEventListeners(); // kjøre funksjon som vil registrere event listeners til tabell rekorder som har blitt lager her.
+    registerTableEventListeners();  // kjøre funksjon som vil registrere event listeners til tabell rekorder som har blitt lager her.
+                                    //her vil begge eventlistenere bli knyttet til hver sin tabell, selv når kun et tabell printes.
 
 }
 
@@ -299,7 +299,7 @@ function Proceed() {
     } else {
         //dersom session storage er ikke tilgjengelig, vis feilmelding.
         console.log("session storage er ikke tilgjengelig");
-        Alert("alert-container", "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
+        BootstrapAlert("alert-container", "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
     }
 
 
