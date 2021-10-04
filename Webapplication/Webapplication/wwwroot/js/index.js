@@ -41,11 +41,9 @@ function fetchRoutes() {
 
         $('#route').html(string);
 
-        console.log("route fetch ok");
-
     }).fail(function () {
 
-        console.log("route fetch failed!");
+        Alert($('#alert-container'), "danger", "Henting av ruter gikk galt. Prøv igjen senere."); //print alert til brukeren
 
     })
 }
@@ -67,6 +65,8 @@ function updateProceed() {
 
     if (cart.getItemCount() == TourType) { //sammenlike antall items og tur type, det forventes 1 item for tur type 1 og 2 for 2.
         $('#button-proceed').show();
+
+        //make it so the side scroll to the button as it may not be obvious that the button appeared when there is scrollable content
     } else {
         $('#button-proceed').hide();
     }
@@ -87,7 +87,7 @@ function dispatchDepartureFetching() {
 
     const passengers = $('#passengers').val();
 
-      //input validation goes here i guess, just do not verify the date return and route reverse if one way is choosen
+    //todo input validation goes here i guess, just do not verify the date return and route reverse if one way is choosen
     //question is if the date should be validated, as currently it will default to todays date anyway.
     //could be also nice if route reverse if wrong, do not allow for two way orders
 
@@ -135,12 +135,12 @@ function fetchDepartures(routeId, dateInterval, passengers, dataProcessingFuncti
         "&To=" + DateUtilities.toApiDateString(to) + "&Passengers=" + passengers;
 
     $.get(url, function (data) {
-        console.log("departure fetch ok");
+
         dataProcessingFunction(routeId, dateInterval, data);
 
     }).fail(function () {
-        console.log("departure fetch failed!");
-        //her skal det vises noe alert tingy.
+        
+        Alert($('#alert-container'), "danger", "Henting av data gikk galt. Prøv igjen senere."); //print alert til brukeren
 
     });
 }

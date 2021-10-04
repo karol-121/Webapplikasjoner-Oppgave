@@ -172,3 +172,13 @@ class Cart {
     }
 
 }
+
+//summary: Funksjon som printer et bootstrap alert av valgt type og meldig til et bestemt plass. 
+//Denne funskjonen appender til destinasjon som betyr at alertene vil stacke seg
+//parameters: destination - jquery dom selector som definerer hvor meldingen skal printes, type - type av feilmelding (warning, danger osv.), melding - hva alerten skal si.
+function Alert(destination, type, message) {
+    let s = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">'
+        + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+    destination.append(s);
+}
