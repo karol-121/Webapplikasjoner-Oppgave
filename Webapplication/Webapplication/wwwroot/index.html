@@ -22,7 +22,7 @@
 
             <div class="col-md-8">
                 <h2>Bestill ⛵</h2>
-                <form class="row g-3" onsubmit="return false">
+                <form id="search-form" class="row g-3 " onsubmit="return false">
 
                     <div class="col-md-6">
                         <label for="route" class="form-label">Strekning:</label>
@@ -39,15 +39,24 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="passengers">Personer:</label>
-                        <input class="form-control" id="passengers" type="number" value="1" min="1" />
+                        <input class="form-control" id="passengers" type="number" value="1" min="1" required />
+                        <div class="invalid-feedback">
+                            Antall personer må være større enn null.
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="date-leave">Utreise:</label>
-                        <input class="form-control" id="date-leave" type="date" />
+                        <input class="form-control" id="date-leave" type="date" required />
+                        <div class="invalid-feedback">
+                            Dato må være gyldig og være tidligere enn retur.
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="date-return">Tilbake:</label>
-                        <input class="form-control" id="date-return" type="date" />
+                        <input class="form-control" id="date-return" type="date" required />
+                        <div class="invalid-feedback">
+                            Dato må være gyldig og være senere enn utreise.
+                        </div>
                     </div>
 
                     <div class="col-md-12">

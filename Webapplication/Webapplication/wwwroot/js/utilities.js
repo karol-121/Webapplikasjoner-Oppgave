@@ -3,6 +3,7 @@
 //dersom inn dato er tidligere enn 3 dager fra dagens dato, skal intervalen starte fra dagens dato og slutte 7 dager etter.
 class DateInterval {
     #nowDate = new Date();
+    #requestDate;
     #startInterval;
     #endInterval; 
     #maxInterval = 604800000; //7 dager representert i millisekunder
@@ -12,11 +13,13 @@ class DateInterval {
 
         this.#nowDate.setHours(0, 0, 0, 0); //nullstiller tid for nå-dato for å ekskludere det som en variabel ved videre kalkulasjoner.
 
-        //hvis forskjellen mellom nå-dato og inn-dato er større enn 3 dager.
-        if (requestDate.getTime() - this.#nowDate.getTime() > this.#intervalOffset) {
+        this.#requestDate = requestDate; //lagrer requested date
 
-            this.#startInterval = new Date(requestDate.getTime() - this.#intervalOffset); //start-intervall = 3 dager før inn-dato
-            this.#endInterval = new Date(requestDate.getTime() + this.#intervalOffset); //slutt-intervall = 3 dager etter inn-dato
+        //hvis forskjellen mellom nå-dato og inn-dato er større enn 3 dager.
+        if (this.#requestDate.getTime() - this.#nowDate.getTime() > this.#intervalOffset) {
+
+            this.#startInterval = new Date(this.#requestDate.getTime() - this.#intervalOffset); //start-intervall = 3 dager før inn-dato
+            this.#endInterval = new Date(this.#requestDate.getTime() + this.#intervalOffset); //slutt-intervall = 3 dager etter inn-dato
 
         } else {
 
@@ -31,6 +34,12 @@ class DateInterval {
     //returns: Date objekt
     getStartInterval() {
         return this.#startInterval;
+    }
+
+    //summary: metode som returnerer primær dato
+    //returns: Date objekt
+    getRequestedDate() {
+        return this.#requestDate;
     }
 
     //summary: metode som returnerer beregnet slutt intervall dato
@@ -90,12 +99,21 @@ class DateUtilities {
 
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
     //parameters: String dateString - dato i "yyyy-mm-dd" streng 
-    //returns: Date objekt.
+    //returns: Date objekt. Returnerer nå dato ved ugyldig date string
     static inputToDateObject(dateString) {
+
+        //regex validation.
+
+        const regexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+
+        if (!regexp.test(dateString)) {
+            return null;
+        }
 
         const year = Number(dateString.substring(0, 4));
         const month = Number(dateString.substring(5, 7)) - 1; //konvertering til 0-indeks månder (0 = januar)
         const day = Number(dateString.substring(8, 10));
+
 
         return new Date(year, month, day);
     }

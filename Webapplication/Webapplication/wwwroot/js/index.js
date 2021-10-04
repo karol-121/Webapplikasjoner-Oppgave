@@ -51,11 +51,11 @@ function fetchRoutes() {
 //summary: funksjon som oppdaterer verdier til tur type og styrer avhenge input elemeter
 function updateTourType() {
     
-    if ($("#tourType").val() == 1) {
-        $('#dateReturn').prop('disabled', true);
+    if ($("#tour-type").val() == 1) {
+        $('#date-return').prop('disabled', true);
 
     } else {
-        $('#dateReturn').prop('disabled', false);
+        $('#date-return').prop('disabled', false);
     }
 
 }
@@ -78,48 +78,72 @@ function updateProceed() {
 //summary: funksjonen som samler data og bestemmer hvilke utreiser skal fetches fra serveren
 function dispatchDepartureFetching() {
 
-    //todo: maybe make it so it does not fetch new values if nothing changed
-    const routes_index = $('#route').val();
+    $('.form-control').removeClass('is-invalid'); //fjerner tidligere feilmeldinger 
 
-    const routeId = Routes[routes_index].id;
+    let isValid = true; //flag som bestemmer om data til sammen er valide eller ikke 
+    let isDateNull = false;
+
+    const routes_index = $('#route').val(); 
+
+    const routeId = Routes[routes_index].id; 
     const routeIdReverse = Routes[routes_index].return_id;
 
-    const dateLeave = $('#date-leave').val();
-    const dateReturn = $('#date-return').val();
+    const passengers = $('#passengers').val(); //henter personer verdi fra input 
 
-    const passengers = $('#passengers').val();
-
-    //todo input validation goes here i guess, just do not verify the date return and route reverse if one way is choosen
-    //question is if the date should be validated, as currently it will default to todays date anyway.
-    //could be also nice if route reverse if wrong, do not allow for two way orders
-
-    //also check if the return date is greater than leave, otherwise it is a error as you can not return before you go.
-
-    TourType = $("#tour-type").val(); //oppdater global verdi med den som har blitt søkt for
-
-    //printe titell for resultat 
-    const deatils = $("#tourType option:selected").text() + " for " + $('#passengers').val() + " personer:"; //den skal printe person og personer avhengig av antall
-    $('#order-details').html(deatils);
-
-    const dateIntervalLeave = new DateInterval(DateUtilities.inputToDateObject(dateLeave));
-    const dateIntervalReturn = new DateInterval(DateUtilities.inputToDateObject(dateReturn));
-
-    fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures); //fetch tur utreise 
-
-
-    if (TourType == 2) {
-        //dersom det skal vises retur utreiser
-        fetchDepartures(routeIdReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
-        
-    } else {
-
-        //dersom det skal ikke vises retur utreiser
-        cleanDepartures($('#timetable-return'));    //fjen tidligere infromasjon siden denne runden forventes det ingen data. 
-                                                    //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
-
+    if (passengers < 1) { //antall personer er invalid hvis tallet er mindre enn 1
+        isValid = false;
+        $('#passengers').addClass('is-invalid');
     }
 
-    cart.emptyCart(); //nullstiller carten etter at nye utreiser skal vises som betyr at de gamle er irrelevante.
+    const type = $("#tour-type").val(); //henter tour type verdi fra input
+
+    const dateLeave = DateUtilities.inputToDateObject($('#date-leave').val()); //henter utreise dato fra input og konverterer til dato objekt
+    const dateReturn = DateUtilities.inputToDateObject($('#date-return').val()); //henter retur dato fra input og konverterer til dato objekt
+
+    if (dateLeave === null) {
+        isValid = false;
+        isDateNull = true;
+        $('#date-leave').addClass('is-invalid');
+    }
+
+    if (type == 2) {
+        if (dateReturn === null) {
+            isValid = false;
+            isDateNull = true;
+            $('#date-return').addClass('is-invalid');
+        }
+
+        if (!isDateNull && dateReturn.getTime() < dateLeave.getTime()) {
+            isValid = false;
+            $('#date-leave').addClass('is-invalid');
+            $('#date-return').addClass('is-invalid');
+        }
+    }
+
+
+
+    if (isValid) { //hvis data er valide, skal man fetche data.
+
+        const dateIntervalLeave = new DateInterval(dateLeave);
+        const dateIntervalReturn = new DateInterval(dateReturn);
+
+        fetchDepartures(routeId, dateIntervalLeave, passengers, processLeaveDepartures); //fetch tur utreise 
+
+        if (type == 2) {
+            //dersom det skal vises retur utreiser
+            fetchDepartures(routeIdReverse, dateIntervalReturn, passengers, processReturnDepartures); //fetch disse utreiser
+
+        } else {
+
+            //dersom det skal ikke vises retur utreiser
+            cleanDepartures($('#timetable-return'));    //fjen tidligere infromasjon siden denne runden forventes det ingen data. 
+            //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
+
+        }
+
+        cart.emptyCart(); //nullstiller carten etter at nye utreiser skal vises som betyr at de gamle er irrelevante.
+
+    }
 
 }
 
@@ -150,6 +174,16 @@ function fetchDepartures(routeId, dateInterval, passengers, dataProcessingFuncti
 //parameters: interval - dateinterval objekt som inneholder intervalet, departures - liste med utreiser
 function processLeaveDepartures(routeId, interval, departures) {
     DeparturesLeave = departures;
+
+
+    TourType = $("#tour-type").val(); //oppdatere global verdi med nå søkt verdi.
+ 
+    const details = $("#tour-type option:selected").text() + " for " + $('#passengers').val() + " personer:"; //den skal printe person og personer avhengig av antall
+    $('#order-details').html(details); //vises titell for søket 
+
+    //grunnet til at tour type og details er oppdatert/printet her er at disse skal utføres etter vellykket fetch. Samtidig leave departures skal skje altid ved søket.
+    //dersom disse utføre før vellykket fetch, vil disse dataene oppdate gui selv om nye data kommer ikke.
+
 
     const routeObj = findRoute(routeId); //finne route for disse departures ut av departure id siden den returneres ikke av server
     
@@ -245,10 +279,13 @@ function findRoute(routeId) {
 //summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
 function Proceed() {
 
+    //sjekk for session storage, hvis det ikke finnes, vis feil melding
+
+    //ellers serialise begge elementer, hvis de er ikke null og så flytt til et annen location.
+
     console.log(cart.getItem(0));
     console.log(cart.getItem(1));
 
-    //gå videre, serialize eller no.
 }
 
 
