@@ -1,128 +1,145 @@
 ﻿//summary: objekt som holder alle validerings funksjoner relatert til registrering av ordre.
 class registerValidation {
+    #isValid;
 
     constructor() {
+        this.#isValid = true;
+    }
 
+    //summary: registrerer validity for hver element og markeres relevant dom element som feil
+    //argument: valid - boolean som forteller om element er valid eller ikke, jquerySelector - referanse til dom element som sjekkes 
+    #registerValidity(valid, jquerySelector) {
+        if (!valid) {
+            this.#isValid = false;
+            jquerySelector.addClass('is-invalid');
+        }
     }
 
     //summary: funksjon med regex sjekk for navn
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkName(string) {
-
-        
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkName(jquerySelector) {
+ 
         const regexp = /^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector);
+
 
     }
 
     //summary: funksjon med regex sjekk for etternavn
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkSurname(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkSurname(jquerySelector) {
 
         const regexp = /^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
     //summary: funksjon med regex sjekk for alder
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkAge(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkAge(jquerySelector) {
 
         const regexp = /^[0-9]{1,3}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
     //summary: funksjon med regex sjekk for adress
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkAddress(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkAddress(jquerySelector) {
 
         const regexp = /^([a-zA-ZÆØÅæøå]{2,20}){1}( [a-zA-ZÆØÅæøå]{2,20}){0,4}( [0-9]{0,3}){0,1}[a-zA-Z]{0,1}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
     //summary: funksjon med regex sjekk for postnummer
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkZip(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkZip(jquerySelector) {
 
         const regexp = /^[0-9]{4}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
     //summary: funksjon med regex sjekk for by
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkCity(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkCity(jquerySelector) {
 
         const regexp = /^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
     //summary: funksjon med regex sjekk for telefonnummer
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkPhone(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkPhone(jquerySelector) {
 
         const regexp = /^(\+\([0-9]{1,3}\)|\+[0-9]{1,3})?( ?[0-9]{1,4}){2,4}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
     //summay: funksjon med regex sjekk for epost
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkEmail(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkEmail(jquerySelector) {
 
         const regexp = /^[a-zA-Z0-9._\-]{2,20}@[a-zA-Z0-9._\-]{2,20}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
 
     }
 
-    //summary: funksjon med regex sjekk for antall voksen passasjerer
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkAdults(string) {
+    //summary: hjelpe metode som sjekker enkel tall, 0-99
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    #checkSimpleNumber(jquerySelector) {
 
         const regexp = /^[0-9]{1,2}$/;
-        return regexp.test(string);
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector)
+    }
+
+    //summary: funksjon med regex sjekk for antall voksen passasjerer
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkAdults(jquerySelector) {
+
+        this.#checkSimpleNumber(jquerySelector);
 
     }
 
     //summary: funksjon med regex sjekk for antall mindreårig passasjerer
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkUnderage(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkUnderage(jquerySelector) {
 
-        const regexp = /^[0-9]{1,2}$/;
-        return regexp.test(string);
+        this.#checkSimpleNumber(jquerySelector);
 
     }
 
     //summary: funksjon med regex sjekk for antall husdyr
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkPets(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkPets(jquerySelector) {
 
-        const regexp = /^[0-9]{1,2}$/;
-        return regexp.test(string);
+        this.#checkSimpleNumber(jquerySelector);
 
     }
 
     //summary: funksjon med regex sjekk for motorvogn
-    //parameters: string - streng som skal valideres
-    //returns: true - hvis streng har korrekt syntaks, false - hvis streng har feil syntaks
-    checkVehicles(string) {
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkVehicles(jquerySelector) {
 
-        const regexp = /^[0-9]{1,2}$/;
-        return regexp.test(string);
+        this.#checkSimpleNumber(jquerySelector);
 
+    }
+
+    //summary: returnerer validity flag som forteller om en eller flere sjekk har feilet
+    //returns: true - hvis alle gjennomførte sjekk er valide, false - hvis en eller flere sjekk har feilet.
+    isValid() {
+        return this.#isValid;
     }
 }

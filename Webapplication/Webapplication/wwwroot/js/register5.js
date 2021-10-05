@@ -23,6 +23,7 @@ $(function () {
 
 });
 
+//summary: funksjon som henter valgte departures som skal ligge i session storage. Dersom de finnes ikke, returneres til index.html
 function getChoosenDepartures() {
     console.log("hello this is your function");
 
@@ -33,7 +34,7 @@ function getChoosenDepartures() {
 
     } else {
 
-        window.location.href = "index.html";
+        window.location.href = "index.html"; //dersom valgte departures finnes ikke, gå til index.html
     }
 }
 
@@ -42,25 +43,38 @@ function updateTotalPrice() {
     
     let total = 0;
 
-    for (d of Departures) {
+    for (d of Departures) { //ta ut priser, gang med antall valgt og summer for hver departure
         total = total + d.cruise.cruiseDetails.passeger_Price * formFields.adults.val();
         total = total + d.cruise.cruiseDetails.passegner_Underage_Price * formFields.underage.val();
         total = total + d.cruise.cruiseDetails.pet_Price * formFields.pets.val();
         total = total + d.cruise.cruiseDetails.vehicle_Price * formFields.vehicles.val();
     }
 
-    $('#price-total').html(total + " kr");
+    $('#price-total').html(total + " kr"); //print sub total
     
 }
 
 //summary: funksjon som validerer input fra form
 //returs: true - ved valid form, false - ved invalid form
 function validateInput() {
-    let isValid = true;
+    $('.form-control').removeClass('is-invalid');
 
+    const validator = new registerValidation();
 
+    validator.checkName(formFields.name);
+    validator.checkSurname(formFields.surname);
+    validator.checkAddress(formFields.address);
+    validator.checkZip(formFields.zip);
+    validator.checkCity(formFields.city);
+    validator.checkAge(formFields.age);
+    validator.checkPhone(formFields.phone);
+    validator.checkEmail(formFields.email);
+    validator.checkAdults(formFields.adults);
+    validator.checkUnderage(formFields.underage);
+    validator.checkPets(formFields.pets);
+    validator.checkVehicles(formFields.vehicles);
 
-    return isValid;
+    return validator.isValid();
 }
 
 //summary: funksjon som registrerer ordre for hver departure i Departures kun hvis form er valid.
