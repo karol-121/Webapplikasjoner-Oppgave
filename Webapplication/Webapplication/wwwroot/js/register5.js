@@ -16,8 +16,8 @@ $(function () {
         email: $('#customer-email'),
         adults: $('#order-adults'),
         underage: $('#order-underage'),
-        pets: $('#customer-pets'),
-        vehicles: $('#customer-vehicles')
+        pets: $('#order-pets'),
+        vehicles: $('#order-vehicles')
 
     }
 
@@ -37,11 +37,33 @@ function getChoosenDepartures() {
     }
 }
 
+//summary: funksjon som oppdaterer total pris dersom endringer påføres inn i form
+function updateTotalPrice() {
+    
+    let total = 0;
 
-function validateInput() {
-    return true;
+    for (d of Departures) {
+        total = total + d.cruise.cruiseDetails.passeger_Price * formFields.adults.val();
+        total = total + d.cruise.cruiseDetails.passegner_Underage_Price * formFields.underage.val();
+        total = total + d.cruise.cruiseDetails.pet_Price * formFields.pets.val();
+        total = total + d.cruise.cruiseDetails.vehicle_Price * formFields.vehicles.val();
+    }
+
+    $('#price-total').html(total + " kr");
+    
 }
 
+//summary: funksjon som validerer input fra form
+//returs: true - ved valid form, false - ved invalid form
+function validateInput() {
+    let isValid = true;
+
+
+
+    return isValid;
+}
+
+//summary: funksjon som registrerer ordre for hver departure i Departures kun hvis form er valid.
 function registerOrder() {
 
     const valid = validateInput();
