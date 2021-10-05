@@ -296,10 +296,11 @@ function Proceed() {
     if (window.sessionStorage) {//sjekk om session storage er tilgjengelig
         window.sessionStorage.setItem("choosed-departures", JSON.stringify(cart.getItems())); //legg cart innholdet til session storage slik at andre undersiden kan bruke det.
         //go to en annen side.
+        window.location.href = "register5.html";
     } else {
         //dersom session storage er ikke tilgjengelig, vis feilmelding.
         console.log("session storage er ikke tilgjengelig");
-        BootstrapAlert("alert-container", "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
+        BootstrapAlert($('#alert-container'), "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
     }
 
 
