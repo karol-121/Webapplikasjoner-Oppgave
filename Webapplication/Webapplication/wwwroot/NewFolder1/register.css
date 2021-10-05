@@ -28,7 +28,6 @@ form {
         border: 1px solid #ccc;
         box-sizing: border-box;
         display: inline-block;
-        color: white;
     }
 
         form div .rows input:focus {
