@@ -49,17 +49,21 @@ namespace Webapplication.DAL
 
                 //Cruise3
                 var sat_41_10 = new DateTime(2021, 10, 16, 10, 00, 0);
+
+                var cruise1_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
+                var cruise2_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
+                var cruise3_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
                 
                 //todo: øke antall maks plasser i produksjon, ellers brukes det små tall for å kunne teste.
 
-                var Cruise1 = new Cruise { Route = san_str, Max_Passengers = 10, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
-                var Cruise1_rev = new Cruise { Route = str_san, Max_Passengers = 10, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
+                var Cruise1 = new Cruise { Route = san_str, CruiseDetails = cruise1_details };
+                var Cruise1_rev = new Cruise { Route = str_san, CruiseDetails = cruise1_details };
 
-                var Cruise2 = new Cruise { Route = stav_berg, Max_Passengers = 10, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
-                var Cruise2_rev = new Cruise { Route = berg_stav, Max_Passengers = 10, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
+                var Cruise2 = new Cruise { Route = stav_berg, CruiseDetails = cruise2_details };
+                var Cruise2_rev = new Cruise { Route = berg_stav, CruiseDetails = cruise2_details };
 
-                var Cruise3 = new Cruise { Route = osl_kie, Max_Passengers = 10, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
-                var Cruise3_rev = new Cruise { Route = kie_osl, Max_Passengers = 10, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
+                var Cruise3 = new Cruise { Route = osl_kie,  CruiseDetails = cruise3_details };
+                var Cruise3_rev = new Cruise { Route = kie_osl, CruiseDetails = cruise3_details };
 
     
                 //Cruise1

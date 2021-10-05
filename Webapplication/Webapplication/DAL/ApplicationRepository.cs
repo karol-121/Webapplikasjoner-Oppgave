@@ -72,7 +72,7 @@ namespace Webapplication.DAL
         private async Task<bool> CheckAvailability(Departure Departure, int Passengers)
         {
 
-            var AvailableSeats = Departure.Cruise.Max_Passengers;
+            var AvailableSeats = Departure.Cruise.CruiseDetails.Max_Passengers;
 
             //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
             var BookedSeats = await _DB.Orders.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);

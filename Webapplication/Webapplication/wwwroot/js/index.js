@@ -230,7 +230,7 @@ function displayDepartures(routeObj, interval, departures, DOM_Source) {
     let tableContent = new String();
 
     for (var d = 0; d < departures.length; d++) { //tabell rader
-        tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.passeger_Price + " kr</td></tr>";
+        tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.cruiseDetails.passeger_Price + " kr</td></tr>";
     }
     DOM_Source.children('table').children('tbody').html(tableContent);
 
