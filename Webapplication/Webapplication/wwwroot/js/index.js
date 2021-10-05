@@ -10,10 +10,21 @@ new DateUtilities();// oppretter objekt fra classen slik at den er defined og ka
 
 //summary: autostart funksjon som kaller på nødvendige funksjoner
 $(function () {
+    successGreatings();
     fetchRoutes();
     updateTourType();
     updateDOM_inputDate();
 });
+
+
+//summary: dersom denne siden ble redirected til etter order så skal det vises et alert at ordre ble registrert.
+function successGreatings() {
+
+    if (window.sessionStorage.getItem("register-successfull") != null) {
+        BootstrapAlert($('#alert-container'), "success", "Din ordre har blitt registrert.");
+        window.sessionStorage.removeItem("register-successfull")
+    }
+}
 
 //summary: funksjon som oppdaterer attributer til dom input date slik at de viser dagens dato.
 function updateDOM_inputDate() {

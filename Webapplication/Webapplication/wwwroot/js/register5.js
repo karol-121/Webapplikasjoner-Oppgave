@@ -34,7 +34,7 @@ function getChoosenDepartures() {
 
     } else {
 
-        window.location.href = "index.html"; //dersom valgte departures finnes ikke, gå til index.html
+        window.location.replace("index.html"); //dersom valgte departures finnes ikke, gå til index.html
     }
 }
 
@@ -105,8 +105,8 @@ function registerOrder() {
             const url = "API/RegisterOrder";
             $.post(url, OrderInformation).done(function () {
 
-
-                alert("nice one!");
+                window.sessionStorage.setItem("register-successfull", "");
+                window.location.replace("index.html"); //replace slik at det er ikke mulig å gå tilbake
 
             }).fail(function () {
 
