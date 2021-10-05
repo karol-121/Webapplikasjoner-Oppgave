@@ -19,7 +19,42 @@ namespace Webapplication.DAL
                 Context.Database.EnsureDeleted();
                 Context.Database.EnsureCreated();
 
-                //todo: add dato og legg til data for neste 2 forkommende uker.
+                //DateTime currentDate = new DateTime(2021, 10, 1, 0, 0, 0);
+                DateTime currentDate = DateTime.Today; //nå tid
+
+                int dayOfWeek = (int)currentDate.DayOfWeek; //hente indeks til dagens ukedag
+
+                //"avrunde" dagens dato til nærmeste oppkommende søndag, for å skape et referanse dato
+                if (dayOfWeek != 0) //dersom i dag er det søndag (0), gjør ingenting.
+                {
+                    currentDate = currentDate.AddDays(7 - dayOfWeek); //legg til bestemt antall dager til oppkommende søndag
+                }
+
+
+                //Cruise1
+                var week1_mon_hour8 = currentDate.AddDays(1).AddHours(8);
+
+                var week1_mon_hour17 = currentDate.AddDays(1).AddHours(17);
+
+                var week1_wen_hour8 = currentDate.AddDays(3).AddHours(8);
+
+                var week1_wen_hour17 = currentDate.AddDays(3).AddHours(17);
+
+                var week1_fri_hour8 = currentDate.AddDays(5).AddHours(8);
+
+                var week1_fri_hour17 = currentDate.AddDays(5).AddHours(17);
+
+                //Cruise2
+                var week1_tue_hour8 = currentDate.AddDays(2).AddHours(8);
+
+                var week1_tue_hour15 = currentDate.AddDays(2).AddHours(15);
+
+                var week1_thu_hour8 = currentDate.AddDays(4).AddHours(8);
+
+                var week1_thu_hour15 = currentDate.AddDays(4).AddHours(15);
+
+                //Cruise3
+                var week1_sat_hour10 = currentDate.AddDays(6).AddHours(10);
 
                 //Routes
                 var san_str = new Route { Origin = "Sandefjord", Destination = "Strømstad", Return_id = 2 };
@@ -28,27 +63,6 @@ namespace Webapplication.DAL
                 var berg_stav = new Route { Origin = "Bergen", Destination = "Stavanger", Return_id = 3 };
                 var osl_kie = new Route { Origin = "Oslo", Destination = "Kiel", Return_id = 6 };
                 var kie_osl = new Route { Origin = "Kiel", Destination = "Oslo", Return_id = 5 };
-
-                //Uke 41
-                //Cruise1
-                var mon_41_8 = new DateTime(2021, 10, 11, 8, 00, 0);
-                var mon_41_17 = new DateTime(2021, 10, 11, 17, 00, 0);
-
-                var wen_41_8 = new DateTime(2021, 10, 13, 8, 00, 0);
-                var wen_41_17 = new DateTime(2021, 10, 13, 17, 00, 0);
-
-                var fri_41_8 = new DateTime(2021, 10, 15, 8, 00, 0);
-                var fri_41_17 = new DateTime(2021, 10, 15, 17, 00, 0);
-
-                //Cruise2
-                var tue_41_8 = new DateTime(2021, 10, 12, 8, 00, 0);
-                var tue_41_15 = new DateTime(2021, 10, 12, 15, 00, 0);
-
-                var thu_41_8 = new DateTime(2021, 10, 14, 8, 00, 0);
-                var thu_41_15 = new DateTime(2021, 10, 14, 15, 00, 0);
-
-                //Cruise3
-                var sat_41_10 = new DateTime(2021, 10, 16, 10, 00, 0);
 
                 var cruise1_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
                 var cruise2_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
@@ -67,38 +81,38 @@ namespace Webapplication.DAL
 
     
                 //Cruise1
-                var Schedule1 = new Departure { Cruise = Cruise1, Date = mon_41_8 };
-                var Schedule2 = new Departure { Cruise = Cruise1, Date = mon_41_17 };
-                var Schedule3 = new Departure { Cruise = Cruise1, Date = wen_41_8 };
-                var Schedule4 = new Departure { Cruise = Cruise1, Date = wen_41_17 };
-                var Schedule5 = new Departure { Cruise = Cruise1, Date = fri_41_8 };
-                var Schedule6 = new Departure { Cruise = Cruise1, Date = fri_41_17 };
+                var Schedule1 = new Departure { Cruise = Cruise1, Date = week1_mon_hour8 };
+                var Schedule2 = new Departure { Cruise = Cruise1, Date = week1_mon_hour17 };
+                var Schedule3 = new Departure { Cruise = Cruise1, Date = week1_wen_hour8 };
+                var Schedule4 = new Departure { Cruise = Cruise1, Date = week1_wen_hour17 };
+                var Schedule5 = new Departure { Cruise = Cruise1, Date = week1_fri_hour8 };
+                var Schedule6 = new Departure { Cruise = Cruise1, Date = week1_fri_hour17 };
 
                 //Cruise1 reverse
-                var Schedule7 = new Departure { Cruise = Cruise1_rev, Date = mon_41_8 };
-                var Schedule8 = new Departure { Cruise = Cruise1_rev, Date = mon_41_17 };
-                var Schedule9 = new Departure { Cruise = Cruise1_rev, Date = wen_41_8 };
-                var Schedule10 = new Departure { Cruise = Cruise1_rev, Date = wen_41_17 };
-                var Schedule11 = new Departure { Cruise = Cruise1_rev, Date = fri_41_8 };
-                var Schedule12 = new Departure { Cruise = Cruise1_rev, Date = fri_41_17 };
+                var Schedule7 = new Departure { Cruise = Cruise1_rev, Date = week1_mon_hour8 };
+                var Schedule8 = new Departure { Cruise = Cruise1_rev, Date = week1_mon_hour17 };
+                var Schedule9 = new Departure { Cruise = Cruise1_rev, Date = week1_wen_hour8 };
+                var Schedule10 = new Departure { Cruise = Cruise1_rev, Date = week1_wen_hour17 };
+                var Schedule11 = new Departure { Cruise = Cruise1_rev, Date = week1_fri_hour8 };
+                var Schedule12 = new Departure { Cruise = Cruise1_rev, Date = week1_fri_hour17 };
 
                 //Cruise2
-                var Schedule13 = new Departure { Cruise = Cruise2, Date = tue_41_8 };
-                var Schedule14 = new Departure { Cruise = Cruise2, Date = tue_41_15 };
-                var Schedule15 = new Departure { Cruise = Cruise2, Date = thu_41_8 };
-                var Schedule16 = new Departure { Cruise = Cruise2, Date = thu_41_15 };
+                var Schedule13 = new Departure { Cruise = Cruise2, Date = week1_tue_hour8 };
+                var Schedule14 = new Departure { Cruise = Cruise2, Date = week1_tue_hour15 };
+                var Schedule15 = new Departure { Cruise = Cruise2, Date = week1_thu_hour8 };
+                var Schedule16 = new Departure { Cruise = Cruise2, Date = week1_thu_hour15 };
 
                 //Cruisea reverse
-                var Schedule17 = new Departure { Cruise = Cruise2_rev, Date = tue_41_8 };
-                var Schedule18 = new Departure { Cruise = Cruise2_rev, Date = tue_41_15 };
-                var Schedule19 = new Departure { Cruise = Cruise2_rev, Date = thu_41_8 };
-                var Schedule20 = new Departure { Cruise = Cruise2_rev, Date = thu_41_15 };
+                var Schedule17 = new Departure { Cruise = Cruise2_rev, Date = week1_tue_hour8 };
+                var Schedule18 = new Departure { Cruise = Cruise2_rev, Date = week1_tue_hour15 };
+                var Schedule19 = new Departure { Cruise = Cruise2_rev, Date = week1_thu_hour8 };
+                var Schedule20 = new Departure { Cruise = Cruise2_rev, Date = week1_thu_hour15 };
 
                 //Cruise3
-                var Schedule21 = new Departure { Cruise = Cruise3, Date = sat_41_10 };
+                var Schedule21 = new Departure { Cruise = Cruise3, Date = week1_sat_hour10 };
 
                 //Cruise3 reverse
-                var Schedule22 = new Departure { Cruise = Cruise3_rev, Date = sat_41_10 };
+                var Schedule22 = new Departure { Cruise = Cruise3_rev, Date = week1_sat_hour10 };
 
 
                 //routes som skal inn i databasen
