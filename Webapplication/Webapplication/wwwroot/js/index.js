@@ -10,10 +10,21 @@ new DateUtilities();// oppretter objekt fra classen slik at den er defined og ka
 
 //summary: autostart funksjon som kaller på nødvendige funksjoner
 $(function () {
+    successGreatings();
     fetchRoutes();
     updateTourType();
     updateDOM_inputDate();
 });
+
+
+//summary: dersom denne siden ble redirected til etter order så skal det vises et alert at ordre ble registrert.
+function successGreatings() {
+
+    if (window.sessionStorage.getItem("register-successfull") != null) {
+        BootstrapAlert($('#alert-container'), "success", "Din ordre har blitt registrert.");
+        window.sessionStorage.removeItem("register-successfull")
+    }
+}
 
 //summary: funksjon som oppdaterer attributer til dom input date slik at de viser dagens dato.
 function updateDOM_inputDate() {
@@ -230,7 +241,7 @@ function displayDepartures(routeObj, interval, departures, DOM_Source) {
     let tableContent = new String();
 
     for (var d = 0; d < departures.length; d++) { //tabell rader
-        tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.passeger_Price + " kr</td></tr>";
+        tableContent += "<tr data-value='" + d + "'><td>" + DateUtilities.isoToLocalDateString(departures[d].date) + "</td><td>" + departures[d].cruise.cruiseDetails.passeger_Price + " kr</td></tr>";
     }
     DOM_Source.children('table').children('tbody').html(tableContent);
 
@@ -296,11 +307,11 @@ function Proceed() {
     if (window.sessionStorage) {//sjekk om session storage er tilgjengelig
         window.sessionStorage.setItem("choosed-departures", JSON.stringify(cart.getItems())); //legg cart innholdet til session storage slik at andre undersiden kan bruke det.
         //go to en annen side.
-        console.log("session storage er tilgjengelig");
+        window.location.href = "register5.html";
     } else {
         //dersom session storage er ikke tilgjengelig, vis feilmelding.
         console.log("session storage er ikke tilgjengelig");
-        BootstrapAlert("alert-container", "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
+        BootstrapAlert($('#alert-container'), "danger", "session storage er ikke støttet. Bruke en annen nettleser.");
     }
 
 }

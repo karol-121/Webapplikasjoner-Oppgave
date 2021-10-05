@@ -22,6 +22,8 @@ namespace Webapplication.DAL
 
         public DbSet<Cruise> Cruises { get; set; }
 
+        public DbSet<CruiseDetails> CruiseDetails { get; set; }
+
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Order> Orders { get; set; }
