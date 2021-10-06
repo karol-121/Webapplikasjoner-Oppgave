@@ -1,7 +1,4 @@
-﻿$(function () {
-    //dette er jquery funksjonen som kjøres med en gang siden loader, holder den for å ikke glemme syntaksen
-});
-
+﻿
 
 function registerOrder() {
 
@@ -28,7 +25,12 @@ function registerOrder() {
         alert("error!")
     });
 
+    
+
+
 }
+
+
 
 
 

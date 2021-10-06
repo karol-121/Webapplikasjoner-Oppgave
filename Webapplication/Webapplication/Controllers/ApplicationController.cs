@@ -43,6 +43,13 @@ namespace Webapplication.Controllers
             {
                 var From_Date = DateTime.ParseExact(From, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
                 var To_Date = DateTime.ParseExact(To, "yyyy-MM-dd", CultureInfo.InvariantCulture); //lager datetime objekt fra string parameter
+                var Today = DateTime.Now; //nåvarende dato
+
+                if (From_Date.Date == Today.Date) //dersom intervalet starter på dagens dato, legg til nåvarende tid, slik at det vises ikke utreiser fra i dag som har gått.
+                {
+                    From_Date = From_Date.AddHours(Today.Hour);
+                    From_Date = From_Date.AddMinutes(Today.Minute);
+                }
 
                 var Departures = await _Local_DB.GetDepartures(Route, From_Date, To_Date); //henter alle utreiser i gitt intervall 
                 var AvailableDep = await _Local_DB.CheckAvailability(Departures, Passengers); //filtrerer og returnerer kun tilgjenglige utreiser
