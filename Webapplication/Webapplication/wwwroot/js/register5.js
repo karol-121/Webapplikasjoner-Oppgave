@@ -1,5 +1,6 @@
 ﻿let Departures;
 let formFields;
+let index;
 
 
 $(function () {
@@ -77,56 +78,111 @@ function validateInput() {
     return validator.isValid();
 }
 
-//summary: funksjon som registrerer ordre for hver departure i Departures kun hvis form er valid.
+//summary: funksjon som utløser registrering for hver element inn i array dersom input data er valide
 function registerOrder() {
 
     const valid = validateInput();
 
     if (valid) {
 
-        for (d of Departures) {
+        $.get("API/EstabilishRegisterSession", function () {
 
-            const OrderInformation = {
-                Name: formFields.name.val(),
-                Surname: formFields.surname.val(),
-                Age: formFields.age.val(),
-                Address: formFields.address.val(),
-                Zip_Code: formFields.zip.val(),
-                City: formFields.city.val(),
-                Phone: formFields.phone.val(),
-                Email: formFields.email.val(),
-                Departure_Id: d.id,
-                Passengers: formFields.adults.val(),
-                Passengers_Underage: formFields.underage.val(),
-                Pets: formFields.pets.val(),
-                Vehicles: formFields.vehicles.val()
-            }
+            console.log("session estabilished");
+            index = 0; //element man skal starte registrering med 
+            dispatchRegistering(); //kalle på rekrusiv registrering funksjon 
 
-            const url = "API/RegisterOrder";
-            $.post(url, OrderInformation).done(function () {
+        });
 
-                window.sessionStorage.setItem("register-successfull", "");
-                window.location.replace("index.html"); //replace slik at det er ikke mulig å gå tilbake
-
-            }).fail(function () {
-
-                BootstrapAlert($('#alert-container'), "danger", "Det gikk noe galt med registrering");
-            });
-
-
-
-
-
-        }
 
     }
 
-    
-
-    
-
 
 }
+
+//summary: funksjon som rekrusivt utløser ajax metoder for hver element inn i array
+//det er kravet at hver element registreres etter at forrige har returnert eller så risikeres det halveis registrering av ordre
+//det er fordi asykronisk så kan element a bli registrert etter at element b feilet, 
+//det kunne man sikker løse bedre, men dette ville kreve å sette jobs inn i database eller andre fancy konfigurering
+//ja det er dårlig men dette er pris man betaller for å ikke plannlegge arkitektur ordenlig før man begynte.
+function dispatchRegistering() {
+
+    
+    const url = "API/RegisterOrder"
+
+    const object = {
+        Name: formFields.name.val(),
+        Surname: formFields.surname.val(),
+        Age: formFields.age.val(),
+        Address: formFields.address.val(),
+        Zip_Code: formFields.zip.val(),
+        City: formFields.city.val(),
+        Phone: formFields.phone.val(),
+        Email: formFields.email.val(),
+        Departure_Id: Departures[index].id,
+        Passengers: formFields.adults.val(),
+        Passengers_Underage: formFields.underage.val(),
+        Pets: formFields.pets.val(),
+        Vehicles: formFields.vehicles.val()
+    }
+
+    $.post(url, object, function () {
+
+        //vellykket registrering runde
+        console.log("round success");
+
+        index = index + 1; //indeks inkrement for å registrere neste element i array i neste runde
+        if (index < Departures.length) { //sjekke om det finnes element 
+
+            //dersom det finnes element, kjøres det et nytt registrering runde
+            console.log("new round");
+            dispatchRegistering(); //rekrusjon
+
+        } else {
+
+            //dersom det er ikke flere elementer i array som skal registrers
+            //avslutt 
+            success();
+
+        }        
+
+    }).fail(function () {
+
+        //dersom det oppstår feil ved registrering
+        fail();
+
+    })
+
+}
+
+//summary: funksjon som behandler vellykket registrering
+function success() {
+
+    //avslutte registrering sesjon
+    $.get("API/DemolishRegisterSession", function () {
+
+        console.log("session ended");
+
+    });
+
+
+    BootstrapAlert($('#alert-container'), "success", "yay"); //for na
+    //window.sessionStorage.setItem("register-successfull", "");
+    //window.location.href = "index.html";
+
+}
+
+//summary: funksjon som behandler feil ved registrering
+function fail() {
+
+    //avslutte registrering sesjon
+    $.get("API/DemolishRegisterSession", function () {
+        console.log("session ended");
+    });
+
+    console.log("round failed");
+    BootstrapAlert($('#alert-container'), "danger", "Det gikk noe galt med registrering");
+}
+
 
 
 

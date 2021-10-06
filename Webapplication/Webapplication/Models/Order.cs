@@ -8,7 +8,7 @@ namespace Webapplication.Models
     public class Order
     {
         public int Id { get; set; }
-        public DateTime Order_Date { get; set; }
+        public String Session { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual Departure Departure { get; set; }
         public int Passengers { get; set; }

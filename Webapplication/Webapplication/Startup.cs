@@ -23,6 +23,15 @@ namespace Webapplication
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=ApplicationDB.db"));
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
+
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Register.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(300); // 5 minutter
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +47,8 @@ namespace Webapplication
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
