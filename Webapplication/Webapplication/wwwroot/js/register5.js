@@ -176,6 +176,127 @@ function fail() {
 }
 
 
+function autozip() {
+
+    var r = document.getElementById('zip').value;
+    var n = r.toString();
+    var x = n.slice(0, 2); //første to tallene blir hentet
+
+
+        if (x >= '00' && x <= '12') {
+            document.getElementById('city').value = 'Oslo';
+        }
+        else if (x >= '13' && x <= '15') {
+            document.getElementById('city').value = 'Akershus';
+
+        }
+
+        else if (x >= '16' && x <= '18') {
+            document.getElementById('field2').value = 'Østfold';
+
+        }
+        else if (x >= '19' && x <= '21') {
+            document.getElementById('field2').value = 'Akershus';
+
+        }
+
+        else if (x >= '22' && x <= '26') {
+            document.getElementById('field2').value = 'Hedmark';
+
+        }
+        else if (x >= '27' && x <= '29') {
+            document.getElementById('field2').value = 'Oppland';
+
+        }
+        else if (x >= '30' && x <= '30') {
+            document.getElementById('field2').value = 'Buskerud';
+
+        }
+        else if (x >= '31' && x <= '32') {
+            document.getElementById('field2').value = 'Vestfold';
+
+        }
+        else if (x == '35' && x <= '35') {
+            document.getElementById('field2').value = 'Oppland';
+
+        }
+        else if (x >= '33' && x <= '36') {
+            document.getElementById('field2').value = 'Buskerud';
+
+        }
+
+        else if (x >= '36' && x <= '39') {
+            document.getElementById('field2').value = 'Telemark';
+
+        }
+        else if (x >= '40' && x <= '44') {
+            document.getElementById('field2').value = 'Rogaland';
+
+        }
+        else if (x >= '45' && x <= '47') {
+            document.getElementById('field2').value = 'Vest-Agder';
+
+        }
+        else if (x >= '48' && x <= '49') {
+            document.getElementById('field2').value = 'Aust-Agder';
+
+        }
+        else if (x >= '50' && x <= '59') {
+            document.getElementById('field2').value = 'Hordaland';
+
+        }
+        else if (x == '55') {
+            document.getElementById('field2').value = 'Rogaland';
+
+        }
+        else if (x == '57' && x == '59') {
+            document.getElementById('field2').value = 'Sogn og Fjordane';
+
+        }
+        else if (x >= '60' && x <= '66') {
+            document.getElementById('field2').value = 'Møre og Romsdal';
+
+        }
+        else if (x >= '67' && x <= '69') {
+            document.getElementById('field2').value = 'Sogn og Fjordane';
+
+        }
+        else if (x >= '70' && x <= '75') {
+            document.getElementById('field2').value = 'Sør-Trøndelag';
+
+        }
+        else if (x == '76') {
+            document.getElementById('field2').value = 'Nord-Trøndelag';
+
+        }
+        else if (x == '77') {
+            document.getElementById('field2').value = 'Sør-Trøndelag';
+
+        }
+        else if (x >= '78' && x <= '79') {
+            document.getElementById('field2').value = 'Nord-Trøndelag';
+
+        }
+        else if (x >= '80' && x <= '89') {
+            document.getElementById('field2').value = 'Nordaland';
+
+        }
+        else if (x == '84' && x >= '90' && x <= '94') {
+            document.getElementById('field2').value = 'Troms';
+
+        }
+
+        else if (x == '91' && x >= '95' && x <= '99') {
+            document.getElementById('field2').value = 'Finmark';
+
+        }
+
+
+
+    }
+
+
+
 
 
 
