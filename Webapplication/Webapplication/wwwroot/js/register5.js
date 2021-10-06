@@ -176,13 +176,17 @@ function fail() {
 }
 
 
+// Autofylling av city etter aa ha skrevet inn zipcode
 function autozip() {
 
+    // Henter inn value fra zip
     var r = document.getElementById('zip').value;
+    // Omgjor om til string
     var n = r.toString();
-    var x = n.slice(0, 2); //første to tallene blir hentet
+    // forste to tallene blir hentet
+    var x = n.slice(0, 2); 
 
-
+        // to forste tallene utgir hvilken city
         if (x >= '00' && x <= '12') {
             document.getElementById('city').value = 'Oslo';
         }
