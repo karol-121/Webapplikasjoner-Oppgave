@@ -19,17 +19,13 @@ namespace Webapplication.DAL
                 Context.Database.EnsureDeleted();
                 Context.Database.EnsureCreated();
 
-                //dette her skal egentlig omgjøres dersom det har mistet integritet med excel
-                //hvis noen skal oppdatere det er det best å undersøke alt grundig og gjenbruke så mye objekter som et er mulig
-                //f.eks cruiser a - b og b - a kan bruke samme datoer, egentlig så skulle rute a - b og b - a bruke samme cruise men whatever
-
                 //Routes
-                var Route1 = new Route { Origin = "Larvik", Destination = "Hirtshals", Return_id = 2 };
-                var Route2 = new Route { Origin = "Hirtshals", Destination = "Larvik", Return_id = 1 };
-                var Route3 = new Route { Origin = "Bodø", Destination = "Moskenes", Return_id = 4 };
-                var Route4 = new Route { Origin = "Moskenes", Destination = "Bodø", Return_id = 3 };
-                var Route5 = new Route { Origin = "Stavanger", Destination = "Bergen", Return_id = 6 };
-                var Route6 = new Route { Origin = "Bergen", Destination = "Stavanger", Return_id = 5 };
+                var Route1 = new Route { Origin = "Larvik", Destination = "Hirtshals" };
+                var Route2 = new Route { Origin = "Oslo", Destination = "København" };
+                var Route3 = new Route { Origin = "Bodø", Destination = "Moskenes" };
+                var Route4 = new Route { Origin = "Sandefjord", Destination = "Strømstad" };
+                var Route5 = new Route { Origin = "Stavanger", Destination = "Bergen" };
+                var Route6 = new Route { Origin = "Oslo", Destination = "Kiel" };
 
                 //Cruise1 
                 var Departure1 = new DateTime(2021, 9, 27, 8, 00, 0);
