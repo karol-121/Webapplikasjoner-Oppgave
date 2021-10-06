@@ -26,12 +26,10 @@ $(function () {
 
 //summary: funksjon som henter valgte departures som skal ligge i session storage. Dersom de finnes ikke, returneres til index.html
 function getChoosenDepartures() {
-    console.log("hello this is your function");
 
     if (window.sessionStorage.getItem("choosed-departures")) { //sjekkes om session storage fungerer og at item med departures eksisterer
 
         Departures = JSON.parse(window.sessionStorage.getItem("choosed-departures")); //valgt departures parses til objekt for videre bruk
-        console.log(Departures);
 
     } else {
 
@@ -87,7 +85,6 @@ function registerOrder() {
 
         $.get("API/EstabilishRegisterSession", function () {
 
-            console.log("session estabilished");
             index = 0; //element man skal starte registrering med 
             dispatchRegistering(); //kalle på rekrusiv registrering funksjon 
 
@@ -128,13 +125,11 @@ function dispatchRegistering() {
     $.post(url, object, function () {
 
         //vellykket registrering runde
-        console.log("round success");
 
         index = index + 1; //indeks inkrement for å registrere neste element i array i neste runde
         if (index < Departures.length) { //sjekke om det finnes element 
 
             //dersom det finnes element, kjøres det et nytt registrering runde
-            console.log("new round");
             dispatchRegistering(); //rekrusjon
 
         } else {
@@ -160,14 +155,12 @@ function success() {
     //avslutte registrering sesjon
     $.get("API/DemolishRegisterSession", function () {
 
-        console.log("session ended");
-
     });
 
+    window.sessionStorage.removeItem("choosed-departures"); //fjerne departures session item, siden de skal ikke brukes lenger
+    window.sessionStorage.setItem("register-successfull", ""); //sette et session verdi om vellykket registering som index.html kan bruke
+    window.location.href = "index.html"; //gå til index.html
 
-    BootstrapAlert($('#alert-container'), "success", "yay"); //for na
-    //window.sessionStorage.setItem("register-successfull", "");
-    //window.location.href = "index.html";
 
 }
 
@@ -176,10 +169,9 @@ function fail() {
 
     //avslutte registrering sesjon
     $.get("API/DemolishRegisterSession", function () {
-        console.log("session ended");
+
     });
 
-    console.log("round failed");
     BootstrapAlert($('#alert-container'), "danger", "Det gikk noe galt med registrering");
 }
 

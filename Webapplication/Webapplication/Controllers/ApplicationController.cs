@@ -71,7 +71,7 @@ namespace Webapplication.Controllers
         //returns: http Ok - ved vellykket registrering, http Bad request - dersom informasjon er invalid
         public async Task<ActionResult> RegisterOrder(OrderInformation OrderInformation)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("registerSession"))) {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("registerSession"))) { //sjekkes om nødvendig session nøkkel er laget
                 _Local_Log.LogError("Register Order was requested without estabilishing required session");
                 return BadRequest("Estabilishing register session is required in order to register order/orders");
             }
@@ -94,7 +94,7 @@ namespace Webapplication.Controllers
             {
                 
                 _Local_Log.LogError("Exception thrown while order registration: "+e.Message); //logge feilmelding
-                await _Local_DB.RemoveSessionOrders(HttpContext.Session.GetString("registerSession")); //fjerne orders som har blitt registrert tidligere
+                await _Local_DB.RemoveSessionOrders(HttpContext.Session.GetString("registerSession")); //fjerne orders som har blitt registrert tidligere inn i denne sesjon
                 return BadRequest(e.Message); // returnere en error http response med excepton melding.
             }
         }

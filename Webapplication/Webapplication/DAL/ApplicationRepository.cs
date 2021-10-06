@@ -185,17 +185,15 @@ namespace Webapplication.DAL
         //parameters: String session - streng med session verdi
         public async Task RemoveSessionOrders(string session)
         {
-            Console.WriteLine("removing orders");
-            Console.WriteLine(session);
-            var orders = await _DB.Orders.Where(o => o.Session.Equals(session)).ToListAsync();
+
+            var orders = await _DB.Orders.Where(o => o.Session.Equals(session)).ToListAsync(); //finn alle ordre som er relatert til et sesjon
 
             foreach (var order in orders)
             {
-                Console.WriteLine(order.Id);
-                _DB.Orders.Remove(order);
+                _DB.Orders.Remove(order); //fjern hver relevant order
             }
             
-            await _DB.SaveChangesAsync();
+            await _DB.SaveChangesAsync(); //lagre 
         }
 
     }

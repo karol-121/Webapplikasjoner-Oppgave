@@ -22,7 +22,7 @@ function successGreatings() {
 
     if (window.sessionStorage.getItem("register-successfull") != null) {
         BootstrapAlert($('#alert-container'), "success", "Din ordre har blitt registrert.");
-        window.sessionStorage.removeItem("register-successfull")
+        window.sessionStorage.removeItem("register-successfull");
     }
 }
 
@@ -197,9 +197,13 @@ function processLeaveDepartures(routeId, interval, departures) {
     let passengers = $('#passengers').val(); //hente verdi på nytt 
 
     if (passengers > 1) { // bøye person etter antall, 1 = person, 2 = personer.
+
         passengers = passengers + " personer:"; //flertall
+
     } else {
+
         passengers = passengers + " person:" //entall
+
     }
 
     const details = $("#tour-type option:selected").text() + " for " + passengers; //den skal printe person og personer avhengig av antall
