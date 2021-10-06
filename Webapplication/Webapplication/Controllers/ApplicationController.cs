@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Webapplication.DAL;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Webapplication.Controllers
 {
@@ -70,6 +71,13 @@ namespace Webapplication.Controllers
         //returns: http Ok - ved vellykket registrering, http Bad request - dersom informasjon er invalid
         public async Task<ActionResult> RegisterOrder(OrderInformation OrderInformation)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("registerSession"))) { //sjekkes om nødvendig session nøkkel er laget
+                _Local_Log.LogError("Register Order was requested without estabilishing required session");
+                return BadRequest("Estabilishing register session is required in order to register order/orders");
+            }
+
+            string sessionKey = HttpContext.Session.GetString("registerSession");
+
             if (!ModelState.IsValid) //sjekkes om data send inn har riktig format som er definert i modellen.
             {
                 _Local_Log.LogError("Information for order register are of invalid type");
@@ -78,15 +86,34 @@ namespace Webapplication.Controllers
 
             try
             {
-                await _Local_DB.RegisterOrder(OrderInformation); //prøve å registrere nye ordre
+                await _Local_DB.RegisterOrder(OrderInformation, sessionKey); //prøve å registrere nye ordre
                 _Local_Log.LogInformation("Order has been registered."); //logger informasjon om vellykket registrering
                 return Ok("Ticket has been registered"); //returnere en ok http response status
             } 
             catch (Exception e)
             {
+                
                 _Local_Log.LogError("Exception thrown while order registration: "+e.Message); //logge feilmelding
+                await _Local_DB.RemoveSessionOrders(HttpContext.Session.GetString("registerSession")); //fjerne orders som har blitt registrert tidligere inn i denne sesjon
                 return BadRequest(e.Message); // returnere en error http response med excepton melding.
             }
+        }
+
+        //summary: endpoint som oppretter register session. Denne sesjonen er nødvendig siden hvis flere enn et billett skal registreres på et gang
+        //må det være mulig å vite hvilken ordrer som henger sammen. F.eks dersom det ene bilett ble registrert men den andre kan ikke registreres, skal den første fjernes
+        //kanskje dårlig arkitektur men nå er det forseint å restrukturere, det er hverfall noe man lærte seg.
+        public ActionResult EstabilishRegisterSession()
+        {
+            HttpContext.Session.SetString("registerSession", DateTime.Now.ToString());
+            return Ok("session created");
+            //her brukes det dato for å danne session key dersom den skal være unik hver gang session opprettes.
+        }
+
+        //summary: endpoint som avslutter session. 
+        public ActionResult DemolishRegisterSession()
+        {
+            HttpContext.Session.Remove("registerSession");
+            return Ok("session ended");
         }
     }
 }

@@ -3,6 +3,7 @@
 //dersom inn dato er tidligere enn 3 dager fra dagens dato, skal intervalen starte fra dagens dato og slutte 7 dager etter.
 class DateInterval {
     #nowDate = new Date();
+    #requestDate;
     #startInterval;
     #endInterval; 
     #maxInterval = 604800000; //7 dager representert i millisekunder
@@ -12,11 +13,13 @@ class DateInterval {
 
         this.#nowDate.setHours(0, 0, 0, 0); //nullstiller tid for nå-dato for å ekskludere det som en variabel ved videre kalkulasjoner.
 
-        //hvis forskjellen mellom nå-dato og inn-dato er større enn 3 dager.
-        if (requestDate.getTime() - this.#nowDate.getTime() > this.#intervalOffset) {
+        this.#requestDate = requestDate; //lagrer requested date
 
-            this.#startInterval = new Date(requestDate.getTime() - this.#intervalOffset); //start-intervall = 3 dager før inn-dato
-            this.#endInterval = new Date(requestDate.getTime() + this.#intervalOffset); //slutt-intervall = 3 dager etter inn-dato
+        //hvis forskjellen mellom nå-dato og inn-dato er større enn 3 dager.
+        if (this.#requestDate.getTime() - this.#nowDate.getTime() > this.#intervalOffset) {
+
+            this.#startInterval = new Date(this.#requestDate.getTime() - this.#intervalOffset); //start-intervall = 3 dager før inn-dato
+            this.#endInterval = new Date(this.#requestDate.getTime() + this.#intervalOffset); //slutt-intervall = 3 dager etter inn-dato
 
         } else {
 
@@ -31,6 +34,12 @@ class DateInterval {
     //returns: Date objekt
     getStartInterval() {
         return this.#startInterval;
+    }
+
+    //summary: metode som returnerer primær dato
+    //returns: Date objekt
+    getRequestedDate() {
+        return this.#requestDate;
     }
 
     //summary: metode som returnerer beregnet slutt intervall dato
@@ -90,14 +99,21 @@ class DateUtilities {
 
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
     //parameters: String dateString - dato i "yyyy-mm-dd" streng 
-    //returns: Date objekt.
+    //returns: Date objekt. Returnerer null ved ugyldig verdi
     static inputToDateObject(dateString) {
+
+        const regexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/; //valid input string
+
+        if (!regexp.test(dateString)) {
+            return null; //returner null ved invalid string
+        }
 
         const year = Number(dateString.substring(0, 4));
         const month = Number(dateString.substring(5, 7)) - 1; //konvertering til 0-indeks månder (0 = januar)
         const day = Number(dateString.substring(8, 10));
 
-        return new Date(year, month, day);
+
+        return new Date(year, month, day); //returner et date objekt
     }
 
     //summary: metode som formaterer json dato streng til lokal tid notasjon
@@ -129,6 +145,7 @@ class Cart {
     //summary: legger til et objekt på spesifikt plass
     //parameters: index - plass hvor objektet skal legges på, obj - objektet som skal legges inn.
     addToCart(index, obj) {
+            
         this.#cart[index] = obj;
         this.#subscriber();
     }
@@ -136,12 +153,14 @@ class Cart {
     //summary: fjerner objekt på spesifik plass
     //parameters: index - plass på hvilken et objekt skal fjernes
     removeFromCart(index) {
+
         this.#cart.splice(index, 1);
         this.#subscriber();
     }
 
     //summary: nullstiller carten
     emptyCart() {
+
         this.#cart = [];
         this.#subscriber();
     }
@@ -150,12 +169,40 @@ class Cart {
     //prameters: index - plass til objektet som skal returneres
     //reutrns: objekt 
     getItem(index) {
+
         return this.#cart[index];
     }
 
-    //summary: returnerer antall objekter som finnes i carten
-    //returns: int med antall objekter
+    //summary: returnerer antall elementer som finnes i carten.
+    //reutrns: integer med antall elementer 
     getItemCount() {
-        return this.#cart.length;
+
+        let count = 0;
+        for (let item of this.#cart) {
+            if (item != null) {
+                count++
+            }
+        }
+
+        return count;
     }
+
+    //summary: returnerer elementer som finnes i carten.
+    //reutrns: array med objekter
+    getItems() {
+        return this.#cart;
+    }
+
 }
+
+//summary: Funksjon som printer et bootstrap alert av valgt type og meldig til et bestemt plass. 
+//Denne funskjonen appender til destinasjon som betyr at alertene vil stacke seg
+//parameters: destination - jquery dom selector som definerer hvor meldingen skal printes, type - type av feilmelding (warning, danger osv.), melding - hva alerten skal si.
+function BootstrapAlert(destination, type, message) {
+
+    let s = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">'
+        + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+    destination.append(s);
+}
+
