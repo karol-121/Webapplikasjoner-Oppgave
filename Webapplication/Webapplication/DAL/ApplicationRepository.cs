@@ -72,7 +72,7 @@ namespace Webapplication.DAL
         private async Task<bool> CheckAvailability(Departure Departure, int Passengers)
         {
 
-            var AvailableSeats = Departure.Cruise.Max_Passengers;
+            var AvailableSeats = Departure.Cruise.CruiseDetails.Max_Passengers;
 
             //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
             var BookedSeats = await _DB.Orders.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
@@ -107,8 +107,9 @@ namespace Webapplication.DAL
         }
 
         //summary: registrerer ordre med informasjon fra OrderInformation objektet
-        //parameters: OrderInformation OrderInformation - objektet som inneholder informasjon nødvendig for registrering
-        public async Task RegisterOrder(OrderInformation OrderInformation) //Registrerer order
+        //parameters: OrderInformation OrderInformation - objektet som inneholder informasjon nødvendig for registrering,
+        //String session - unik session key som assosiaserer denne ordre med et session.
+        public async Task RegisterOrder(OrderInformation OrderInformation, String session) //Registrerer order
         {
 
             Departure departure = await FindDeparture(OrderInformation.Departure_Id);
@@ -167,7 +168,7 @@ namespace Webapplication.DAL
 
             Order order = new Order
             {
-                Order_Date = DateTime.Now,
+                Session = session,
                 Customer = customer,
                 Departure = departure,
                 Passengers = OrderInformation.Passengers,
@@ -178,6 +179,21 @@ namespace Webapplication.DAL
 
             _DB.Orders.Add(order);
             await _DB.SaveChangesAsync();
+        }
+
+        //summary: fjerner alle ordrer som er relatert til et session.
+        //parameters: String session - streng med session verdi
+        public async Task RemoveSessionOrders(string session)
+        {
+
+            var orders = await _DB.Orders.Where(o => o.Session.Equals(session)).ToListAsync(); //finn alle ordre som er relatert til et sesjon
+
+            foreach (var order in orders)
+            {
+                _DB.Orders.Remove(order); //fjern hver relevant order
+            }
+            
+            await _DB.SaveChangesAsync(); //lagre 
         }
 
     }

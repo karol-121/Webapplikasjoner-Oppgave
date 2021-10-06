@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>register-proto2 </title>
+    <script src="js/utilities.js"></script>
+    <script src="js/register.js"></script>
+    <script src="js/validation.js"></script>
+    <link rel="stylesheet" href="NewFolder1/register.css">
+
+</head>
+<body>
+    <div class="navbar">
+
+    </div>
+
+    <form action="url()">
+
+        <div class="personalia">
+
+            <div class=" row1 row1p">
+
+                <h3>Personalia</h3>
+
+            </div>
+
+            <div class="rows row2 row2p">
+
+                <label for="fname">Forname:</label>
+                <input type="text" name="fname" id="fnmae">
+
+                <label for="adress">Adress:</label>
+                <input type="text" name="adress" id="adress">
+
+            </div>
+
+            <div class="rows row3 row3p">
+
+                <label for="surename">Surename:</label>
+                <input type="text" name="surename" id="surename">
+
+                <label for="zipcode">ZipCode:</label>
+                <input type="number" name="zipcode" id="zipcode">
+
+                <label for="city">City:</label>
+                <input type="text" name="city" id="city">
+
+            </div>
+
+            <div class="rows row4 row4p">
+
+                <label for="age">Age:</label>
+                <input type="number" name="age" id="age" min="0" max="120">
+
+                <label for="phone">Phone Number:</label>
+                <input type="tel" name="phone" id="phone">
+
+            </div>
+
+            <div class="rows row5 row5p">
+
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+
+            </div>
+
+        </div>
+
+        <div class="departuer_extras">
+
+            <div class="rows row1 row1d">
+
+                <h3>Departure Extras</h3>
+
+            </div>
+
+            <div class="rows row2 row2d">
+
+                <label for="adults">Adults:</label>
+                <input type="number" name="adults" id="adults">
+
+            </div>
+
+            <div class="rows row3 row3d">
+
+                <label for="children">Children:</label>
+                <input type="number" name="children" id="children">
+
+                <label for="departure">Departure:</label>
+                <input type="number" name="departure" id="departure">
+
+            </div>
+
+        </div>
+
+        <div class="extras">
+
+            <div class="rows row1 row1e">
+
+                <h3>Extras</h3>
+
+            </div>
+
+            <div class="rows row2 row2e">
+
+                <label for="vehicles">Vehicles:</label>
+                <input type="number" name="vehcles" id="vehicles">
+
+                <label for="pets">Pets:</label>
+                <input type="number" name="pets" id="pets">
+
+            </div>
+
+        </div>
+
+        <input type="submit" value="submit" onclick="registerOrder()">
+    </form>
+
+    <div class="page_img">
+
+        <img src="cruise.jpg" alt="cruise">
+        <!--  Bilde av Dominik Reiter fra Pexels -->
+
+    </div>
+
+</body>
+</html>
