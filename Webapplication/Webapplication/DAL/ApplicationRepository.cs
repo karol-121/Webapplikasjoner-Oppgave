@@ -39,7 +39,6 @@ namespace Webapplication.DAL
                 throw new ArgumentException("the interval is negative, which is not allowed");
             }
 
-            //tocheck: den brude nå returnere listen etter dato men dette kan ikke virkelig sjekkes med data som er i databasen dersom de er allerede etter order.
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date < Date_to.AddDays(1)).OrderBy(d => d.Date).ToListAsync();
         }
 
@@ -74,8 +73,8 @@ namespace Webapplication.DAL
 
             var AvailableSeats = Departure.Cruise.CruiseDetails.Max_Passengers;
 
-            //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
-            var BookedSeats = await _DB.Orders.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
+            //henter alle booked plasser ved å summere antall registrerte pasasjerer fra biletter til spesifik cruise 
+            var BookedSeats = await _DB.Tickets.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
 
             return BookedSeats + Passengers <= AvailableSeats;
             
@@ -101,18 +100,18 @@ namespace Webapplication.DAL
         //summary: finner post objekt etter postnummer
         //parameters: string Zip_Code - postnummer som er postens primary key
         //returns: Post objekt, null - hvis objektet ble ikke funnet.
-        public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
+        public async Task<Post> FindPost(string Zip_Code)
         {
             return await _DB.Posts.FindAsync(Zip_Code);
         }
 
-        //summary: registrerer ordre med informasjon fra OrderInformation objektet
-        //parameters: OrderInformation OrderInformation - objektet som inneholder informasjon nødvendig for registrering,
-        //String session - unik session key som assosiaserer denne ordre med et session.
-        public async Task RegisterOrder(OrderInformation OrderInformation, String session) //Registrerer order
+        //summary: registrerer bilett med informasjon fra orderItem objektet
+        //parameters: OrderItem orderItem - objektet som inneholder informasjon nødvendig for registrering,
+        //string session - unik session key som assosiaserer denne bilett med et session.
+        public async Task RegisterOrderItem(OrderItem orderItem, string session)
         {
 
-            Departure departure = await FindDeparture(OrderInformation.Departure_Id);
+            Departure departure = await FindDeparture(orderItem.Departure_Id);
 
             if (departure == null) //sjekkes om utreise som det kjøpes bilett for faktisk eksisterer.
             {
@@ -124,7 +123,7 @@ namespace Webapplication.DAL
                 throw new ArgumentOutOfRangeException("Invalid departure: This departure is older than present");
             }
 
-            int Passengers = OrderInformation.Passengers + OrderInformation.Passengers_Underage;
+            int Passengers = orderItem.Passengers + orderItem.Passengers_Underage;
 
             if (Passengers < 1) //sjekkes for negative antall personer, dette må gjøres her igjen dersom herfra akseseres det kun privat hjelpe metode "checkAvailability"
             {
@@ -136,27 +135,27 @@ namespace Webapplication.DAL
                 throw new ArgumentOutOfRangeException("Requested amount of seats are not available.");
             }
 
-            Post post = await FindPost(OrderInformation.Zip_Code); //søk etter gitt postnummer 
+            Post post = await FindPost(orderItem.Zip_Code); //søk etter gitt postnummer 
 
             if (post == null) //dersom gitt postnummer ble ikke funnet, lag et nytt objekt 
             {
                 post = new Post
                 {
-                    Zip_Code = OrderInformation.Zip_Code,
-                    City = OrderInformation.City.ToUpper()
+                    Zip_Code = orderItem.Zip_Code,
+                    City = orderItem.City.ToUpper()
                 };
                 
             }
 
             Customer customer = new Customer 
             {
-                Name = OrderInformation.Name.ToUpper(),
-                Surname = OrderInformation.Surname.ToUpper(),
-                Age = OrderInformation.Age,
-                Address = OrderInformation.Address.ToUpper(),
+                Name = orderItem.Name.ToUpper(),
+                Surname = orderItem.Surname.ToUpper(),
+                Age = orderItem.Age,
+                Address = orderItem.Address.ToUpper(),
                 Post = post,
-                Phone = OrderInformation.Phone.ToUpper(),
-                Email = OrderInformation.Email.ToUpper()
+                Phone = orderItem.Phone.ToUpper(),
+                Email = orderItem.Email.ToUpper()
             };
 
             var customer_duplicate = await FindCustomer(customer);
@@ -166,31 +165,31 @@ namespace Webapplication.DAL
                 customer = customer_duplicate;
             }
 
-            Order order = new Order
+            Ticket ticket = new Ticket
             {
                 Session = session,
                 Customer = customer,
                 Departure = departure,
-                Passengers = OrderInformation.Passengers,
-                Passengers_Underage = OrderInformation.Passengers_Underage,
-                Pets = OrderInformation.Pets,
-                Vehicles = OrderInformation.Vehicles
+                Passengers = orderItem.Passengers,
+                Passengers_Underage = orderItem.Passengers_Underage,
+                Pets = orderItem.Pets,
+                Vehicles = orderItem.Vehicles
             };
 
-            _DB.Orders.Add(order);
+            _DB.Tickets.Add(ticket);
             await _DB.SaveChangesAsync();
         }
 
-        //summary: fjerner alle ordrer som er relatert til et session.
-        //parameters: String session - streng med session verdi
-        public async Task RemoveSessionOrders(string session)
+        //summary: fjerner alle biletter som er relatert til et session.
+        //parameters: string session - streng med session verdi
+        public async Task RemoveSessionTickets(string session)
         {
 
-            var orders = await _DB.Orders.Where(o => o.Session.Equals(session)).ToListAsync(); //finn alle ordre som er relatert til et sesjon
+            var tickets = await _DB.Tickets.Where(o => o.Session.Equals(session)).ToListAsync(); //finn alle ordre som er relatert til et sesjon
 
-            foreach (var order in orders)
+            foreach (var ticket in tickets)
             {
-                _DB.Orders.Remove(order); //fjern hver relevant order
+                _DB.Tickets.Remove(ticket); //fjern hver relevant order
             }
             
             await _DB.SaveChangesAsync(); //lagre 

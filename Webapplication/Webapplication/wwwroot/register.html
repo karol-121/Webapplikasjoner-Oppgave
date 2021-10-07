@@ -2,16 +2,17 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <title>OsloMet cruises - registrering</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <title>register-proto</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
     <script src="js/utilities.js"></script>
     <script src="js/validation.js"></script>
-    <script src="js/register5.js"></script>
+    <script src="js/register.js"></script>
     <style>
+
         .img-background {
-            background-image: url("josiah-weiss-tthKs4A7XMY-unsplash.jpg");
+            background-image: url("assets/josiah-weiss-tthKs4A7XMY-unsplash.jpg");
             background-repeat: no-repeat;
             background-position-x: center;
         }
@@ -22,7 +23,7 @@
         <div class="row mt-3">
             <div class="col-md-8 mb-4">
                 <div class="col-md-2">
-                    <img id="logo" src="boatlogo.png" class="img-fluid">
+                    <img id="logo" src="assets/boatlogo.png" class="img-fluid">
                 </div>
                 <div id="alert-container">
                     <!--boks for eventuelle notifikasjoner som printes her-->
@@ -38,31 +39,32 @@
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="customer-surname">Etternavn:</label>
-                            <input id="customer-surname" class="form-control" type="text" />
-                            <div class="invalid-feedback">
-                                Etternavn må være gyldig
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-6">
                             <label for="customer-address">Adresse:</label>
                             <input id="customer-address" class="form-control" type="text" />
                             <div class="invalid-feedback">
                                 Adresse må være gyldig
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="customer-surname">Etternavn:</label>
+                            <input id="customer-surname" class="form-control" type="text" />
+                            <div class="invalid-feedback">
+                                Etternavn må være gyldig
+                            </div>
+                        </div>
                         <div class="form-group col-md-3">
                             <label for="customer-zip">Postnummer:</label>
-                            <input id="customer-zip" class="form-control" type="number" />
+                            <input id="customer-zip" class="form-control" type="number" min="0" max="9999" onchange="updateZip()" />
                             <div class="invalid-feedback">
                                 Postnummer må være gyldig
                             </div>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="customer-city">By:</label>
-                            <input id="customer-city" class="form-control" type="text" />
+                            <!-- onchange autozip funksjon lagt til -->
+                            <input id="customer-city" class="form-control" type="text"  />
                             <div class="invalid-feedback">
                                 By må være gyldig
                             </div>
@@ -71,7 +73,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="customer-age">Alder:</label>
-                            <input id="customer-age" class="form-control" type="number" />
+                            <input id="customer-age" class="form-control" type="number" min="0" max="999"/>
                             <div class="invalid-feedback">
                                 Alder må være gyldig
                             </div>
@@ -93,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-                    <h2 class="mt-3">Cruise detalier:</h2>
+                    <h2 class="mt-3">Reisefølge:</h2>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="order-adults">Voksen:</label>
@@ -103,7 +105,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="order-underage">Mindreårig:</label>
+                            <label for="order-underage">Mindreårige:</label>
                             <input id="order-underage" class="form-control" type="number" value="0" min="0" onchange="updateTotalPrice()" />
                             <div class="invalid-feedback">
                                 Antall mindreårig må være gyldig

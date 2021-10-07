@@ -11,7 +11,7 @@ namespace Webapplication.DAL
         Task<List<Route>> GetRoutes();
         Task<List<Departure>> GetDepartures(int Route_Id, DateTime Date_from, DateTime Date_to);
         Task<List<Departure>> CheckAvailability(List<Departure> Departures, int PassengersAmount);
-        Task RegisterOrder(OrderInformation OrderInformation, String session);
-        Task RemoveSessionOrders(string session);
+        Task RegisterOrderItem(OrderItem orderItem, string session);
+        Task RemoveSessionTickets(string session);
     }
 }

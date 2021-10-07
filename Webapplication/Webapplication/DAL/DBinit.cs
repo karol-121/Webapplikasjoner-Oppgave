@@ -19,7 +19,7 @@ namespace Webapplication.DAL
                 Context.Database.EnsureDeleted();
                 Context.Database.EnsureCreated();
 
-                //DateTime currentDate = new DateTime(2021, 10, 1, 0, 0, 0);
+                //DateTime currentDate = new DateTime(2021, 10, 1, 0, 0, 0); //spesifik dag det skal genereres fra
                 DateTime currentDate = DateTime.Today; //nå tid
 
                 int dayOfWeek = (int)currentDate.DayOfWeek; //hente indeks til dagens ukedag
@@ -77,11 +77,9 @@ namespace Webapplication.DAL
                 var osl_kie = new Route { Origin = "Oslo", Destination = "Kiel", Return_id = 6 };
                 var kie_osl = new Route { Origin = "Kiel", Destination = "Oslo", Return_id = 5 };
 
-                var cruise1_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
-                var cruise2_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
-                var cruise3_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
-                
-                //todo: øke antall maks plasser i produksjon, ellers brukes det små tall for å kunne teste.
+                var cruise1_details = new CruiseDetails { Max_Passengers = 500, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
+                var cruise2_details = new CruiseDetails { Max_Passengers = 700, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
+                var cruise3_details = new CruiseDetails { Max_Passengers = 1000, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
 
                 var Cruise1 = new Cruise { Route = san_str, CruiseDetails = cruise1_details };
                 var Cruise1_rev = new Cruise { Route = str_san, CruiseDetails = cruise1_details };
@@ -156,26 +154,6 @@ namespace Webapplication.DAL
                 //Cruise3 (reverse) uke 2
                 var Schedule43 = new Departure { Cruise = Cruise3, Date = week2_sat_hour10 };
                 var Schedule44 = new Departure { Cruise = Cruise3_rev, Date = week2_sun_hour10 };
-                
-
-
-                //routes som skal inn i databasen
-
-                /*Context.Routes.Add(san_str);
-                Context.Routes.Add(str_san);
-                Context.Routes.Add(stav_berg);
-                Context.Routes.Add(berg_stav);
-                Context.Routes.Add(osl_kie);
-                Context.Routes.Add(kie_osl);*/
-
-                //cruises som skal inn i databasen
-
-                /*Context.Cruises.Add(Cruise1);
-                Context.Cruises.Add(Cruise1_rev);
-                Context.Cruises.Add(Cruise2);
-                Context.Cruises.Add(Cruise2_rev);
-                Context.Cruises.Add(Cruise3);
-                Context.Cruises.Add(Cruise3_rev);*/
 
                 //departures som skal inn i databasen
 

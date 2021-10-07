@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
-    public class OrderInformation
+    public class OrderItem
     {
-        [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$")]
+        [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$")]
         public string Name { get; set; }
         
-        [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$")]
+        [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$")]
         public string Surname { get; set; }
         
         [RegularExpression(@"^[0-9]{1,3}$")]
@@ -23,7 +23,7 @@ namespace Webapplication.Models
         [RegularExpression(@"^[0-9]{4}$")]
         public string Zip_Code { get; set; }
         
-        [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$")]
+        [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$")]
         public string City { get; set; }
         
         [RegularExpression(@"^(\+\([0-9]{1,3}\)|\+[0-9]{1,3})?( ?[0-9]{1,4}){2,4}$")]
