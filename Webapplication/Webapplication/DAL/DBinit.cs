@@ -77,11 +77,9 @@ namespace Webapplication.DAL
                 var osl_kie = new Route { Origin = "Oslo", Destination = "Kiel", Return_id = 6 };
                 var kie_osl = new Route { Origin = "Kiel", Destination = "Oslo", Return_id = 5 };
 
-                var cruise1_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
-                var cruise2_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
-                var cruise3_details = new CruiseDetails { Max_Passengers = 10, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
-                
-                //todo: øke antall maks plasser i produksjon, ellers brukes det små tall for å kunne teste.
+                var cruise1_details = new CruiseDetails { Max_Passengers = 500, Passeger_Price = 449, Passegner_Underage_Price = 299, Pet_Price = 100, Vehicle_Price = 99 };
+                var cruise2_details = new CruiseDetails { Max_Passengers = 700, Passeger_Price = 549, Passegner_Underage_Price = 399, Pet_Price = 100, Vehicle_Price = 149 };
+                var cruise3_details = new CruiseDetails { Max_Passengers = 1000, Passeger_Price = 749, Passegner_Underage_Price = 549, Pet_Price = 100, Vehicle_Price = 200 };
 
                 var Cruise1 = new Cruise { Route = san_str, CruiseDetails = cruise1_details };
                 var Cruise1_rev = new Cruise { Route = str_san, CruiseDetails = cruise1_details };

@@ -199,3 +199,121 @@ function BootstrapAlert(destination, type, message) {
     destination.append(s);
 }
 
+// Autofylling av city etter aa ha skrevet inn zipcode
+function AutofillCity(jquerySelectorZip, jquerySelectorCity) {
+    let x = jquerySelectorZip.val();
+
+    x = x.slice(0, 2);
+
+
+    // to forste tallene utgir hvilken city
+    if (x >= '00' && x <= '12') {
+
+        jquerySelectorCity.val('Oslo');
+    }
+    else if (x >= '13' && x <= '15') {
+
+        jquerySelectorCity.val('Akershus');
+    }
+    else if (x >= '16' && x <= '18') {
+
+        jquerySelectorCity.val('Østfold');
+    }
+    else if (x >= '19' && x <= '21') {
+
+        jquerySelectorCity.val('Akershus');
+    }
+    else if (x >= '22' && x <= '26') {
+
+        jquerySelectorCity.val('Hedmark');
+    }
+    else if (x >= '27' && x <= '29') {
+
+        jquerySelectorCity.val('Oppland');
+    }
+    else if (x >= '30' && x <= '30') {
+
+        jquerySelectorCity.val('Buskerud');
+    }
+    else if (x >= '31' && x <= '32') {
+
+        jquerySelectorCity.val('Vestfold');
+    }
+    else if (x == '35' && x <= '35') {
+
+        jquerySelectorCity.val('Oppland');
+    }
+    else if (x >= '33' && x <= '36') {
+
+        jquerySelectorCity.val('Buskerud');
+    }
+    else if (x >= '36' && x <= '39') {
+
+        jquerySelectorCity.val('Telemark');
+    }
+    else if (x >= '40' && x <= '44') {
+
+        jquerySelectorCity.val('Rogaland');
+    }
+    else if (x >= '45' && x <= '47') {
+
+        jquerySelectorCity.val('Vest-Agder');
+    }
+    else if (x >= '48' && x <= '49') {
+
+        jquerySelectorCity.val('Aust-Agder');
+    }
+    else if (x >= '50' && x <= '59') {
+
+        jquerySelectorCity.val('Hordaland');
+    }
+    else if (x == '55') {
+
+        jquerySelectorCity.val('Rogaland');
+    }
+    else if (x == '57' && x == '59') {
+
+        jquerySelectorCity.val('Sogn og Fjordane');
+    }
+    else if (x >= '60' && x <= '66') {
+
+        jquerySelectorCity.val('Møre og Romsdal');
+    }
+    else if (x >= '67' && x <= '69') {
+
+        jquerySelectorCity.val('Sogn og Fjordane');
+    }
+    else if (x >= '70' && x <= '75') {
+
+        jquerySelectorCity.val('Sør-Trøndelag');
+    }
+    else if (x == '76') {
+
+        jquerySelectorCity.val('Nord-Trøndelag');
+    }
+    else if (x == '77') {
+
+        jquerySelectorCity.val('Sør-Trøndelag');
+    }
+    else if (x >= '78' && x <= '79') {
+
+        jquerySelectorCity.val('Nord-Trøndelag');
+    }
+    else if (x >= '80' && x <= '89') {
+
+        jquerySelectorCity.val('Nordaland');
+    }
+    else if (x == '84' && x >= '90' && x <= '94') {
+
+        jquerySelectorCity.val('Troms');
+    }
+
+    else if (x == '91' && x >= '95' && x <= '99') {
+
+        jquerySelectorCity.val('Finmark');
+    }
+
+    else {
+        jquerySelectorCity.val('');
+    }
+}

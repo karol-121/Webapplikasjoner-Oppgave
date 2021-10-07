@@ -149,130 +149,17 @@ function fail() {
     BootstrapAlert($('#alert-container'), "danger", "Det gikk noe galt med registrering");
 }
 
-
-// Autofylling av city etter aa ha skrevet inn zipcode
-function autozip() {
-    var x = document.getElementById('customer-zip').value;
-
-    var x = x.slice(0, 2);
-
-  
-        // to forste tallene utgir hvilken city
-    if (x >= '00' && x <= '12') {
-        document.getElementById('customer-city').value = 'Oslo';
-    }
-    else if (x >= '13' && x <= '15') {
-        document.getElementById('customer-city').value = 'Akershus';
-
-    }
-    else if (x >= '16' && x <= '18') {
-        document.getElementById('customer-city').value = 'Østfold';
-
-    }
-    else if (x >= '19' && x <= '21') {
-        document.getElementById('customer-city').value = 'Akershus';
-
-    }
-
-    else if (x >= '22' && x <= '26') {
-        document.getElementById('customer-city').value = 'Hedmark';
-
-    }
-    else if (x >= '27' && x <= '29') {
-        document.getElementById('customer-city').value = 'Oppland';
-
-    }
-    else if (x >= '30' && x <= '30') {
-        document.getElementById('customer-city').value = 'Buskerud';
-
-    }
-    else if (x >= '31' && x <= '32') {
-        document.getElementById('customer-city').value = 'Vestfold';
-
-    }
-    else if (x == '35' && x <= '35') {
-        document.getElementById('customer-city').value = 'Oppland';
-
-    }
-    else if (x >= '33' && x <= '36') {
-        document.getElementById('customer-city').value = 'Buskerud';
-
-    }
-
-    else if (x >= '36' && x <= '39') {
-        document.getElementById('customer-city').value = 'Telemark';
-
-    }
-    else if (x >= '40' && x <= '44') {
-        document.getElementById('customer-city').value = 'Rogaland';
-
-    }
-    else if (x >= '45' && x <= '47') {
-        document.getElementById('customer-city').value = 'Vest-Agder';
-
-    }
-    else if (x >= '48' && x <= '49') {
-        document.getElementById('customer-city').value = 'Aust-Agder';
-
-    }
-    else if (x >= '50' && x <= '59') {
-        document.getElementById('customer-city').value = 'Hordaland';
-
-    }
-    else if (x == '55') {
-        document.getElementById('customer-city').value = 'Rogaland';
-
-    }
-    else if (x == '57' && x == '59') {
-        document.getElementById('customer-city').value = 'Sogn og Fjordane';
-
-    }
-    else if (x >= '60' && x <= '66') {
-        document.getElementById('customer-city').value = 'Møre og Romsdal';
-
-    }
-    else if (x >= '67' && x <= '69') {
-        document.getElementById('customer-city').value = 'Sogn og Fjordane';
-
-    }
-    else if (x >= '70' && x <= '75') {
-        document.getElementById('customer-city').value = 'Sør-Trøndelag';
-
-    }
-    else if (x == '76') {
-        document.getElementById('customer-city').value = 'Nord-Trøndelag';
-
-    }
-    else if (x == '77') {
-        document.getElementById('customer-city').value = 'Sør-Trøndelag';
-
-    }
-    else if (x >= '78' && x <= '79') {
-        document.getElementById('customer-city').value = 'Nord-Trøndelag';
-
-    }
-    else if (x >= '80' && x <= '89') {
-        document.getElementById('customer-city').value = 'Nordaland';
-
-    }
-    else if (x == '84' && x >= '90' && x <= '94') {
-        document.getElementById('customer-city').value = 'Troms';
-
-    }
-
-    else if (x == '91' && x >= '95' && x <= '99') {
-        document.getElementById('customer-city').value = 'Finmark';
-
-
-
-    }
+//summary: funksjon som fyller inn byen basert på zip input
+function updateZip() {
+    AutofillCity(formFields.zip, formFields.city);
+}
 
 
      
 
 
 
-}
+
 
 
 

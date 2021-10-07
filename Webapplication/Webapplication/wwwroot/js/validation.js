@@ -19,7 +19,7 @@ class registerValidation {
     //parameters: jquerySelector - dom element som verdien til skal valideres
     checkName(jquerySelector) {
  
-        const regexp = /^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$/;
+        const regexp = /^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$/;
         const result = regexp.test(jquerySelector.val());
         this.#registerValidity(result, jquerySelector);
 
@@ -30,7 +30,7 @@ class registerValidation {
     //parameters: jquerySelector - dom element som verdien til skal valideres
     checkSurname(jquerySelector) {
 
-        const regexp = /^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$/;
+        const regexp = /^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$/;
         const result = regexp.test(jquerySelector.val());
         this.#registerValidity(result, jquerySelector)
 
@@ -70,7 +70,7 @@ class registerValidation {
     //parameters: jquerySelector - dom element som verdien til skal valideres
     checkCity(jquerySelector) {
 
-        const regexp = /^[a-zA-ZÆØÅæøå]{2,25}( [a-zA-ZÆØÅæøå]{1,25}){0,1}$/;
+        const regexp = /^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$/;
         const result = regexp.test(jquerySelector.val());
         this.#registerValidity(result, jquerySelector)
 
