@@ -33,7 +33,7 @@ namespace Webapplication
             {
                 app.UseDeveloperExceptionPage();
                 loggerFactory.AddFile("Logs/log.txt");
-                //DBinit.InitializeApplicationDB(app);
+               //DBinit.InitializeApplicationDB(app);
             }
 
             app.UseRouting();

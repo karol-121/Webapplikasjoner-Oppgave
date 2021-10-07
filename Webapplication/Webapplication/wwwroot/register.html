@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label for="customer-zip">Postnummer:</label>
-                            <input id="customer-zip" class="form-control" type="text" />
+                            <input id="customer-zip" class="form-control" type="text" onfocusout="autozip()" />
                             <div class="invalid-feedback">
                                 Postnummer må være gyldig
                             </div>
@@ -64,7 +64,7 @@
                         <div class="form-group col-md-3">
                             <label for="customer-city">By:</label>
                             <!-- onchange autozip funksjon lagt til -->
-                            <input id="customer-city" class="form-control" type="text" onchange="autozip()" />
+                            <input id="customer-city" class="form-control" type="text"  />
                             <div class="invalid-feedback">
                                 By må være gyldig
                             </div>
