@@ -143,3 +143,68 @@ class registerValidation {
         return this.#isValid;
     }
 }
+
+//summary: validerings klasse for søk verdier.
+class searchValidation {
+    #isValid;
+
+    constructor() {
+        this.#isValid = true;
+    }
+
+    //summary: registrerer validity for hver element og markeres relevant dom element som feil
+    //argument: valid - boolean som forteller om element er valid eller ikke, jquerySelector - referanse til dom element som sjekkes 
+    #registerValidity(valid, jquerySelector) {
+        if (!valid) {
+            this.#isValid = false;
+            jquerySelector.addClass('is-invalid');
+        }
+    }
+
+    //summary: funksjon med regex sjekk for antall personer, den tillater verdier større enn 0.
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkPassengers(jquerySelector) {
+
+        const regexp = /^[1-9]{1}[0-9]{0,1}$/;
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector);
+
+    }
+
+    //summary: funksjon med regex sjekk for dato input
+    //parameters: jquerySelector - dom element som verdien til skal valideres
+    checkDate(jquerySelector) {
+
+        const regexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/; 
+        const result = regexp.test(jquerySelector.val());
+        this.#registerValidity(result, jquerySelector);
+       
+    }
+
+    //summary: funksjon som sjekker interval for to date input. For at denne sjekk utføres,
+    //må tidligere validerte verdier være riktige, altså begge dato burde være teste tidligere.
+    //parameters: jquerySelectorA - dom element til dato a, jquerySelectorB - dom element til dato b
+    checkInterval(jquerySelectorA, jquerySelectorB) {
+
+        if (this.#isValid) {
+
+            const a = DateUtilities.inputToDateObject(jquerySelectorA.val());
+            const b = DateUtilities.inputToDateObject(jquerySelectorB.val());
+
+            if (a.getTime() > b.getTime()) {
+                this.#registerValidity(false, jquerySelectorA);
+                this.#registerValidity(false, jquerySelectorB);
+            }
+
+        }
+          
+    }
+
+
+    //summary: returnerer validity flag som forteller om en eller flere sjekk har feilet
+    //returns: true - hvis alle gjennomførte sjekk er valide, false - hvis en eller flere sjekk har feilet.
+    isValid() {
+        return this.#isValid;
+    }
+
+}

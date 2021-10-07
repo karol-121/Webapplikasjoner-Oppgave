@@ -99,19 +99,12 @@ class DateUtilities {
 
     //summary: metode som konverterer dato streng i formatt "yyyy-mm-dd" til dato objekt.
     //parameters: String dateString - dato i "yyyy-mm-dd" streng 
-    //returns: Date objekt. Returnerer null ved ugyldig verdi
+    //returns: Date objekt.
     static inputToDateObject(dateString) {
-
-        const regexp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/; //valid input string
-
-        if (!regexp.test(dateString)) {
-            return null; //returner null ved invalid string
-        }
 
         const year = Number(dateString.substring(0, 4));
         const month = Number(dateString.substring(5, 7)) - 1; //konvertering til 0-indeks månder (0 = januar)
         const day = Number(dateString.substring(8, 10));
-
 
         return new Date(year, month, day); //returner et date objekt
     }
