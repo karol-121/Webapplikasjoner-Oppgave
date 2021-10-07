@@ -79,75 +79,61 @@ function validateInput() {
 //summary: funksjon som utløser registrering for hver element inn i array dersom input data er valide
 function registerOrder() {
 
-    const valid = validateInput();
+    const valid = validateInput(); //input data valideres
 
     if (valid) {
+        //hvis input data er valide
 
-        $.get("API/EstabilishRegisterSession", function () {
+        const items = new Array(); //lage liste med alle elementer som skal registreres
 
-            index = 0; //element man skal starte registrering med 
-            dispatchRegistering(); //kalle på rekrusiv registrering funksjon 
+        for (let d of Departures) { //for hver valgt departure, register et bilett
+
+            const ticket = {
+                Name: formFields.name.val(),
+                Surname: formFields.surname.val(),
+                Age: formFields.age.val(),
+                Address: formFields.address.val(),
+                Zip_Code: formFields.zip.val(),
+                City: formFields.city.val(),
+                Phone: formFields.phone.val(),
+                Email: formFields.email.val(),
+                Departure_Id: d.id,
+                Passengers: formFields.adults.val(),
+                Passengers_Underage: formFields.underage.val(),
+                Pets: formFields.pets.val(),
+                Vehicles: formFields.vehicles.val()
+            };
+
+            items.push(ticket);
+
+        }
+
+
+        //lage order objekt som skal inneholde liste med alle biletter som skal registreres
+        const order = {
+            Items: items
+        }
+
+
+        //registrering av ordre
+        const url = "API/RegisterOrder"
+        $.post(url, order, function () {
+
+            //dersom registrering er vellykket
+            success();
+
+        }).fail(function () {
+
+            //dersom det oppstår feil 
+            fail();
 
         });
 
-
     }
 
 
 }
 
-//summary: funksjon som rekrusivt utløser ajax metoder for hver element inn i array
-//det er kravet at hver element registreres etter at forrige har returnert eller så risikeres det halveis registrering av ordre
-//det er fordi asykronisk så kan element a bli registrert etter at element b feilet, 
-//det kunne man sikker løse bedre, men dette ville kreve å sette jobs inn i database eller andre fancy konfigurering
-//ja det er dårlig men dette er pris man betaller for å ikke plannlegge arkitektur ordenlig før man begynte.
-function dispatchRegistering() {
-
-    
-    const url = "API/RegisterOrder"
-
-    const object = {
-        Name: formFields.name.val(),
-        Surname: formFields.surname.val(),
-        Age: formFields.age.val(),
-        Address: formFields.address.val(),
-        Zip_Code: formFields.zip.val(),
-        City: formFields.city.val(),
-        Phone: formFields.phone.val(),
-        Email: formFields.email.val(),
-        Departure_Id: Departures[index].id,
-        Passengers: formFields.adults.val(),
-        Passengers_Underage: formFields.underage.val(),
-        Pets: formFields.pets.val(),
-        Vehicles: formFields.vehicles.val()
-    }
-
-    $.post(url, object, function () {
-
-        //vellykket registrering runde
-
-        index = index + 1; //indeks inkrement for å registrere neste element i array i neste runde
-        if (index < Departures.length) { //sjekke om det finnes element 
-
-            //dersom det finnes element, kjøres det et nytt registrering runde
-            dispatchRegistering(); //rekrusjon
-
-        } else {
-
-            //dersom det er ikke flere elementer i array som skal registrers
-            //avslutt 
-            success();
-
-        }        
-
-    }).fail(function () {
-
-        //dersom det oppstår feil ved registrering
-        fail();
-
-    })
-
-}
 
 //summary: funksjon som behandler vellykket registrering
 function success() {

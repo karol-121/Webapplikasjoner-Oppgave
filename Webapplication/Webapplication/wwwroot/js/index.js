@@ -94,7 +94,7 @@ function dispatchDepartureFetching() {
 
     $('.form-control').removeClass('is-invalid'); //fjerner tidligere 
 
-    const routes_index = $('#route').val(); //henter index fra input
+    const routes_index = $('#route').val(); //henter index til routes fra input
 
     const routeId = Routes[routes_index].id; //henter route id fra lokal array
     const routeIdReverse = Routes[routes_index].return_id; //henter retur route id fra lokal array
@@ -131,7 +131,7 @@ function dispatchDepartureFetching() {
         }
 
         if (!isDateNull && dateReturn.getTime() < dateLeave.getTime()) {    //hvis retur dato er tidligere enn utreise, noe som er feil
-                                                                            //dette utføres kun hvis begge verdier er ikke null, ellers er .gettime() ikke tilgjengelig
+                                                                            //dette utføres kun hvis begge dato verdier er ikke null, ellers er .gettime() ikke tilgjengelig
             isValid = false;
             $('#date-leave').addClass('is-invalid');
             $('#date-return').addClass('is-invalid');
