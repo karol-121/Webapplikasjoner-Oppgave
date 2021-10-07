@@ -23,7 +23,7 @@
         <div class="row mt-3">
             <div class="col-md-8 mb-4">
                 <div class="col-md-2">
-                    <img id="logo" src="assets/josiah-weiss-tthKs4A7XMY-unsplash.jpg" class="img-fluid">
+                    <img id="logo" src="assets/boatlogo.png" class="img-fluid">
                 </div>
                 <div id="alert-container">
                     <!--boks for eventuelle notifikasjoner som printes her-->
@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label for="customer-zip">Postnummer:</label>
-                            <input id="customer-zip" class="form-control" type="text" />
+                            <input id="customer-zip" class="form-control" type="text" onfocusout="autozip()" />
                             <div class="invalid-feedback">
                                 Postnummer må være gyldig
                             </div>
@@ -64,7 +64,7 @@
                         <div class="form-group col-md-3">
                             <label for="customer-city">By:</label>
                             <!-- onchange autozip funksjon lagt til -->
-                            <input id="customer-city" class="form-control" type="text" onchange="autozip()" />
+                            <input id="customer-city" class="form-control" type="text"  />
                             <div class="invalid-feedback">
                                 By må være gyldig
                             </div>

@@ -152,126 +152,128 @@ function fail() {
 
 // Autofylling av city etter aa ha skrevet inn zipcode
 function autozip() {
+    var x = document.getElementById('customer-zip').value;
 
-    // Henter inn value fra zip
-    var r = document.getElementById('zip').value;
-    // Omgjor om til string
-    var n = r.toString();
-    // forste to tallene blir hentet
-    var x = n.slice(0, 2); 
+    var x = x.slice(0, 2);
 
+  
         // to forste tallene utgir hvilken city
-        if (x >= '00' && x <= '12') {
-            document.getElementById('city').value = 'Oslo';
-        }
-        else if (x >= '13' && x <= '15') {
-            document.getElementById('city').value = 'Akershus';
+    if (x >= '00' && x <= '12') {
+        document.getElementById('customer-city').value = 'Oslo';
+    }
+    else if (x >= '13' && x <= '15') {
+        document.getElementById('customer-city').value = 'Akershus';
 
-        }
+    }
+    else if (x >= '16' && x <= '18') {
+        document.getElementById('customer-city').value = 'Østfold';
 
-        else if (x >= '16' && x <= '18') {
-            document.getElementById('field2').value = 'Østfold';
+    }
+    else if (x >= '19' && x <= '21') {
+        document.getElementById('customer-city').value = 'Akershus';
 
-        }
-        else if (x >= '19' && x <= '21') {
-            document.getElementById('field2').value = 'Akershus';
+    }
 
-        }
+    else if (x >= '22' && x <= '26') {
+        document.getElementById('customer-city').value = 'Hedmark';
 
-        else if (x >= '22' && x <= '26') {
-            document.getElementById('field2').value = 'Hedmark';
+    }
+    else if (x >= '27' && x <= '29') {
+        document.getElementById('customer-city').value = 'Oppland';
 
-        }
-        else if (x >= '27' && x <= '29') {
-            document.getElementById('field2').value = 'Oppland';
+    }
+    else if (x >= '30' && x <= '30') {
+        document.getElementById('customer-city').value = 'Buskerud';
 
-        }
-        else if (x >= '30' && x <= '30') {
-            document.getElementById('field2').value = 'Buskerud';
+    }
+    else if (x >= '31' && x <= '32') {
+        document.getElementById('customer-city').value = 'Vestfold';
 
-        }
-        else if (x >= '31' && x <= '32') {
-            document.getElementById('field2').value = 'Vestfold';
+    }
+    else if (x == '35' && x <= '35') {
+        document.getElementById('customer-city').value = 'Oppland';
 
-        }
-        else if (x == '35' && x <= '35') {
-            document.getElementById('field2').value = 'Oppland';
+    }
+    else if (x >= '33' && x <= '36') {
+        document.getElementById('customer-city').value = 'Buskerud';
 
-        }
-        else if (x >= '33' && x <= '36') {
-            document.getElementById('field2').value = 'Buskerud';
+    }
 
-        }
+    else if (x >= '36' && x <= '39') {
+        document.getElementById('customer-city').value = 'Telemark';
 
-        else if (x >= '36' && x <= '39') {
-            document.getElementById('field2').value = 'Telemark';
+    }
+    else if (x >= '40' && x <= '44') {
+        document.getElementById('customer-city').value = 'Rogaland';
 
-        }
-        else if (x >= '40' && x <= '44') {
-            document.getElementById('field2').value = 'Rogaland';
+    }
+    else if (x >= '45' && x <= '47') {
+        document.getElementById('customer-city').value = 'Vest-Agder';
 
-        }
-        else if (x >= '45' && x <= '47') {
-            document.getElementById('field2').value = 'Vest-Agder';
+    }
+    else if (x >= '48' && x <= '49') {
+        document.getElementById('customer-city').value = 'Aust-Agder';
 
-        }
-        else if (x >= '48' && x <= '49') {
-            document.getElementById('field2').value = 'Aust-Agder';
+    }
+    else if (x >= '50' && x <= '59') {
+        document.getElementById('customer-city').value = 'Hordaland';
 
-        }
-        else if (x >= '50' && x <= '59') {
-            document.getElementById('field2').value = 'Hordaland';
+    }
+    else if (x == '55') {
+        document.getElementById('customer-city').value = 'Rogaland';
 
-        }
-        else if (x == '55') {
-            document.getElementById('field2').value = 'Rogaland';
+    }
+    else if (x == '57' && x == '59') {
+        document.getElementById('customer-city').value = 'Sogn og Fjordane';
 
-        }
-        else if (x == '57' && x == '59') {
-            document.getElementById('field2').value = 'Sogn og Fjordane';
+    }
+    else if (x >= '60' && x <= '66') {
+        document.getElementById('customer-city').value = 'Møre og Romsdal';
 
-        }
-        else if (x >= '60' && x <= '66') {
-            document.getElementById('field2').value = 'Møre og Romsdal';
+    }
+    else if (x >= '67' && x <= '69') {
+        document.getElementById('customer-city').value = 'Sogn og Fjordane';
 
-        }
-        else if (x >= '67' && x <= '69') {
-            document.getElementById('field2').value = 'Sogn og Fjordane';
+    }
+    else if (x >= '70' && x <= '75') {
+        document.getElementById('customer-city').value = 'Sør-Trøndelag';
 
-        }
-        else if (x >= '70' && x <= '75') {
-            document.getElementById('field2').value = 'Sør-Trøndelag';
+    }
+    else if (x == '76') {
+        document.getElementById('customer-city').value = 'Nord-Trøndelag';
 
-        }
-        else if (x == '76') {
-            document.getElementById('field2').value = 'Nord-Trøndelag';
+    }
+    else if (x == '77') {
+        document.getElementById('customer-city').value = 'Sør-Trøndelag';
 
-        }
-        else if (x == '77') {
-            document.getElementById('field2').value = 'Sør-Trøndelag';
+    }
+    else if (x >= '78' && x <= '79') {
+        document.getElementById('customer-city').value = 'Nord-Trøndelag';
 
-        }
-        else if (x >= '78' && x <= '79') {
-            document.getElementById('field2').value = 'Nord-Trøndelag';
+    }
+    else if (x >= '80' && x <= '89') {
+        document.getElementById('customer-city').value = 'Nordaland';
 
-        }
-        else if (x >= '80' && x <= '89') {
-            document.getElementById('field2').value = 'Nordaland';
+    }
+    else if (x == '84' && x >= '90' && x <= '94') {
+        document.getElementById('customer-city').value = 'Troms';
 
-        }
-        else if (x == '84' && x >= '90' && x <= '94') {
-            document.getElementById('field2').value = 'Troms';
+    }
 
-        }
-
-        else if (x == '91' && x >= '95' && x <= '99') {
-            document.getElementById('field2').value = 'Finmark';
-
-        }
+    else if (x == '91' && x >= '95' && x <= '99') {
+        document.getElementById('customer-city').value = 'Finmark';
 
 
 
     }
+
+
+     
+
+
+
+}
+
 
 
 
