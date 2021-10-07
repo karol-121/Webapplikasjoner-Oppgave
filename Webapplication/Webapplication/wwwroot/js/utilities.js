@@ -57,7 +57,7 @@ class DateUtilities {
 
     }
 
-    //summary: metode som tar dag, måned og år verdi ut av et date objekt
+    //summary: hjelpe metode som tar dag, måned og år verdi ut av et date objekt
     //parameters: Date dateObject - dato objekt hvorfra verdiene skal tas ut
     //returs: array med dag, måned og år verdi 
     static #disassembleDateObject(dateObject) {

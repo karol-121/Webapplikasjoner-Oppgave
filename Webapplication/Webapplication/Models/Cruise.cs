@@ -6,7 +6,6 @@ namespace Webapplication.Models
     {
         public int Id { get; set; }
         public virtual Route Route { get; set; }
-        
         public virtual CruiseDetails CruiseDetails { get; set; }
     }
 }

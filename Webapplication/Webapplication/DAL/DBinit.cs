@@ -19,7 +19,7 @@ namespace Webapplication.DAL
                 Context.Database.EnsureDeleted();
                 Context.Database.EnsureCreated();
 
-                //DateTime currentDate = new DateTime(2021, 10, 1, 0, 0, 0);
+                //DateTime currentDate = new DateTime(2021, 10, 1, 0, 0, 0); //spesifik dag det skal genereres fra
                 DateTime currentDate = DateTime.Today; //nå tid
 
                 int dayOfWeek = (int)currentDate.DayOfWeek; //hente indeks til dagens ukedag
@@ -156,26 +156,6 @@ namespace Webapplication.DAL
                 //Cruise3 (reverse) uke 2
                 var Schedule43 = new Departure { Cruise = Cruise3, Date = week2_sat_hour10 };
                 var Schedule44 = new Departure { Cruise = Cruise3_rev, Date = week2_sun_hour10 };
-                
-
-
-                //routes som skal inn i databasen
-
-                /*Context.Routes.Add(san_str);
-                Context.Routes.Add(str_san);
-                Context.Routes.Add(stav_berg);
-                Context.Routes.Add(berg_stav);
-                Context.Routes.Add(osl_kie);
-                Context.Routes.Add(kie_osl);*/
-
-                //cruises som skal inn i databasen
-
-                /*Context.Cruises.Add(Cruise1);
-                Context.Cruises.Add(Cruise1_rev);
-                Context.Cruises.Add(Cruise2);
-                Context.Cruises.Add(Cruise2_rev);
-                Context.Cruises.Add(Cruise3);
-                Context.Cruises.Add(Cruise3_rev);*/
 
                 //departures som skal inn i databasen
 

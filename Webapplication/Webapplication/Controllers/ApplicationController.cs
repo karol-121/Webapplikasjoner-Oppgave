@@ -67,7 +67,7 @@ namespace Webapplication.Controllers
         }
 
         //summary: validerer informasjon og registrerer ordre
-        //parameters: OrderInformation OrderInformation - objekt som holder informasjon om ordre
+        //parameters: Order order - objekt som holder informasjon om ordre
         //returns: http Ok - ved vellykket registrering, http Bad request - dersom informasjon er invalid
         public async Task<ActionResult> RegisterOrder(Order order)
         {
@@ -85,11 +85,11 @@ namespace Webapplication.Controllers
             {
                 foreach (var orderItem in order.Items) //registreres alle biletter i ordre
                 {
-                    await _Local_DB.RegisterOrderItem(orderItem, sessionKey); //prøve å registrere nye ordre
+                    await _Local_DB.RegisterOrderItem(orderItem, sessionKey); //prøve å registrere ny bilett
                     _Local_Log.LogInformation("Order has been registered."); //logger informasjon om vellykket registrering
                 }
 
-                return Ok("Ticket/tickets has been registered"); //returnere en ok http response status
+                return Ok("Ticket/tickets has been registered"); //returnerer en ok http response status
             } 
             catch (Exception e)
             {

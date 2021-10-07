@@ -28,9 +28,9 @@ function successGreatings() {
 
 //summary: funksjon som oppdaterer attributer til dom input date slik at de viser dagens dato.
 function updateDOM_inputDate() {
+
     const a = new Date();
     $('#date-leave').val(DateUtilities.toApiDateString(a));
-
     $('#date-return').val(DateUtilities.toApiDateString(a));
 
 }
@@ -63,9 +63,11 @@ function fetchRoutes() {
 function updateTourType() {
     
     if ($("#tour-type").val() == 1) {
+
         $('#date-return').prop('disabled', true);
 
     } else {
+
         $('#date-return').prop('disabled', false);
     }
 
@@ -81,6 +83,7 @@ function updateProceed() {
         //Det er ikke git at brukeren merker at knappen ble vist dersom det er content som skal scrolles.
 
     } else {
+
         $('#button-proceed').hide();
     }
 
@@ -92,7 +95,7 @@ function dispatchDepartureFetching() {
     let isValid = true; //flag som bestemmer om data til sammen er valide eller ikke 
     let isDateNull = false; //hjelpe variabel som holder rede på om dato objekter er null eller ikke
 
-    $('.form-control').removeClass('is-invalid'); //fjerner tidligere 
+    $('.form-control').removeClass('is-invalid'); //fjerner tidligere feilmeldinger ved input elementer 
 
     const routes_index = $('#route').val(); //henter index til routes fra input
 
@@ -154,7 +157,6 @@ function dispatchDepartureFetching() {
 
             cleanDepartures($('#timetable-return'));    
             //fjen tidligere infromasjon siden denne runden forventes det ingen data
-            //Ja den vil også fjerne selv om ingenting finnes men man må leve med det.
 
         }
 
@@ -215,7 +217,7 @@ function processLeaveDepartures(routeId, interval, departures) {
 
     const routeObj = findRoute(routeId); //finne route for disse departures ut av departure id siden den returneres ikke av server
     
-    displayDepartures(routeObj, interval, DeparturesLeave, $('#timetable-leave')); // kjøre print metode
+    displayDepartures(routeObj, interval, DeparturesLeave, $('#timetable-leave')); // kjøre print metode for tabell
 }
 
 //summary: funksjon som videre prosesserer tilbake utreiser, den bestemmer ting som hvor data skal printes osv.
@@ -229,7 +231,7 @@ function processReturnDepartures(routeId, interval, departures) {
 
 }
 
-//summary: funksjon som populerer tabell objekt med inn data. Html objekt må ha spesifik oppsett.
+//summary: funksjon som lager/populerer tabell objekt med inn data. Html objekt må ha spesifik oppsett.
 //parameters: route - route objekt, interval - interval objekt, departures - liste med departure objekter, DOM_Source - parent node
 function displayDepartures(routeObj, interval, departures, DOM_Source) {
 
@@ -254,8 +256,7 @@ function displayDepartures(routeObj, interval, departures, DOM_Source) {
 
 }
 
-//summary: disse jquery funksjoner må være kjørt etter at tabellen er populert eller vil de ikke reagere på rowsa
-//det er mulig å om formattere det men det er ikke bare bare her.
+//summary: disse jquery funksjoner må være kjørt etter at tabellen er populert eller vil de ikke reagere på rowsa.
 function registerTableEventListeners() {
 
     $('#table-leave tr').click(function () {
@@ -263,7 +264,7 @@ function registerTableEventListeners() {
         $(this).addClass('table-active').siblings().removeClass('table-active');
         const value = $(this).data('value');
 
-        cart.addToCart(0, DeparturesLeave[value]); //add departure til cart
+        cart.addToCart(0, DeparturesLeave[value]); //legg til cart
         
     });
 
@@ -273,7 +274,7 @@ function registerTableEventListeners() {
         $(this).addClass('table-active').siblings().removeClass('table-active');
         const value = $(this).data('value');
 
-        cart.addToCart(1, DeparturesReturn[value]); //add departure til cart
+        cart.addToCart(1, DeparturesReturn[value]); //legg til cart
 
     });
 
@@ -292,11 +293,13 @@ function cleanDepartures(DOM_Source) {
 
 }
 
-//summary: funksjon som finner route etter dens routeId (ikke Routes array index) i global Routes array
+//summary: funksjon som finner route etter dens routeId (ikke index) i global Routes array
 //parameters: routeId id til route objekt
 //returns: route objekt, null hvis den ble ikke funnet.
 function findRoute(routeId) {
+
     for (let r of Routes) {
+
         if (r.id == routeId) {
             return r;
         } 
@@ -305,13 +308,13 @@ function findRoute(routeId) {
     return null;
 }
 
-//summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kun kunnes kjøres etter at departures er valgt
+//summary funksjonen som vil takle things videre etter at kunden vil forsette. Denne skal kjøres etter at departures er valgt
 function Proceed() {
 
     if (window.sessionStorage) {//sjekk om session storage er tilgjengelig
         window.sessionStorage.setItem("choosed-departures", JSON.stringify(cart.getItems())); //legg cart innholdet til session storage slik at andre undersiden kan bruke det.
         //go to en annen side.
-        window.location.href = "register5.html";
+        window.location.href = "register.html";
     } else {
         //dersom session storage er ikke tilgjengelig, vis feilmelding.
         console.log("session storage er ikke tilgjengelig");

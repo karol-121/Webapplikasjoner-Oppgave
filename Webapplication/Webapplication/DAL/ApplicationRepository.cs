@@ -39,7 +39,6 @@ namespace Webapplication.DAL
                 throw new ArgumentException("the interval is negative, which is not allowed");
             }
 
-            //tocheck: den brude nå returnere listen etter dato men dette kan ikke virkelig sjekkes med data som er i databasen dersom de er allerede etter order.
             return await _DB.Departures.Where(d => d.Cruise.Route.Id == Route_Id && d.Date >= Date_from && d.Date < Date_to.AddDays(1)).OrderBy(d => d.Date).ToListAsync();
         }
 
@@ -74,7 +73,7 @@ namespace Webapplication.DAL
 
             var AvailableSeats = Departure.Cruise.CruiseDetails.Max_Passengers;
 
-            //henter alle booked plasser ved å summere antall registrerte pasasjerer fra ordrer på spesifik cruise 
+            //henter alle booked plasser ved å summere antall registrerte pasasjerer fra biletter til spesifik cruise 
             var BookedSeats = await _DB.Tickets.Where(o => o.Departure == Departure).SumAsync(o => o.Passengers + o.Passengers_Underage);
 
             return BookedSeats + Passengers <= AvailableSeats;
@@ -101,15 +100,15 @@ namespace Webapplication.DAL
         //summary: finner post objekt etter postnummer
         //parameters: string Zip_Code - postnummer som er postens primary key
         //returns: Post objekt, null - hvis objektet ble ikke funnet.
-        public async Task<Post> FindPost(string Zip_Code) //finner post objekt etter postnummer
+        public async Task<Post> FindPost(string Zip_Code)
         {
             return await _DB.Posts.FindAsync(Zip_Code);
         }
 
-        //summary: registrerer ordre med informasjon fra OrderInformation objektet
-        //parameters: OrderInformation OrderInformation - objektet som inneholder informasjon nødvendig for registrering,
-        //String session - unik session key som assosiaserer denne ordre med et session.
-        public async Task RegisterOrderItem(OrderItem orderItem, string session) //Registrerer order
+        //summary: registrerer bilett med informasjon fra orderItem objektet
+        //parameters: OrderItem orderItem - objektet som inneholder informasjon nødvendig for registrering,
+        //string session - unik session key som assosiaserer denne bilett med et session.
+        public async Task RegisterOrderItem(OrderItem orderItem, string session)
         {
 
             Departure departure = await FindDeparture(orderItem.Departure_Id);
@@ -181,8 +180,8 @@ namespace Webapplication.DAL
             await _DB.SaveChangesAsync();
         }
 
-        //summary: fjerner alle ordrer som er relatert til et session.
-        //parameters: String session - streng med session verdi
+        //summary: fjerner alle biletter som er relatert til et session.
+        //parameters: string session - streng med session verdi
         public async Task RemoveSessionTickets(string session)
         {
 
