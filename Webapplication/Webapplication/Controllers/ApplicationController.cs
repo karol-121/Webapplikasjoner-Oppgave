@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 namespace Webapplication.Controllers
 {
     [Route("API/[action]")]
+
+    //summary: "base" kontroller som implementerer alle endpoint som hoved applikasjonen krever
     public class ApplicationController : ControllerBase
     {
         private readonly IApplicationRepository _Local_DB; //database objekt

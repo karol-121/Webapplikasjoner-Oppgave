@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Controllers
 {
-    public class SharedController : Controller
+    //summary: kontroller som implementerer et felles session objekt slik at alle kontrollerene som arver den, deler samme session
+    //Den brukes for å etablerer et session verdi ved logg inn og sjekke tilgang ved hjelp av den hos andre kontrollerene som skal ha access controll
+    public class SharedController : ControllerBase
     {
-        //implements a session object that will be shared across all controllers that implements inherets this controller
-        //idea from: https://www.blakepell.com/asp-net-mvc-sharing-a-session-between-controllers
+        //summary: implementasjon av et felles session objekt
+        //idea hentet fra: https://www.blakepell.com/asp-net-mvc-sharing-a-session-between-contr
         public ISession SharedSession
         {
             get
