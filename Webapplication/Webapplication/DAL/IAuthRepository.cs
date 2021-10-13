@@ -8,7 +8,7 @@ namespace Webapplication.DAL
 {
     public interface IAuthRepository
     {
-        Task<bool> SetAdministratorSessionToken(UserInfo userInfo);
+        Task<bool> AuthenticateAdministrator(UserInfo userInfo);
 
         Task<bool> RegisterAdministrator(UserInfo userInfo); //this should be deleted in final version, more info in auth repo
 
