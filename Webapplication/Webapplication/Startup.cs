@@ -23,10 +23,11 @@ namespace Webapplication
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=ApplicationDB.db"));
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddSession(options =>
             {
                 options.Cookie.Name = ".AdventureWorks.Session";
-                options.IdleTimeout = TimeSpan.FromSeconds(60); // 30 minutter
+                options.IdleTimeout = TimeSpan.FromSeconds(1800); // 30 minutter
                 options.Cookie.IsEssential = true;
             });
 
@@ -41,7 +42,7 @@ namespace Webapplication
             {
                 app.UseDeveloperExceptionPage();
                 loggerFactory.AddFile("Logs/log.txt");
-               //DBinit.InitializeApplicationDB(app);
+                //DBinit.InitializeApplicationDB(app);
             }
 
             app.UseRouting();

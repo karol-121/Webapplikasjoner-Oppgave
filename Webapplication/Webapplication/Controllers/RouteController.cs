@@ -13,14 +13,15 @@ namespace Webapplication.Controllers
         
         public ActionResult Test()
         {
-            string a = SharedSession.GetString("a");
+            string a = SharedSession.GetString("autorizaionToken");
 
-            if (!string.IsNullOrEmpty(a))
+            if (a == "admin")
             {
-                return Ok("the session token exsist");
+                return Ok("the session token exsist and equals admin");
+
             } else
             {
-                return BadRequest("the session token does not exist");
+                return Unauthorized("You can not access this endpoint");
             }
         }
 

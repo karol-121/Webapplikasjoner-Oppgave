@@ -29,6 +29,8 @@ namespace Webapplication.DAL
         public DbSet<Ticket> Tickets { get; set; }
 
         public DbSet<Departure> Departures { get; set; }
+        
+        public DbSet<Admin> Admins { get; set; }
 
         
 
