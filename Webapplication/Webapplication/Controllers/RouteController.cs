@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Webapplication.DAL;
 using Webapplication.Models;
 
 namespace Webapplication.Controllers
@@ -11,29 +13,30 @@ namespace Webapplication.Controllers
     [Route("API/[controller]")]
     public class RouteController : SharedController
     {
-        
-        //summary: teste funksjon for å sjekke om shared session fungerer
-        public ActionResult Test()
+        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly IAppDataRepository _Local_DB; //database objekt
+        private ILogger<RouteController> _Local_Log; //log objekt
+
+        public RouteController(IAppDataRepository appDataRepository, ILogger<RouteController> logger)
         {
-            string a = SharedSession.GetString("autorizaionToken");
-
-            if (a == "admin")
-            {
-                return Ok("the session token exsist and equals admin");
-
-            } else
-            {
-                return Unauthorized("You can not access this endpoint");
-            }
+            _Local_DB = appDataRepository;
+            _Local_Log = logger;
+            
         }
-
 
         //summary: get funksjon for routes som henter alle routes som finnes i databasen
         //returns: liste med alle route objekter 
         [HttpGet]
         public ActionResult Get()
         {
-            return Ok("boi");
+            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            {
+                return Ok("boi");
+            } else
+            {
+                return Unauthorized("Access required");
+            }
+            
         }
 
         //summary: get funksjon for routes som henter en route med bestemt id 

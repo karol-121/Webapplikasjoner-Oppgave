@@ -24,6 +24,7 @@ namespace Webapplication
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=ApplicationDB.db"));
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAppDataRepository, AppDataRepository>();
             services.AddSession(options =>
             {
                 options.Cookie.Name = ".AdventureWorks.Session";
