@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
+    //summary: modell på et admin bruker 
     public class Admin
     {
         public int Id { get; set; }

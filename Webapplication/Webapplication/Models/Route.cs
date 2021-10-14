@@ -1,5 +1,6 @@
 ﻿namespace Webapplication.Models
 {
+    //summary: modell som representerer et rute objekt
     public class Route
     {
         public int Id { get; set; } 

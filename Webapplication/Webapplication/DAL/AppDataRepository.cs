@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Webapplication.Models;
@@ -8,10 +10,12 @@ namespace Webapplication.DAL
     public class AppDataRepository : IAppDataRepository
     {
         private readonly ApplicationDbContext _DB;
+        private ILogger<AppDataRepository> _Local_Log;
 
-        public AppDataRepository(ApplicationDbContext DB)
+        public AppDataRepository(ApplicationDbContext DB, ILogger<AppDataRepository> logger)
         {
             _DB = DB;
+            _Local_Log = logger;
         }
 
         //summary: funksjon som henter alle ruter som finnes inn i databasen
@@ -32,62 +36,105 @@ namespace Webapplication.DAL
         //summary: funksjon som legger inn gitt route objekt.
         //her blir det også generet et relatert return objekt som også blir lagt inn
         //parameters: Route route - route objekt som skal legges inn
-        public async Task AddRoute(Route route)
+        public async Task<bool> AddRoute(Route route)
         {
-            //lage et relatert return route
-            Route route_return = new Route
+            try
             {
-                Origin = route.Destination,
-                Destination = route.Origin,
-                Return_id = route.Id
-            };
+                //lage et ny route objekt som skal inn i databasen
+                Route new_route = new Route
+                {
+                    Origin = route.Origin,
+                    Destination = route.Destination,
+                };
 
-            //koble relatert objekt til den opprinelige
-            route.Return_id = route_return.Id; //dette er ikke sikkert at fungerer altså her kan det hende at objektet har ikke id enda
 
-            //legge begge inn i databasen
-            _DB.Routes.Add(route);
-            _DB.Routes.Add(route_return);
+                //lage et relatert return route 
+                Route new_route_return = new Route
+                {
+                    Origin = route.Destination,
+                    Destination = route.Origin,
+                };
 
-            await _DB.SaveChangesAsync();
+
+                //legge begge inn i databasen
+                _DB.Routes.Add(new_route);
+                _DB.Routes.Add(new_route_return);
+
+                //her kobles det disse to objekter, antaglighivs de burde nå få sitt id?
+                //OBS. dette er her er ikke sikkert at det virker, samtidig er det ikke mulig å sjekker ordenlig
+                //kan hende at dette må bearbeides senere.
+                new_route.Return_id = new_route_return.Id;
+                new_route_return.Return_id = new_route.Id;
+
+                await _DB.SaveChangesAsync(); //lagre id
+                _Local_Log.LogInformation("Sucessfully added route/s to db");
+                return true;
+
+            } 
+            catch (Exception e)
+            {
+                _Local_Log.LogError("error occured while adding new route/s: " + e.Message);
+                return false;
+            }
+            
         }
 
         //summary: funksjon som endrer allerede eksisterende objekt med data oppgitt i inn objekt
         //her påføres det også relevante endringer på relatert objekt 
         //parameters: Route route - objekt med nye verdier 
-        public async Task EditRoute(Route route)
+        public async Task<bool> EditRoute(Route route)
         {
-            var a = await _DB.Routes.FindAsync(route.Id); //hente opprinelig objekt
-            var b = await _DB.Routes.FindAsync(route.Return_id); //hente relatert objekt
+            try
+            {
+                var a = await _DB.Routes.FindAsync(route.Id); //hente opprinelig objekt
+                var b = await _DB.Routes.FindAsync(route.Return_id); //hente relatert objekt
 
-            //påføre endringer på oppringlig objekt
-            a.Origin = route.Origin;
-            a.Destination = route.Destination;
+                //påføre endringer på oppringlig objekt
+                a.Origin = route.Origin;
+                a.Destination = route.Destination;
 
-            //påføre endringer på relatert objekt
-            b.Origin = route.Destination;
-            b.Destination = route.Origin;
+                //påføre endringer på relatert objekt
+                b.Origin = route.Destination;
+                b.Destination = route.Origin;
 
-            //sette inn de nye objekter (vet ikke om det er nødvendig)
-            _DB.Routes.Add(a);
-            _DB.Routes.Add(b);
+                //lagre endringer
+                await _DB.SaveChangesAsync();
 
-            //lagre endringer
-            await _DB.SaveChangesAsync();
+                _Local_Log.LogInformation("Sucessfully changed route/s in db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                _Local_Log.LogError("Error occured while changing route/s: " + e.Message);
+                return false;
+            }
+            
         }
 
         //summary: funksjon som sletter objekt med bestemt id
         //her blir det også relatert objektet slettet
         //parameters: int id - id til objektet som skal fjernes
-        public async Task DeleteRoute(int id)
+        public async Task<bool> DeleteRoute(int id)
         {
-            var a = await _DB.Routes.FindAsync(id); //find the requested route to delete
-            var b = await _DB.Routes.FindAsync(a.Return_id); //find the related route that also should be deleted
+            try
+            {
+                var a = await _DB.Routes.FindAsync(id); //find the requested route to delete
+                var b = await _DB.Routes.FindAsync(a.Return_id); //find the related route that also should be deleted
 
-            _DB.Routes.Remove(a); //remove the requested route
-            _DB.Routes.Remove(b); //remover related route
+                _DB.Routes.Remove(a); //remove the requested route
+                _DB.Routes.Remove(b); //remover related route
 
-            await _DB.SaveChangesAsync(); //lagrer endringer 
+                await _DB.SaveChangesAsync(); //lagrer endringer 
+
+                _Local_Log.LogInformation("Sucessfully deleted route/s from db");
+                return true;
+            } 
+            catch (Exception e)
+            {
+                _Local_Log.LogError("error occured while deleting route/s: " + e.Message);
+                return false;
+            }
+            
         }
     }
 }
