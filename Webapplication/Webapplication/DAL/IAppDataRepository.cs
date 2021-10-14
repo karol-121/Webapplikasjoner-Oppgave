@@ -8,15 +8,22 @@ namespace Webapplication.DAL
 {
     public interface IAppDataRepository
     {
+        //route objekt
         Task<List<Route>> GetRoutes();
-
         Task<Route> GetRoute(int id);
-
         Task<bool> AddRoute(Route route);
-
         Task<bool> EditRoute(Route route);
-
         Task<bool> DeleteRoute(int id);
+
+        //cruise details objekt
+        Task<List<CruiseDetails>> GetCruisesDetails();
+        Task<CruiseDetails> GetCruiseDetails(int id);
+        Task<bool> AddCruiseDetails(CruiseDetails details);
+        Task<bool> EditCruiseDetails(CruiseDetails details);
+        Task<bool> DeleteCruiseDetails(int id);
+
+
+
 
     }
 }
