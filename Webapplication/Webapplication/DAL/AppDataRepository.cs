@@ -234,5 +234,126 @@ namespace Webapplication.DAL
                 return false;
             }
         }
+
+
+        //summary: funksjon som henter alle cruiser som finnes inn i databasen
+        //returns: liste med cruise objekter
+        public async Task<List<Cruise>> GetCruises()
+        {
+            _Local_Log.LogInformation("Requested all cruises");
+            return await _DB.Cruises.ToListAsync();
+        }
+
+        //summary: funksjon som henter cruise objekt med bestemt id
+        //parameters: int id - id til objektet som skal vises
+        //returns: Cruise objekt
+        public async Task<Cruise> GetCruise(int id)
+        {
+            _Local_Log.LogInformation("Requested information about cruise");
+            return await _DB.Cruises.FindAsync(id);
+        }
+
+        //summary: funksjon som skaper og legger inn et nytt cruise objekt ut av parameterene.
+        //parameters: int routeId - id til route objekt som skal inn i den nye cruise, int detailsId - id til cruise details objekt som skal inn i den nye cruise 
+        public async Task<bool> AddCruise(int routeId, int detailsId)
+        {
+            try
+            {
+                //finn objekter som skal være attributer for den nye cruisen
+                var route = await _DB.Routes.FindAsync(routeId);
+                var details = await _DB.CruiseDetails.FindAsync(detailsId);
+
+                //sjekk om cruise attributer som route og/eller detalier er ikke null, 
+                if (route == null || details == null)
+                {
+                    _Local_Log.LogError("could not add new cruise as route or details or both was not found");
+                    return false;
+                }
+
+                //lag ny objekt og legg inn attributer 
+                Cruise new_cruise = new Cruise
+                {
+                    Route = route,
+                    CruiseDetails = details
+                };
+
+                //legg ny objekt inn i databasen og lagre 
+                _DB.Cruises.Add(new_cruise);
+                await _DB.SaveChangesAsync();
+
+                //log og return svar
+                _Local_Log.LogInformation("Sucessfully added new cruise details to db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                //feil håndtere feil
+                _Local_Log.LogError("error occured while adding new cruise details to db: " + e.Message);
+                return false;
+            }
+
+        }
+
+        //summary: funksjon som endrer allerede eksisterende cruise objekt med data oppgitt som parameterene
+        //parameters: int Id - id til cruise objekt som skal endres, int routeId - id til route objekt som oppdatering, int detailsId - id til cruise details objekt som oppdatering
+        public async Task<bool> EditCruise(int Id, int routeId, int detailsId)
+        {
+            try
+            {
+                //finn objekter som skal være attributer for den nye cruisen
+                var route = await _DB.Routes.FindAsync(routeId);
+                var details = await _DB.CruiseDetails.FindAsync(detailsId);
+
+                //sjekk om cruise attributer som route og/eller detalier er ikke null, 
+                if (route == null || details == null)
+                {
+                    _Local_Log.LogError("could not edit cruise as route or details or both was not found");
+                    return false;
+                }
+
+                //hente nåværende objekt som skal endres 
+                var current = await _DB.Cruises.FindAsync(Id); 
+
+                //endre objektet
+                current.Route = route;
+                current.CruiseDetails = details;
+
+                //lagre endringer
+                await _DB.SaveChangesAsync();
+
+                //log og return svar
+                _Local_Log.LogInformation("Sucessfully changed cruise details in db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                //feil håndtere feil
+                _Local_Log.LogError("Error occured while changing cruise details in db: " + e.Message);
+                return false;
+            }
+        }
+
+        //summary: funksjon som sletter cruise objekt med bestemt id
+        //parameters: int id - id til objektet som skal fjernes
+        public async Task<bool> DeleteCruise(int id)
+        {
+            try
+            {
+                var target = await _DB.Cruises.FindAsync(id);
+
+                _DB.Cruises.Remove(target);
+
+                await _DB.SaveChangesAsync();
+
+                _Local_Log.LogInformation("Sucessfully deleted cruise details from db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                _Local_Log.LogError("error occured while deleting cruise details: " + e.Message);
+                return false;
+            }
+        }
+
     }
 }

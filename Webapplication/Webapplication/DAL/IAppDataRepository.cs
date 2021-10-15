@@ -22,8 +22,14 @@ namespace Webapplication.DAL
         Task<bool> EditCruiseDetails(CruiseDetails details);
         Task<bool> DeleteCruiseDetails(int id);
 
-
-
+        //cruise objekt
+        Task<List<Cruise>> GetCruises();
+        Task<Cruise> GetCruise(int id);
+        Task<bool> AddCruise(int routeId, int detailsId);
+        Task<bool> EditCruise(int Id, int routeId, int detailsId);
+        Task<bool> DeleteCruise(int id);
+        
+        //Departure objekt
 
     }
 }
