@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Webapplication.Models;
 
@@ -72,13 +73,13 @@ namespace Webapplication.DAL
                 _Local_Log.LogInformation("Sucessfully added new route/s to db");
                 return true;
 
-            } 
+            }
             catch (Exception e)
             {
                 _Local_Log.LogError("error occured while adding new route/s to db:" + e.Message);
                 return false;
             }
-            
+
         }
 
         //summary: funksjon som endrer allerede eksisterende route objekt med data oppgitt i inn objekt
@@ -110,7 +111,7 @@ namespace Webapplication.DAL
                 _Local_Log.LogError("Error occured while changing route/s: " + e.Message);
                 return false;
             }
-            
+
         }
 
         //summary: funksjon som sletter route objekt med bestemt id
@@ -130,13 +131,13 @@ namespace Webapplication.DAL
 
                 _Local_Log.LogInformation("Sucessfully deleted route/s from db");
                 return true;
-            } 
+            }
             catch (Exception e)
             {
                 _Local_Log.LogError("error occured while deleting route/s: " + e.Message);
                 return false;
             }
-            
+
         }
 
 
@@ -163,6 +164,7 @@ namespace Webapplication.DAL
         {
             try
             {
+                //lage et nytt objekt med data fra inn objekt som skal inn i db
                 CruiseDetails new_cruiseDetails = new CruiseDetails
                 {
                     Max_Passengers = details.Max_Passengers,
@@ -172,18 +174,21 @@ namespace Webapplication.DAL
                     Vehicle_Price = details.Pet_Price
                 };
 
+                //legg ny objekt inn i databasen og lagre 
                 _DB.CruiseDetails.Add(new_cruiseDetails);
-
                 await _DB.SaveChangesAsync();
+
+                //log og return svar
                 _Local_Log.LogInformation("Sucessfully added new cruise details to db");
                 return true;
             }
             catch (Exception e)
             {
+                //feil håndtering
                 _Local_Log.LogError("error occured while adding new cruise details to db: " + e.Message);
                 return false;
             }
-            
+
         }
 
         //summary: funksjon som endrer allerede eksisterende cruise details objekt med data oppgitt i inn objekt
@@ -192,25 +197,30 @@ namespace Webapplication.DAL
         {
             try
             {
+                //hente objektet som skal endres
                 var current = await _DB.CruiseDetails.FindAsync(details.Id);
 
+                //oppdatere objektet
                 current.Max_Passengers = details.Max_Passengers;
                 current.Passeger_Price = details.Passeger_Price;
                 current.Passegner_Underage_Price = details.Passegner_Underage_Price;
                 current.Pet_Price = details.Pet_Price;
                 current.Vehicle_Price = details.Vehicle_Price;
 
+                //lagre endringer
                 await _DB.SaveChangesAsync();
 
+                //log og return svar
                 _Local_Log.LogInformation("Sucessfully changed cruise details in db");
                 return true;
             }
             catch (Exception e)
             {
+                //feil håndtereing
                 _Local_Log.LogError("Error occured while changing cruise details in db: " + e.Message);
                 return false;
             }
-            
+
         }
 
         //summary: funksjon som sletter cruise details objekt med bestemt id
@@ -219,17 +229,20 @@ namespace Webapplication.DAL
         {
             try
             {
+                //finne objektet som skal fjernes
                 var target = await _DB.CruiseDetails.FindAsync(id);
 
-                _DB.CruiseDetails.Remove(target); 
+                //fjerne og lagre
+                _DB.CruiseDetails.Remove(target);
+                await _DB.SaveChangesAsync();
 
-                await _DB.SaveChangesAsync(); 
-
+                //log og return svar
                 _Local_Log.LogInformation("Sucessfully deleted cruise details from db");
                 return true;
             }
             catch (Exception e)
             {
+                //feil håndtering
                 _Local_Log.LogError("error occured while deleting cruise details: " + e.Message);
                 return false;
             }
@@ -282,13 +295,13 @@ namespace Webapplication.DAL
                 await _DB.SaveChangesAsync();
 
                 //log og return svar
-                _Local_Log.LogInformation("Sucessfully added new cruise details to db");
+                _Local_Log.LogInformation("Sucessfully added new cruise to db");
                 return true;
             }
             catch (Exception e)
             {
                 //feil håndtere feil
-                _Local_Log.LogError("error occured while adding new cruise details to db: " + e.Message);
+                _Local_Log.LogError("error occured while adding new cruise to db: " + e.Message);
                 return false;
             }
 
@@ -312,7 +325,7 @@ namespace Webapplication.DAL
                 }
 
                 //hente nåværende objekt som skal endres 
-                var current = await _DB.Cruises.FindAsync(Id); 
+                var current = await _DB.Cruises.FindAsync(Id);
 
                 //endre objektet
                 current.Route = route;
@@ -322,13 +335,13 @@ namespace Webapplication.DAL
                 await _DB.SaveChangesAsync();
 
                 //log og return svar
-                _Local_Log.LogInformation("Sucessfully changed cruise details in db");
+                _Local_Log.LogInformation("Sucessfully changed cruise in db");
                 return true;
             }
             catch (Exception e)
             {
                 //feil håndtere feil
-                _Local_Log.LogError("Error occured while changing cruise details in db: " + e.Message);
+                _Local_Log.LogError("Error occured while changing cruise  in db: " + e.Message);
                 return false;
             }
         }
@@ -355,5 +368,129 @@ namespace Webapplication.DAL
             }
         }
 
+
+        //summary: funksjon som henter alle departures som finnes inn i databasen
+        //returns: liste med departure objekter
+        public async Task<List<Departure>> GetDepartures()
+        {
+            _Local_Log.LogInformation("Requested all departures");
+            return await _DB.Departures.ToListAsync();
+        }
+
+        //summary: funksjon som henter departure objekt med bestemt id
+        //parameters: int id - id til objektet som skal vises
+        //returns: Departure objekt
+        public async Task<Departure> GetDeparture(int id)
+        {
+            _Local_Log.LogInformation("Requested information about departure");
+            return await _DB.Departures.FindAsync(id);
+        }
+
+        //summary: funksjon som skaper og legger inn et nytt departure objekt ut av parameterene.
+        //parameters: int cruiseId - id til cruise objekt som skal inn i den nye departure, string dateString - string med dato som skal inn i den nye cruise 
+        public async Task<bool> AddDeparture(int cruiseId, string dateString)
+        {
+            try
+            {
+                //finn objekter som skal være attributer for den nye cruisen
+                var cruise = await _DB.Cruises.FindAsync(cruiseId);
+                DateTime date = DateTime.ParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                //sjekk om cruise attributer som route og/eller detalier er ikke null, 
+                if (cruise == null)
+                {
+                    _Local_Log.LogError("could not add new departure as cruise was not found");
+                    return false;
+                }
+
+                //date objekt krever ikke sjekk dersom den vil kaste exception dersom parsing blir ikke vellykket
+
+                //lag ny objekt og legg inn attributer 
+                Departure new_departure = new Departure
+                {
+                    Cruise = cruise,
+                    Date = date
+                };
+
+                //legg ny objekt inn i databasen og lagre 
+                _DB.Departures.Add(new_departure);
+                await _DB.SaveChangesAsync();
+
+                //log og return svar
+                _Local_Log.LogInformation("Sucessfully added new departure to db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                //feil håndtere feil
+                _Local_Log.LogError("error occured while adding new departure to db: " + e.Message);
+                return false;
+            }
+
+        }
+
+        //summary: funksjon som endrer allerede eksisterende departure objekt med data oppgitt som parameterene
+        //parameters: int Id - id til departure objekt som skal endres, int cruiseId - id til cruise objekt som oppdatering,
+        //string dateString - string med dato som oppdatering
+        public async Task<bool> EditDeparture(int Id, int cruiseId, string dateString)
+        {
+            try
+            {
+                //finn objekter som skal være attributer for den nye cruisen
+                var cruise = await _DB.Cruises.FindAsync(cruiseId);
+                DateTime date = DateTime.ParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                //sjekk om cruise attributer som route og/eller detalier er ikke null, 
+                if (cruise == null)
+                {
+                    _Local_Log.LogError("could not edit departure as cruise was not found");
+                    return false;
+                }
+
+                //date objekt krever ikke sjekk dersom den vil kaste exception dersom parsing blir ikke vellykket
+
+                //hente nåværende objekt som skal endres 
+                var current = await _DB.Departures.FindAsync(Id);
+
+                //endre objektet
+                current.Cruise = cruise;
+                current.Date = date;
+
+                //lagre endringer
+                await _DB.SaveChangesAsync();
+
+                //log og return svar
+                _Local_Log.LogInformation("Sucessfully changed departure details in db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                //feil håndtere feil
+                _Local_Log.LogError("Error occured while changing departure in db: " + e.Message);
+                return false;
+            }
+        }
+
+        //summary: funksjon som sletter departure objekt med bestemt id
+        //parameters: int id - id til objektet som skal fjernes
+        public async Task<bool> DeleteDeparture(int id)
+        {
+            try
+            {
+                var target = await _DB.Departures.FindAsync(id);
+
+                _DB.Departures.Remove(target);
+
+                await _DB.SaveChangesAsync();
+
+                _Local_Log.LogInformation("Sucessfully deleted departure from db");
+                return true;
+            }
+            catch (Exception e)
+            {
+                _Local_Log.LogError("error occured while deleting departure: " + e.Message);
+                return false;
+            }
+        }
     }
 }

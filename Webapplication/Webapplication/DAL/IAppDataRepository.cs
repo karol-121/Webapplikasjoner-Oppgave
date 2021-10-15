@@ -28,8 +28,13 @@ namespace Webapplication.DAL
         Task<bool> AddCruise(int routeId, int detailsId);
         Task<bool> EditCruise(int Id, int routeId, int detailsId);
         Task<bool> DeleteCruise(int id);
-        
+
         //Departure objekt
+        Task<List<Departure>> GetDepartures();
+        Task<Departure> GetDeparture(int id);
+        Task<bool> AddDeparture(int cruiseId, string dateString);
+        Task<bool> EditDeparture(int Id, int cruiseId, string dateString);
+        Task<bool> DeleteDeparture(int id);
 
     }
 }
