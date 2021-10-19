@@ -5,12 +5,14 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoggInn } from './logg-inn/logg-inn';
-import { AppRoutingModule } from './app-routing.module'
+import { NavBar } from './nav-bar/nav-bar';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    NavBar,
     LoggInn
   ],
   imports: [
