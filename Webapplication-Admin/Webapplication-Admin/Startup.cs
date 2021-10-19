@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using Webapplication.DAL;
 
 namespace Webapplication_Admin
 {
@@ -19,6 +24,21 @@ namespace Webapplication_Admin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=ApplicationDB.db"));
+            services.AddScoped<IApplicationRepository, ApplicationRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAppDataRepository, AppDataRepository>();
+
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(1800); // 30 minutter
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddDistributedMemoryCache();
+
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -28,11 +48,13 @@ namespace Webapplication_Admin
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                loggerFactory.AddFile("Logs/log.txt");
+                //DBinit.InitializeApplicationDB(app);
             }
             else
             {
@@ -46,12 +68,14 @@ namespace Webapplication_Admin
             }
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
+                /*endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");*/
+                endpoints.MapControllers();
             });
 
             app.UseSpa(spa =>
