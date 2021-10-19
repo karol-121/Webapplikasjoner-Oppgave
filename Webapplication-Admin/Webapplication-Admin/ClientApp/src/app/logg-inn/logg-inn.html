@@ -1,14 +1,22 @@
-<div class="row-md-4">
+<div class="col-md-4">
   <form [formGroup]="logg_inn_form" (ngSubmit)="authenticate()">
     <div class="form-group">
       <label for="username_field">Brukernavn Admin:</label>
-      <input type="email" class="form-control" id="username_field" formControlName="username" placeholder="Brukernavn">
+      <input type="email" class="form-control" [class.is-invalid]="!logg_inn_form.controls.username.valid && !logg_inn_form.controls.username.pristine" id="username_field" formControlName="username" placeholder="Brukernavn">
+      <div class="invalid-feedback">
+        Brukernavn har feil formatt.
+      </div>
     </div>
     <div class="form-group">
       <label for="password_field">Passord:</label>
-      <input type="password" class="form-control" id="password_field" formControlName="password" placeholder="Passord">
+      <input type="password" class="form-control" [class.is-invalid]="!logg_inn_form.controls.password.valid && !logg_inn_form.controls.password.pristine" id="password_field" formControlName="password" placeholder="Passord">
+      <div class="invalid-feedback">
+        Passord har feil formatt.
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Logg inn</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!logg_inn_form.valid">Logg inn</button>
   </form>
 
 </div>
+
+
