@@ -9,9 +9,9 @@ namespace Webapplication.Models
     //summary: objekt som brukes til å transportere logg inn data fra klient til server
     public class UserInfo
     {
-        [RegularExpression(@"[a-zA-Z0-9\-_]{3,15}$")]
+        [RegularExpression(@"^[a-zA-Z0-9\-_]{3,15}$")]
         public string Username { get; set; }
-        [RegularExpression(@"^[[:ascii:]]{8,64}$")]
+        [RegularExpression(@"^[0-9A-Za-z]{8,64}$")]
         public string Password { get; set; }
     }
 }

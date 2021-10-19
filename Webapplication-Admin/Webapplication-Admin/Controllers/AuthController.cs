@@ -10,6 +10,7 @@ using Webapplication.Models;
 
 namespace Webapplication.Controllers
 {
+    [ApiController]
     [Route("API/[action]")]
 
     //summary: kontroller som sammler endpoints som har med identifikasjon og autorization å gjøre
@@ -31,13 +32,13 @@ namespace Webapplication.Controllers
         //summary: funksjon som etablerer et session verdi etter vellykket logg inn. Denne session verdi brukes i andre kontrollerene for å autorization
         //parameters: UserInfo userInfo - objekt som inneholder logg inn detalier som brukernavn og passord
         //returns: Http ok status - ved vellykket identifikasjon, Http bad request status ved feil identifikasjon
-        public async Task<ActionResult> EstabilishAdministratorToken(string u, string p) //change the parameters to userInfor afterwards
+        public async Task<ActionResult> EstabilishAdministratorToken(UserInfo userInfo) //change the parameters to userInfor afterwards
         {
-            UserInfo userInfo = new UserInfo
+            /*UserInfo userInfo = new UserInfo
             {
-                Username = u,
-                Password = p
-            };
+                Username = Username,
+                Password = Password
+            };*/
 
             if (!ModelState.IsValid) //input validering av bruker logg inn info
             {

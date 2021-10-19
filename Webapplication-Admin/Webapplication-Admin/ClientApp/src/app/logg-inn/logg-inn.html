@@ -1,0 +1,14 @@
+<div class="row-md-4">
+  <form [formGroup]="logg_inn_form" (ngSubmit)="authenticate()">
+    <div class="form-group">
+      <label for="username_field">Brukernavn Admin:</label>
+      <input type="email" class="form-control" id="username_field" formControlName="username" placeholder="Brukernavn">
+    </div>
+    <div class="form-group">
+      <label for="password_field">Passord:</label>
+      <input type="password" class="form-control" id="password_field" formControlName="password" placeholder="Passord">
+    </div>
+    <button type="submit" class="btn btn-primary">Logg inn</button>
+  </form>
+
+</div>
