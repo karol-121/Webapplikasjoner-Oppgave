@@ -25,11 +25,11 @@ namespace Webapplication.Controllers
         //summary: get funksjon for departure objekter som henter alle utreiser som finnes i databasen
         //returns: liste med alle departure objekter 
         [HttpGet]
-        public ActionResult<List<Departure>> Get()
+        public async Task<ActionResult> Get()
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                return Ok(_Local_DB.GetDepartures());
+                return Ok(await _Local_DB.GetDepartures());
             }
             else
             {
@@ -41,11 +41,11 @@ namespace Webapplication.Controllers
         //parameters: int id - id til objekt som skal returneres 
         //returns: departure objekt
         [HttpGet("{id}")]
-        public ActionResult<Departure> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                return Ok(_Local_DB.GetDeparture(id));
+                return Ok(await _Local_DB.GetDeparture(id));
             }
             else
             {

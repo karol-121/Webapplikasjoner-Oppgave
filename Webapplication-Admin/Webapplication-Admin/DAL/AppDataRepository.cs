@@ -90,7 +90,7 @@ namespace Webapplication.DAL
             try
             {
                 var a = await _DB.Routes.FindAsync(route.Id); //hente opprinelig objekt
-                var b = await _DB.Routes.FindAsync(route.Return_id); //hente relatert objekt
+                var b = await _DB.Routes.FindAsync(a.Return_id); //hente relatert objekt
 
                 //påføre endringer på oppringlig objekt
                 a.Origin = route.Origin;

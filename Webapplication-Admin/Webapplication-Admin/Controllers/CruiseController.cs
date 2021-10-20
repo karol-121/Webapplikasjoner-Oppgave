@@ -26,11 +26,11 @@ namespace Webapplication.Controllers
         //summary: get funksjon for cruise som henter alle cruises som finnes i databasen
         //returns: liste med alle cruise objekter 
         [HttpGet]
-        public ActionResult<List<Cruise>> Get()
+        public async Task<ActionResult> Get()
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                return Ok(_Local_DB.GetCruises());
+                return Ok(await _Local_DB.GetCruises());
             }
             else
             {
@@ -42,11 +42,11 @@ namespace Webapplication.Controllers
         //parameters: int id - id til objekt som skal returneres 
         //returns: cruise objekt
         [HttpGet("{id}")]
-        public ActionResult<Cruise> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                return Ok(_Local_DB.GetCruise(id));
+                return Ok(await _Local_DB.GetCruise(id));
             }
             else
             {
