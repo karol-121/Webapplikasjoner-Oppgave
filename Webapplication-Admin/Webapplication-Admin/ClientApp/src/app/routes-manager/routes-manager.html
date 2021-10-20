@@ -1,0 +1,20 @@
+<div class="col-md-12">
+  <h2>Manage routes</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Id:</th>
+        <th>Orgin:</th>
+        <th>Destination:</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let route of routes">
+        <td>{{route.id}}</td>
+        <td>{{route.origin}}</td>
+        <td>{{route.destination}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

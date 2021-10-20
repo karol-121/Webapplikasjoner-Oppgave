@@ -25,11 +25,11 @@ namespace Webapplication.Controllers
         //summary: get funksjon for routes som henter alle routes som finnes i databasen
         //returns: liste med alle route objekter 
         [HttpGet]
-        public ActionResult<List<Route>> Get()
+        public async Task<ActionResult> Get()
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                return Ok(_Local_DB.GetRoutes());
+                return Ok(await _Local_DB.GetRoutes());
             } 
             else
             {
@@ -41,11 +41,11 @@ namespace Webapplication.Controllers
         //parameters: int id - id til objekt som skal returneres 
         //returns: route objekt
         [HttpGet("{id}")]
-        public ActionResult<Route> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                return Ok(_Local_DB.GetRoute(id));
+                return Ok(await _Local_DB.GetRoute(id));
             }
             else
             {
