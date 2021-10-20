@@ -1,6 +1,6 @@
 export class Route {
-  Id: number;
-  Origin: string;
-  Destination: string;
-  Return_id: number;
+  id: number;
+  origin: string;
+  destination: string;
+  return_id: number;
 }

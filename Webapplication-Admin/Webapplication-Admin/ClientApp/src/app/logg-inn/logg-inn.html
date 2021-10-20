@@ -3,7 +3,7 @@
   <form [formGroup]="logg_inn_form" (ngSubmit)="authenticate()">
     <div class="form-group">
       <label for="username_field">Brukernavn Admin:</label>
-      <input type="email" class="form-control" [class.is-invalid]="!logg_inn_form.controls.username.valid && !logg_inn_form.controls.username.pristine" id="username_field" formControlName="username" placeholder="Brukernavn">
+      <input type="text" class="form-control" [class.is-invalid]="!logg_inn_form.controls.username.valid && !logg_inn_form.controls.username.pristine" id="username_field" formControlName="username" placeholder="Brukernavn">
       <div class="invalid-feedback">
         Brukernavn har feil formatt.
       </div>

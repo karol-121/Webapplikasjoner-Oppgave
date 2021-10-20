@@ -13,29 +13,29 @@ import { UserInfo } from '../UserInfo';
 export class LoggInn {
   logg_inn_form: FormGroup;
 
-  form_validation = {
-    username: [
-      null, Validators.compose([Validators.required, Validators.pattern("[a-zA-Z0-9\-_]{3,15}")])
-    ],
-    password: [
-      null, Validators.compose([Validators.required, Validators.pattern("[0-9A-Za-z]{8,64}")])
-    ]
+  formProfile = {
+    username: [null, Validators.compose([Validators.required, Validators.pattern("[a-zA-Z0-9\-_]{3,15}")])],
+    password: [null, Validators.compose([Validators.required, Validators.pattern("[0-9A-Za-z]{8,64}")])]
   }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
-    this.logg_inn_form = fb.group(this.form_validation);
+    this.logg_inn_form = fb.group(this.formProfile);
   }
 
   //funksjon som kjøres ved submit av form, den lager et user info objekt som inneholder form data og kaller logg inn funksjon på server
   authenticate() {
     const userInfo = new UserInfo();
-    userInfo.Username = this.logg_inn_form.value.username;
-    userInfo.Password = this.logg_inn_form.value.password;
+    userInfo.username = this.logg_inn_form.value.username;
+    userInfo.password = this.logg_inn_form.value.password;
 
     //her skal det redirectes tilbake der hvorfra logg inn request ble laget,
     //f.eks dersom noen prøvde å åpne route admin side, og var ikke logget inn, så skal den bli redirected her og så etter innlogging skal den gå tilbake til routes
     this.http.post("API/EstabilishAdministratorToken", userInfo)
-      .subscribe(success => { console.log("logg inn success;"); }, error => console.log(error));
+      .subscribe(success => {
+        console.log("logg inn success;");
+      }, error => {
+        console.log(error);
+      });
   }
 
 

@@ -62,14 +62,13 @@ namespace Webapplication.DAL
                 //legge begge inn i databasen
                 _DB.Routes.Add(new_route);
                 _DB.Routes.Add(new_route_return);
-
-                //her kobles det disse to objekter, antaglighivs de burde nå få sitt id?
-                //OBS. dette er her er ikke sikkert at det virker, samtidig er det ikke mulig å sjekker ordenlig
-                //kan hende at dette må bearbeides senere.
+                await _DB.SaveChangesAsync(); //man må kalle på save changes for at id blir generated for objekter
+                
+                //knytte relatert objekter ved hjelp av id som disse objekter skal få inntil nå
                 new_route.Return_id = new_route_return.Id;
                 new_route_return.Return_id = new_route.Id;
-
-                await _DB.SaveChangesAsync(); //lagre id
+                await _DB.SaveChangesAsync();
+                //lagre id
                 _Local_Log.LogInformation("Sucessfully added new route/s to db");
                 return true;
 
