@@ -14,7 +14,8 @@ export class CruisesdetailsManager {
   cruisesdetails: Array<CruiseDetails>;
   submitButtonText: string;
   isFetchingData: boolean;
-  selected: number;
+  selected: number; //id til det valgte element
+  alertContent: string; //streng som inneholder alert tekst
 
   formProfile = {
     cruisedetails_id: [null],
@@ -30,11 +31,18 @@ export class CruisesdetailsManager {
     this.cruisedetails_modifications.controls.cruisedetails_id.disable(); //angular foretrekker disablering input herfra og ikke direkte i dom
     this.submitButtonText = "Register";
     this.selected = -1;
+    this.alertContent = null; //dersom alertcontet er null, alert vises ikke
   }
 
+  //init funksjon
   ngOnInit() {
     this.fetchCruisedetails();
     this.isFetchingData = true;
+  }
+
+  //funksjon som lukker alert
+  dissmissAlert() {
+    this.alertContent = null;
   }
 
   //funksjon som legger valgt element inn i formen, hvorfra denne elementet kan endres
@@ -112,7 +120,10 @@ export class CruisesdetailsManager {
           this.fetchCruisedetails();
         }
 
-        //feilmelding
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Disse cruise detaljer kunne ikke bli lagt til.";
+        }
 
       });
   }
@@ -137,7 +148,10 @@ export class CruisesdetailsManager {
           this.fetchCruisedetails();
         }
 
-        //feilmelding
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Disse cruise detaljer kunne ikke bli endret.";
+        }
 
       });
 
@@ -157,8 +171,10 @@ export class CruisesdetailsManager {
           this.fetchCruisedetails();
         }
         
-        //feilmelding
-
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Disse cruise detaljer kunne ikke bli fjernet. Er du sikkert på at de refereres ikke til andre objekter?";
+        }
       });
   }
 

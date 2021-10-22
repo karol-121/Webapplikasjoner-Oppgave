@@ -14,13 +14,13 @@ export class RoutesManager {
   routes: Array<Route>;
   submitButtonText: string;
   isFetchingData: boolean;
-  selected: number;
+  selected: number; //id til valgt element
+  alertContent: string; //streng som inneholder alert tekst
 
-  //forsk på hvorfor ikke latinske bokstaver inn i validtors pattern knekker hele siden, angualr har noe problem med http
   formProfile = {
     route_id: [null],
-    route_orgin: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-z\- .]{2,30}")])],
-    route_destination: [null, Validators.compose([Validators.required, Validators.pattern("^[A-Za-z\- .]{2,30}$")])]
+    route_orgin: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-zøæåØÆÅ\\- .]{2,30}")])],
+    route_destination: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-zøæåØÆÅ\\- .]{2,30}")])]
   }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
@@ -28,11 +28,18 @@ export class RoutesManager {
     this.route_modifications.controls.route_id.disable(); //angular foretrekker disablering input herfra og ikke direkte i dom
     this.submitButtonText = "Register";
     this.selected = -1;
+    this.alertContent = null; //dersom alertcontet er null, alert vises ikke
   }
 
+  //init funksjon
   ngOnInit() {
     this.fetchRoutes();
     this.isFetchingData = true;
+  }
+
+  //funksjon som lukker alert
+  dissmissAlert() {
+    this.alertContent = null;
   }
 
   //funksjon som legger valgt element inn i formen, hvorfra denne elementet kan endres
@@ -105,7 +112,10 @@ export class RoutesManager {
           this.fetchRoutes();
         }
 
-        //do fail here
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Denne ruten kunne ikke bli lagt til";
+        }
 
       });
   }
@@ -127,7 +137,10 @@ export class RoutesManager {
           this.fetchRoutes();
         }
 
-        //do fail here
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Denne ruten kunne ikke bli endret.";
+        }
 
       });
 
@@ -147,8 +160,10 @@ export class RoutesManager {
           this.fetchRoutes();
         }
 
-        //do fail here
-
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Denne ruten kunne ikke bli fjernet. Er du sikkert på at den referers ikke til andre objekter?";
+        }
       });
   }
 
