@@ -35,7 +35,7 @@ namespace Webapplication.Controllers
         public async Task<ActionResult> EstabilishAdministratorToken(UserInfo userInfo) //change the parameters to userInfor afterwards
         {
 
-            if (!ModelState.IsValid) //input validering av bruker logg inn info
+            if (!ModelState.IsValid || userInfo == null) //input validering av bruker logg inn info
             {
                 _Local_Log.LogError("requested admin authentication with invalid user information");
                 return BadRequest("invalid user information");

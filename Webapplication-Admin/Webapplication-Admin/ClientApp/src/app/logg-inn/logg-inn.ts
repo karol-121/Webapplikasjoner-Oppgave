@@ -11,6 +11,7 @@ import { UserInfo } from '../UserInfo';
 
 export class LoggInn {
   logg_inn_form: FormGroup;
+  alertContent: string;
 
   formProfile = {
     username: [null, Validators.compose([Validators.required, Validators.pattern("[a-zA-Z0-9\-_]{3,15}")])],
@@ -19,6 +20,12 @@ export class LoggInn {
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
     this.logg_inn_form = fb.group(this.formProfile);
+    this.alertContent = null;
+  }
+
+  //funksjon som fjerner alert (alert blir borte når content er null)
+  dissmissAlert() {
+    this.alertContent = null;
   }
 
   //funksjon som kjøres ved submit av form, den lager et user info objekt som inneholder form data og kaller logg inn funksjon på server
@@ -36,6 +43,11 @@ export class LoggInn {
         if (response.status === 200) {
           //gå til hoved siden
           this.router.navigate(['/Dashboard']);
+        }
+
+        //bad request
+        if (response.status === 400) {
+          this.alertContent = "Kunne ikke autentisere, sjekk brukernavn og passord."
         }
 
       });

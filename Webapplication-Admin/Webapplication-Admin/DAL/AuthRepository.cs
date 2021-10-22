@@ -48,6 +48,13 @@ namespace Webapplication.DAL
             try
             {
                 Admin matchingAdmin = await _DB.Admins.FirstOrDefaultAsync(a => a.Username == userInfo.Username); //hentes admin med passende bruker navn
+
+                if (matchingAdmin == null) //ikke nødvendig dersom det er try blokk, men den gir en "gentle" gjennomføring dersom argumentnullexception blir ikke kastet hvis brukernavn er feil
+                {
+                    _Local_Log.LogError("could not authenticate administrator as matching username was not found.");
+                    return false;
+                }
+
                 byte[] hash = GenerateHash(userInfo.Password, matchingAdmin.Salt); //generere hash verdi ut av oppgitt passord og lagret salt verdi
                 bool result = hash.SequenceEqual(matchingAdmin.Password); //sjekkes genererte hash verdi mot den orginale, som verifiserer som oppgitt passord er riktig eller ikke
 
