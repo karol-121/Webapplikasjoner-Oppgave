@@ -1,0 +1,90 @@
+<div class="col-md-12">
+  <h2>Manage cruise detaljer</h2>
+
+  <div class="table-heigh-limiter">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Id:</th>
+          <th>Max passasjerer:</th>
+          <th>Voksen pris:</th>
+          <th>Mindreårig pris:</th>
+          <th>Husdyr pris:</th>
+          <th>Motorvogn pris:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cruisedetails of cruisesdetails" (click)="applyForEdit(cruisedetails)">
+          <td>{{cruisedetails.id}}</td>
+          <td>{{cruisedetails.max_Passengers}}</td>
+          <td>{{cruisedetails.passeger_Price}}</td>
+          <td>{{cruisedetails.passegner_Underage_Price}}</td>
+          <td>{{cruisedetails.pet_Price}}</td>
+          <td>{{cruisedetails.vehicle_Price}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr />
+
+  <form [formGroup]="cruisedetails_modifications" (ngSubmit)="submitForm()">
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <label for="cruisedetails_id">Id:</label>
+        <input type="number" class="form-control" id="cruisedetails_id" formControlName="cruisedetails_id">
+      </div>
+      <div class="form-group col-md-2">
+        <label for="cruisedetails_max">Max passasjerer:</label>
+        <input type="number" class="form-control" id="cruisedetails_max" placeholder="f.eks 800" [class.is-invalid]="!cruisedetails_modifications.controls.cruisedetails_max_passengers.valid && !cruisedetails_modifications.controls.cruisedetails_max_passengers.pristine" formControlName="cruisedetails_max_passengers">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="cruisedetails_adult">Voksen pris:</label>
+        <input type="number" class="form-control" id="cruisedetails_adult" placeholder="f.eks 520" [class.is-invalid]="!cruisedetails_modifications.controls.cruisedetails_passeger_price.valid && !cruisedetails_modifications.controls.cruisedetails_passeger_price.pristine" formControlName="cruisedetails_passeger_price">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="cruisedetails_underage">Mindreårig pris:</label>
+        <input type="number" class="form-control" id="cruisedetails_underage" placeholder="f.eks 480" [class.is-invalid]="!cruisedetails_modifications.controls.cruisedetails_passenger_underage_price.valid && !cruisedetails_modifications.controls.cruisedetails_passenger_underage_price.pristine" formControlName="cruisedetails_passenger_underage_price">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="cruisedetails_pet">Husdyr pris:</label>
+        <input type="number" class="form-control" id="cruisedetails_pet" placeholder="f.eks 200" [class.is-invalid]="!cruisedetails_modifications.controls.cruisedetails_pet_price.valid && !cruisedetails_modifications.controls.cruisedetails_pet_price.pristine" formControlName="cruisedetails_pet_price">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="cruisedetails_vehicle">Motorvogn pris:</label>
+        <input type="number" class="form-control" id="cruisedetails_vehicle" placeholder="f.eks 300" [class.is-invalid]="!cruisedetails_modifications.controls.cruisedetails_vehicle_price.valid && !cruisedetails_modifications.controls.cruisedetails_vehicle_price.pristine" formControlName="cruisedetails_vehicle_price">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="!cruisedetails_modifications.valid">{{submitButtonText}}</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <button type="button" class="btn btn-danger btn-block" [disabled]="this.cruisedetails_modifications.controls.cruisedetails_id.value === null" (click)="deleteCruisedetails()">Slett</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <button type="reset" class="btn btn-secondary btn-block" (click)="resetForm()">Reset</button>
+      </div>
+
+    </div>
+  </form>
+
+</div>

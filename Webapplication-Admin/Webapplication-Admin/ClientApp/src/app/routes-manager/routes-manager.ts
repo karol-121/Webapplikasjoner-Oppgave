@@ -14,11 +14,11 @@ export class RoutesManager {
   routes: Array<Route>;
   submitButtonText: string;
 
-  //Obs disse validerings er ikke finale, disse burde endres etterhvert
+  //forsk på hvorfor ikke latinske bokstaver inn i validtors pattern knekker hele siden, angualr har noe problem med http
   formProfile = {
     route_id: [null],
-    route_orgin: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-zøæåØÆÅ\- .]{2,30}")])],
-    route_destination: [null, Validators.compose([Validators.required, Validators.pattern("^[A-Za-zøæåØÆÅ\- .]{2,30}$")])]
+    route_orgin: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-z\- .]{2,30}")])],
+    route_destination: [null, Validators.compose([Validators.required, Validators.pattern("^[A-Za-z\- .]{2,30}$")])]
   }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
@@ -130,7 +130,7 @@ export class RoutesManager {
   //funksjon som sletter element 
   deleteRoute() {
 
-    const id = this.route_modifications.getRawValue().route_id;
+    const id = this.route_modifications.controls.route_id.value;
 
     this.http.delete("API/Route/" + id)
       .subscribe(response => {
@@ -146,9 +146,5 @@ export class RoutesManager {
 
       });
   }
-
-
-  //legg til error handler funksjon
-  //dette er ikke sikkert dersom her skal det også printes alerter og de skal være avhengig av metoden
 
 }

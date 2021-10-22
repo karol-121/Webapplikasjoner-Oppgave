@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { LoggInn } from './logg-inn/logg-inn';
 import { NavBar } from './nav-bar/nav-bar';
 import { RoutesManager } from './routes-manager/routes-manager';
+import { CruisesdetailsManager } from './cruisesdetails-manager/cruisesdetails-manager';
 import { AppRoutingModule } from './app-routing.module';
 
 
@@ -15,6 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppComponent,
     NavBar,
     LoggInn,
+    CruisesdetailsManager,
     RoutesManager
   ],
   imports: [
