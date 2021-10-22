@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { UserInfo } from '../UserInfo';
 
 
@@ -31,10 +30,14 @@ export class LoggInn {
     //her skal det redirectes tilbake der hvorfra logg inn request ble laget,
     //f.eks dersom noen prøvde å åpne route admin side, og var ikke logget inn, så skal den bli redirected her og så etter innlogging skal den gå tilbake til routes
     this.http.post("API/EstabilishAdministratorToken", userInfo)
-      .subscribe(success => {
-        console.log("logg inn success;");
-      }, error => {
-        console.log(error);
+      .subscribe(body => {}, response => {
+
+        //hvis det har blitt vellykket 
+        if (response.status === 200) {
+          //gå til hoved siden
+          this.router.navigate(['/Dashboard']);
+        }
+
       });
   }
 

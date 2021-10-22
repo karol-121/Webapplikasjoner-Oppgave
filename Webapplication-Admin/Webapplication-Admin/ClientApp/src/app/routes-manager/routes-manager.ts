@@ -13,6 +13,7 @@ export class RoutesManager {
   route_modifications: FormGroup;
   routes: Array<Route>;
   submitButtonText: string;
+  isFetchingData: boolean;
 
   //forsk på hvorfor ikke latinske bokstaver inn i validtors pattern knekker hele siden, angualr har noe problem med http
   formProfile = {
@@ -29,6 +30,7 @@ export class RoutesManager {
 
   ngOnInit() {
     this.fetchRoutes();
+    this.isFetchingData = true;
   }
 
   //funksjon som legger valgt element inn i formen, hvorfra denne elementet kan endres
@@ -70,13 +72,15 @@ export class RoutesManager {
     this.http.get<Route[]>("API/Route")
       .subscribe(fetchedRoutes => {
         this.routes = fetchedRoutes;
+        this.isFetchingData = false;
 
-      }, error => {
+      }, response => {
 
         //dersom det returneres et http 401 (unauthorized), flyttes brukeren til logg inn side
-        if (error.status === 401) {
+        if (response.status === 401) {
           this.router.navigate(['/Logg-Inn']);
         }
+
       });
   }
 
@@ -89,16 +93,15 @@ export class RoutesManager {
     //Return_id blir null dersom denne krever ikke route add metode på serveren
 
     this.http.post("API/Route", newRoute)
-      .subscribe(response => {
+      .subscribe(body => {}, response => {
 
-        //her skal man printe et slags alert som sier at det har blit lagt til
-        this.resetForm();
-        this.fetchRoutes();
+        //success
+        if (response.status === 200) {
+          this.resetForm();
+          this.fetchRoutes();
+        }
 
-      }, error => {
-
-        //printe feilmelding
-        console.log(error);
+        //do fail here
 
       });
   }
@@ -112,16 +115,15 @@ export class RoutesManager {
     //Return_id blir null dersom denne krever ikke route put metode på serveren
 
     this.http.put("API/Route", modifiedRoute)
-      .subscribe(response => {
+      .subscribe(body => {}, response => {
 
-        //her skal man printe et slags alert som sier at det har blit modifisert
-        this.resetForm();
-        this.fetchRoutes();
+        //success
+        if (response.status === 200) {
+          this.resetForm();
+          this.fetchRoutes();
+        }
 
-      }, error => {
-
-        //printe feilmelding
-        console.log(error);
+        //do fail here
 
       });
 
@@ -133,16 +135,15 @@ export class RoutesManager {
     const id = this.route_modifications.controls.route_id.value;
 
     this.http.delete("API/Route/" + id)
-      .subscribe(response => {
+      .subscribe(body => {}, response => {
 
-        //lage melding
-        this.resetForm();
-        this.fetchRoutes();
+        //success
+        if (response.status === 200) {
+          this.resetForm();
+          this.fetchRoutes();
+        }
 
-      }, error => {
-
-        //feilmelding
-        console.log(error);
+        //do fail here
 
       });
   }

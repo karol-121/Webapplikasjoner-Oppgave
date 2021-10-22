@@ -2,6 +2,7 @@
   <h2>Manage cruise detaljer</h2>
 
   <div class="table-heigh-limiter">
+    <div *ngIf="isFetchingData">Henter cruises details...</div>
     <table class="table table-striped table-hover">
       <thead>
         <tr>

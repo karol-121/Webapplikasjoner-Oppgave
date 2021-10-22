@@ -13,6 +13,7 @@ export class CruisesdetailsManager {
   cruisedetails_modifications: FormGroup;
   cruisesdetails: Array<CruiseDetails>;
   submitButtonText: string;
+  isFetchingData: boolean;
 
   formProfile = {
     cruisedetails_id: [null],
@@ -31,6 +32,7 @@ export class CruisesdetailsManager {
 
   ngOnInit() {
     this.fetchCruisedetails();
+    this.isFetchingData = true;
   }
 
   //funksjon som legger valgt element inn i formen, hvorfra denne elementet kan endres
@@ -76,13 +78,15 @@ export class CruisesdetailsManager {
     this.http.get<CruiseDetails[]>("API/CruiseDetails")
       .subscribe(fetchedCruisedetails => {
         this.cruisesdetails = fetchedCruisedetails;
+        this.isFetchingData = false;
 
-      }, error => {
+      }, response => {
 
         //dersom det returneres et http 401 (unauthorized), flyttes brukeren til logg inn side
-        if (error.status === 401) {
+        if (response.status === 401) {
           this.router.navigate(['/Logg-Inn']);
         }
+
       });
   }
 
@@ -97,16 +101,15 @@ export class CruisesdetailsManager {
     newCruisedetails.vehicle_Price = this.cruisedetails_modifications.value.cruisedetails_vehicle_price;
 
     this.http.post("API/CruiseDetails", newCruisedetails)
-      .subscribe(response => {
+      .subscribe(body => { }, response => {
 
-        //her skal man printe et slags alert som sier at det har blit lagt til
-        this.resetForm();
-        this.fetchCruisedetails();
+        //success
+        if (response.status === 200) {
+          this.resetForm();
+          this.fetchCruisedetails();
+        }
 
-      }, error => {
-
-        //printe feilmelding
-        console.log(error);
+        //feilmelding
 
       });
   }
@@ -123,16 +126,15 @@ export class CruisesdetailsManager {
 
 
     this.http.put("API/CruiseDetails", modifiedCruiseDetails)
-      .subscribe(response => {
+      .subscribe(body => { }, response => {
 
-        //her skal man printe et slags alert som sier at det har blit modifisert
-        this.resetForm();
-        this.fetchCruisedetails();
+        //success
+        if (response.status === 200) {
+          this.resetForm();
+          this.fetchCruisedetails();
+        }
 
-      }, error => {
-
-        //printe feilmelding
-        console.log(error);
+        //feilmelding
 
       });
 
@@ -144,16 +146,15 @@ export class CruisesdetailsManager {
     const id = this.cruisedetails_modifications.controls.cruisedetails_id.value;
 
     this.http.delete("API/CruiseDetails/" + id)
-      .subscribe(response => {
+      .subscribe(body => {}, response => {
 
-        //lage melding
-        this.resetForm();
-        this.fetchCruisedetails();
-
-      }, error => {
-
+        //success
+        if (response.status === 200) {
+          this.resetForm();
+          this.fetchCruisedetails();
+        }
+        
         //feilmelding
-        console.log(error);
 
       });
   }

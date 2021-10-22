@@ -34,11 +34,6 @@ namespace Webapplication.Controllers
         //returns: Http ok status - ved vellykket identifikasjon, Http bad request status ved feil identifikasjon
         public async Task<ActionResult> EstabilishAdministratorToken(UserInfo userInfo) //change the parameters to userInfor afterwards
         {
-            /*UserInfo userInfo = new UserInfo
-            {
-                Username = Username,
-                Password = Password
-            };*/
 
             if (!ModelState.IsValid) //input validering av bruker logg inn info
             {
