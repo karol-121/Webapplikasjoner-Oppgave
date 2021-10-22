@@ -62,13 +62,18 @@ namespace Webapplication.Controllers
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
+                if(!ModelState.IsValid)
+                {
+                    return BadRequest("The new route cound not be added");
+                }
+
                 if (await _Local_DB.AddRoute(route)) 
                 {
                     return Ok("Sucessfully added the new route");
                 }
 
                 return BadRequest("The new route cound not be added");
-                
+
             }
             else
             {
@@ -85,6 +90,10 @@ namespace Webapplication.Controllers
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("The route could not be changed");
+                }
 
                 if (await _Local_DB.EditRoute(route))
                 {

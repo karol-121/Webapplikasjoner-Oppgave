@@ -63,6 +63,11 @@ namespace Webapplication.Controllers
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("The new cruise details object cound not be added");
+                }
+
                 if (await _Local_DB.AddCruiseDetails(details))
                 {
                     return Ok("Sucessfully added the new cruise details object");
@@ -85,6 +90,10 @@ namespace Webapplication.Controllers
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("The cruise details object could not be changed");
+                }
 
                 if (await _Local_DB.EditCruiseDetails(details))
                 {

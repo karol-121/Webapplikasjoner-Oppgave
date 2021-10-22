@@ -1,22 +1,26 @@
 <div class="col-md-12">
   <h2>Manage routes</h2>
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Id:</th>
-        <th>Orgin:</th>
-        <th>Destination:</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let route of routes" (click)="applyForEdit(route)">
-        <td>{{route.id}}</td>
-        <td>{{route.origin}}</td>
-        <td>{{route.destination}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-heigh-limiter">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Id:</th>
+          <th>Orgin:</th>
+          <th>Destination:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let route of routes" (click)="applyForEdit(route)">
+          <td>{{route.id}}</td>
+          <td>{{route.origin}}</td>
+          <td>{{route.destination}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  
 
   <hr />
 
@@ -43,15 +47,15 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-1">
-        <button type="submit" class="btn btn-primary" [disabled]="!route_modifications.valid">{{submitButtonText}}</button>
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="!route_modifications.valid">{{submitButtonText}}</button>
       </div>
 
       <div class="form-group col-md-1">
-        <button type="button" class="btn btn-danger" [disabled]="this.route_modifications.controls.route_id.value === null" (click)="deleteRoute()">Slett</button>
+        <button type="button" class="btn btn-danger btn-block" [disabled]="this.route_modifications.controls.route_id.value === null" (click)="deleteRoute()">Slett</button>
       </div>
 
       <div class="form-group col-md-1">
-        <button type="reset" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+        <button type="reset" class="btn btn-secondary btn-block" (click)="resetForm()">Reset</button>
       </div>
 
 

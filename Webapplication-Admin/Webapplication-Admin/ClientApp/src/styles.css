@@ -14,3 +14,10 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.table-heigh-limiter {
+  width: 100%;
+  max-height: 400px;
+  overflow: auto;
+  display: inline-block;
+}

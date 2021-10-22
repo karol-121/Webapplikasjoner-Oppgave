@@ -17,8 +17,8 @@ export class RoutesManager {
   //Obs disse validerings er ikke finale, disse burde endres etterhvert
   formProfile = {
     route_id: [null],
-    route_orgin: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-z ]{2,30}")])],
-    route_destination: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-z ]{2,30}")])]
+    route_orgin: [null, Validators.compose([Validators.required, Validators.pattern("[A-Za-zøæåØÆÅ\- .]{2,30}")])],
+    route_destination: [null, Validators.compose([Validators.required, Validators.pattern("^[A-Za-zøæåØÆÅ\- .]{2,30}$")])]
   }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
