@@ -14,6 +14,7 @@ export class CruisesdetailsManager {
   cruisesdetails: Array<CruiseDetails>;
   submitButtonText: string;
   isFetchingData: boolean;
+  selected: number;
 
   formProfile = {
     cruisedetails_id: [null],
@@ -28,6 +29,7 @@ export class CruisesdetailsManager {
     this.cruisedetails_modifications = fb.group(this.formProfile);
     this.cruisedetails_modifications.controls.cruisedetails_id.disable(); //angular foretrekker disablering input herfra og ikke direkte i dom
     this.submitButtonText = "Register";
+    this.selected = -1;
   }
 
   ngOnInit() {
@@ -45,8 +47,8 @@ export class CruisesdetailsManager {
     this.cruisedetails_modifications.patchValue({ cruisedetails_pet_price: toEdit.pet_Price });
     this.cruisedetails_modifications.patchValue({ cruisedetails_vehicle_price: toEdit.vehicle_Price });
  
-
     this.submitButtonText = "Endre";
+    this.selected = toEdit.id;
 
   }
 
@@ -71,6 +73,7 @@ export class CruisesdetailsManager {
 
     this.cruisedetails_modifications.reset();
     this.submitButtonText = "Register";
+    this.selected = -1;
   }
 
   //henter alle ruter fra databasen

@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cruisedetails of cruisesdetails" (click)="applyForEdit(cruisedetails)">
+        <tr *ngFor="let cruisedetails of cruisesdetails" (click)="applyForEdit(cruisedetails)" [class.table-active]="selected === cruisedetails.id">
           <td>{{cruisedetails.id}}</td>
           <td>{{cruisedetails.max_Passengers}}</td>
           <td>{{cruisedetails.passeger_Price}}</td>
