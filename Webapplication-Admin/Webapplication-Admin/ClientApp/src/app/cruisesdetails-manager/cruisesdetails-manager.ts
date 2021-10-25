@@ -84,7 +84,7 @@ export class CruisesdetailsManager {
     this.selected = -1;
   }
 
-  //henter alle ruter fra databasen
+  //henter alle cruise details fra databasen
   fetchCruisedetails() {
     this.http.get<CruiseDetails[]>("API/CruiseDetails")
       .subscribe(fetchedCruisedetails => {

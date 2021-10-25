@@ -9,6 +9,7 @@ import { Dashboard } from './dashboard/dashboard';
 import { NavBar } from './nav-bar/nav-bar';
 import { RoutesManager } from './routes-manager/routes-manager';
 import { CruisesdetailsManager } from './cruisesdetails-manager/cruisesdetails-manager';
+import { CruisesManager } from './cruises-manager/cruises-manager';
 import { AppRoutingModule } from './app-routing.module';
 
 
@@ -19,7 +20,8 @@ import { AppRoutingModule } from './app-routing.module';
     Dashboard,
     NavBar,
     RoutesManager,
-    CruisesdetailsManager
+    CruisesdetailsManager,
+    CruisesManager
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

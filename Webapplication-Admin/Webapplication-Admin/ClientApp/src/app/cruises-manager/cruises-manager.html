@@ -1,0 +1,72 @@
+<div class="col-md-12">
+  <h2>Manage cruises</h2>
+
+  <div class="alert alert-danger" role="alert" [hidden]="alertContent === null">
+    {{alertContent}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dissmissAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="table-heigh-limiter">
+    <div *ngIf="isFetchingData">Henter cruises...</div>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Id:</th>
+          <th>Rute:</th>
+          <th>Detaljer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cruise of cruises" (click)="applyForEdit(cruise)" [class.table-active]="selected === cruise.id">
+          <td>{{cruise.id}}</td>
+          <td>{{cruise.route.origin}} - {{cruise.route.destination}}</td>
+          <td>Maks: {{cruise.cruiseDetails.max_Passengers}} Priser: voksen - {{cruise.cruiseDetails.passeger_Price}}, mindreårig - {{cruise.cruiseDetails.passegner_Underage_Price}},
+              husdyr - {{cruise.cruiseDetails.pet_Price}}, motorvogn - {{cruise.cruiseDetails.vehicle_Price}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr />
+
+  <form [formGroup]="cruise_modifications" (ngSubmit)="submitForm()">
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <label for="cruise_id">Id:</label>
+        <input type="number" class="form-control" id="cruise_id" formControlName="cruise_id">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="cruise_route">Rute:</label>
+        <select class="form-control" id="cruise_route" formControlName="cruise_route_id">
+          <option *ngIf="isFetchingRoutes">Henter ruter...</option>
+          <option *ngFor="let route of routes" value="{{route.id}}">{{route.origin}} - {{route.destination}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="cruise_details">Detaljer:</label>
+        <select class="form-control" id="cruise_details" formControlName="cruise_details_id">
+          <option *ngIf="isFetchingDetails">Henter detaljer...</option>
+          <option *ngFor="let details of cruisesdetails" value="{{details.id}}">Maks: {{details.max_Passengers}} Priser: voksen - {{details.passeger_Price}},
+          mindreårig - {{details.passegner_Underage_Price}}, husdyr - {{details.pet_Price}}, motorvogn - {{details.vehicle_Price}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="!cruise_modifications.valid">{{submitButtonText}}</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <button type="button" class="btn btn-danger btn-block" [disabled]="this.cruise_modifications.controls.cruise_id.value === null" (click)="deleteCruise()">Slett</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <button type="reset" class="btn btn-secondary btn-block" (click)="resetForm()">Reset</button>
+      </div>
+
+    </div>
+  </form>
+
+</div>

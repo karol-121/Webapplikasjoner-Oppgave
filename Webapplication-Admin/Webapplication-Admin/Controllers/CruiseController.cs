@@ -57,14 +57,14 @@ namespace Webapplication.Controllers
         //summary: post funksjon for cruises som lagrer en cruise 
         //her passeres det enkle parameterene og ikke objekt dersom dette objektet kun sammensetter andre objekter som allerede eksisterer inn i db
         //for å legge til disse andre objekter, skal man benytte seg av deres add funksjoner og ikke den her.
-        //parameters: int routeId - id til route objekt som skal til, int detailsId id til cruise detail objekt som skal til 
+        //parameters: int[] data - [0] id til route objekt som skal til, [1] id til cruise detail objekt som skal til 
         //returns: Http Ok status - ved vellykket lagring, Http Bad request - ved ikke vellykket lagring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPost]
-        public async Task<ActionResult> Post(int routeId, int detailsId)
+        public async Task<ActionResult> Post(int[] data)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                if (await _Local_DB.AddCruise(routeId, detailsId))
+                if (await _Local_DB.AddCruise(data[0], data[1])) //data[0] = routeId, data[1] = detailsId
                 {
                     return Ok("Sucessfully added the new cruise");
                 }
@@ -81,15 +81,15 @@ namespace Webapplication.Controllers
         //summary: put funksjon for cruise som endrer en bestemt cruise
         //her passeres det enkle paremeterene og ikke objekt dersom dette objektet kun sammensetter andre objekter som allerede eksisterer inn i db
         //for å endre disse andre objekter, skal man benytte seg av deres endre funksjoner og ikke den her.
-        //parameters: int Id - id til cruise objekt som skal endres, int routeId - id til route objekt som oppdatering, int detailsId - id til cruise details objekt som oppdatering
+        //parameters: int[] - [0] id til cruise objekt som skal endres, [1] id til route objekt som oppdatering, [2] id til cruise details objekt som oppdatering
         //returns: Http Ok status - ved vellykket endring, Http Bad request - ved ikke vellykket endring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPut]
-        public async Task<ActionResult> Put(int Id, int routeId, int detailsId)
+        public async Task<ActionResult> Put(int[] data)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
 
-                if (await _Local_DB.EditCruise(Id, routeId, detailsId))
+                if (await _Local_DB.EditCruise(data[0], data[1], data[2])) //data[0] = Id, data[1] = routeId, data[2] = detailsId
                 {
                     return Ok("Sucessfullyy changed the cruise");
                 }
