@@ -1,5 +1,5 @@
 <div class="col-md-12">
-  <h2>Manage cruise detaljer</h2>
+  <h2>Administrer cruise detaljer</h2>
 
   <div class="alert alert-danger" role="alert" [hidden]="alertContent === null">
     {{alertContent}}
@@ -9,12 +9,12 @@
   </div>
 
   <div class="table-heigh-limiter">
-    <div *ngIf="isFetchingData">Henter cruises details...</div>
+    <div *ngIf="isFetchingData">Henter cruise detaljer...</div>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
           <th>Id:</th>
-          <th>Max passasjerer:</th>
+          <th>Maks passasjerer:</th>
           <th>Voksen pris:</th>
           <th>Mindreårig pris:</th>
           <th>Husdyr pris:</th>
@@ -43,7 +43,7 @@
         <input type="number" class="form-control" id="cruisedetails_id" formControlName="cruisedetails_id">
       </div>
       <div class="form-group col-md-2">
-        <label for="cruisedetails_max">Max passasjerer:</label>
+        <label for="cruisedetails_max">Maks passasjerer:</label>
         <input type="number" class="form-control" id="cruisedetails_max" placeholder="f.eks 800" [class.is-invalid]="!cruisedetails_modifications.controls.cruisedetails_max_passengers.valid && !cruisedetails_modifications.controls.cruisedetails_max_passengers.pristine" formControlName="cruisedetails_max_passengers">
         <div class="invalid-feedback">
           Feil formatt
