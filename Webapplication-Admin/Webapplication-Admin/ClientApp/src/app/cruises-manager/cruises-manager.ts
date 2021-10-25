@@ -27,8 +27,8 @@ export class CruisesManager {
 
   formProfile = {
     cruise_id: [null],
-    cruise_route_id: [""],
-    cruise_details_id: [""]
+    cruise_route_id: [null],
+    cruise_details_id: [null]
   }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
@@ -144,9 +144,10 @@ export class CruisesManager {
   //funksjon som henter verdier fra form og så legge til et nytt objekt med disse verdier
   addCruise() {
     
-    //array som holder id-er til objekter som skal opprette et ny cruise.
-    //det er ikke vits å sende all informasjon dersom de allerede ligger på server, det er også sikker
-    const data = [this.cruise_modifications.value.cruise_route_id, this.cruise_modifications.value.cruise_details_id]
+    const data = {
+      routeId: this.cruise_modifications.value.cruise_route_id,
+      detailsId:this.cruise_modifications.value.cruise_details_id
+    }
 
     this.http.post("API/Cruise", data)
       .subscribe(body => { }, response => {
@@ -168,9 +169,11 @@ export class CruisesManager {
   //funksjon som henter verdier fra form og så endrer bestem objekt med disse verdier
   editCruise() {
 
-    //array som holder id-er til objekter som skal endre et cruise objekt.
-    //det er ikke vits å sende all informasjon dersom de allerede ligger på server, det er også sikker
-    const data = [this.cruise_modifications.controls.cruise_id.value, this.cruise_modifications.value.cruise_route_id, this.cruise_modifications.value.cruise_details_id]
+    const data = {
+      Id: this.cruise_modifications.controls.cruise_id.value,
+      routeId: this.cruise_modifications.value.cruise_route_id,
+      detailsId: this.cruise_modifications.value.cruise_details_id
+    }
 
     this.http.put("API/Cruise", data)
       .subscribe(body => { }, response => {

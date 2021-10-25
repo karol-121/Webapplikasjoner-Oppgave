@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Webapplication.DAL;
 using Webapplication.Models;
+using Webapplication_Admin.Models;
 
 namespace Webapplication.Controllers
 {
@@ -57,14 +58,14 @@ namespace Webapplication.Controllers
         //summary: post funksjon for cruises som lagrer en cruise 
         //her passeres det enkle parameterene og ikke objekt dersom dette objektet kun sammensetter andre objekter som allerede eksisterer inn i db
         //for å legge til disse andre objekter, skal man benytte seg av deres add funksjoner og ikke den her.
-        //parameters: int[] data - [0] id til route objekt som skal til, [1] id til cruise detail objekt som skal til 
+        //parameters: CruiseBinding cruiseBinding - objekt med data nødvendig for registrering av cruise objekt
         //returns: Http Ok status - ved vellykket lagring, Http Bad request - ved ikke vellykket lagring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPost]
-        public async Task<ActionResult> Post(int[] data)
+        public async Task<ActionResult> Post(CruiseBinding cruiseBinding)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                if (await _Local_DB.AddCruise(data[0], data[1])) //data[0] = routeId, data[1] = detailsId
+                if (await _Local_DB.AddCruise(cruiseBinding.routeId, cruiseBinding.detailsId))
                 {
                     return Ok("Sucessfully added the new cruise");
                 }
@@ -81,15 +82,15 @@ namespace Webapplication.Controllers
         //summary: put funksjon for cruise som endrer en bestemt cruise
         //her passeres det enkle paremeterene og ikke objekt dersom dette objektet kun sammensetter andre objekter som allerede eksisterer inn i db
         //for å endre disse andre objekter, skal man benytte seg av deres endre funksjoner og ikke den her.
-        //parameters: int[] - [0] id til cruise objekt som skal endres, [1] id til route objekt som oppdatering, [2] id til cruise details objekt som oppdatering
+        //parameters: CruiseBinding cruiseBinding - objekt med data nødvendig for endring av cruise objekt
         //returns: Http Ok status - ved vellykket endring, Http Bad request - ved ikke vellykket endring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPut]
-        public async Task<ActionResult> Put(int[] data)
+        public async Task<ActionResult> Put(CruiseBinding cruiseBinding)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
 
-                if (await _Local_DB.EditCruise(data[0], data[1], data[2])) //data[0] = Id, data[1] = routeId, data[2] = detailsId
+                if (await _Local_DB.EditCruise(cruiseBinding.Id, cruiseBinding.routeId, cruiseBinding.detailsId))
                 {
                     return Ok("Sucessfullyy changed the cruise");
                 }

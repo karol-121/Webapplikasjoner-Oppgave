@@ -5,6 +5,7 @@ import { Dashboard } from './dashboard/dashboard';
 import { RoutesManager } from './routes-manager/routes-manager';
 import { CruisesdetailsManager } from './cruisesdetails-manager/cruisesdetails-manager';
 import { CruisesManager } from './cruises-manager/cruises-manager';
+import { DeparturesManager } from './departures-manager/departures-manager';
 
 
 const appRoots: Routes = [
@@ -13,6 +14,7 @@ const appRoots: Routes = [
   { path: 'Manage-Routes', component: RoutesManager },
   { path: 'Manage-Cruisedetails', component: CruisesdetailsManager },
   { path: 'Manage-Cruises', component: CruisesManager },
+  { path: 'Manage-Departures', component: DeparturesManager },
   { path: '', redirectTo: '/Logg-Inn', pathMatch: 'full' }
 ]
 

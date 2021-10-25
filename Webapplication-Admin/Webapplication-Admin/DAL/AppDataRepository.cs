@@ -393,7 +393,7 @@ namespace Webapplication.DAL
             {
                 //finn objekter som skal være attributer for den nye cruisen
                 var cruise = await _DB.Cruises.FindAsync(cruiseId);
-                DateTime date = DateTime.ParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime date = DateTime.ParseExact(dateString, "yyyy-MM-ddThh:mm", CultureInfo.InvariantCulture);
 
                 //sjekk om cruise attributer som route og/eller detalier er ikke null, 
                 if (cruise == null)
@@ -437,7 +437,7 @@ namespace Webapplication.DAL
             {
                 //finn objekter som skal være attributer for den nye cruisen
                 var cruise = await _DB.Cruises.FindAsync(cruiseId);
-                DateTime date = DateTime.ParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime date = DateTime.ParseExact(dateString, "yyyy-MM-ddThh:mm", CultureInfo.InvariantCulture);
 
                 //sjekk om cruise attributer som route og/eller detalier er ikke null, 
                 if (cruise == null)

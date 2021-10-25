@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Webapplication.DAL;
 using Webapplication.Models;
+using Webapplication_Admin.Models;
 
 namespace Webapplication.Controllers
 {
@@ -56,14 +57,16 @@ namespace Webapplication.Controllers
         //summary: post funksjon for departures som lagrer en departure objekt
         //her passeres det enkle parameterene og ikke objekt dersom dette objektet kun sammensetter andre objekter og enkelte primitiv datatyper
         //for å legge til disse andre objekter, skal man benytte seg av deres add funksjoner og ikke den her.
-        //parameters: int cruiseId - id til cruise objekt som skal til, string dateString - dato streg i format  yyyy-MM-dd som skal til 
+        //parameters: DepartureBinding departureBinding - objekt med data nødvendig for registrering av departure objekt
         //returns: Http Ok status - ved vellykket lagring, Http Bad request - ved ikke vellykket lagring, Http unauthorized - ved uaktorisert tilgang 
+
         [HttpPost]
-        public async Task<ActionResult> Post(int cruiseId, string dateString)
+        public async Task<ActionResult> Post(DepartureBinding departureBinding)
         {
+
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
-                if (await _Local_DB.AddDeparture(cruiseId, dateString))
+                if (await _Local_DB.AddDeparture(departureBinding.cruiseId, departureBinding.dateString))
                 {
                     return Ok("Sucessfully added the new departure");
                 }
@@ -80,16 +83,15 @@ namespace Webapplication.Controllers
         //summary: put funksjon for departure objekter som endrer en bestemt utreise
         //her passeres det enkle paremeterene og ikke objekt dersom dette objektet kun sammensetter andre objekter og enkle primitiv datatyper
         //for å endre disse andre objekter, skal man benytte seg av deres endre funksjoner og ikke den her.
-        //parameters: int Id - id til departure objekt som skal endres, int cruiseId - id til cruise objekt som oppdatering,
-        //string dateString - dato streng i format yyyy-MM-dd som oppdatering
+        //parameters: DepartureBinding departureBinding - objekt med data nødvendig for endring av departure objekt
         //returns: Http Ok status - ved vellykket endring, Http Bad request - ved ikke vellykket endring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPut]
-        public async Task<ActionResult> Put(int Id, int cruiseId, string dateString)
+        public async Task<ActionResult> Put(DepartureBinding departureBinding)
         {
             if (SharedSession.GetString(_autorizaionToken) == "admin")
             {
 
-                if (await _Local_DB.EditDeparture(Id, cruiseId, dateString))
+                if (await _Local_DB.EditDeparture(departureBinding.Id, departureBinding.cruiseId, departureBinding.dateString))
                 {
                     return Ok("Sucessfullyy changed the departure");
                 }
