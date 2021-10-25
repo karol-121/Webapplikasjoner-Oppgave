@@ -40,6 +40,7 @@
         <label for="departure_cruise_id">Cruise:</label>
         <select class="form-control" id="departure_cruise_id" formControlName="departure_cruise_id">
           <option *ngIf="isFetchingCruises">Henter cruiser... </option>
+          <option value="">velg...</option>
           <option *ngFor="let cruise of cruises" value="{{cruise.id}}">{{cruise.id}}</option>
         </select>
       </div>

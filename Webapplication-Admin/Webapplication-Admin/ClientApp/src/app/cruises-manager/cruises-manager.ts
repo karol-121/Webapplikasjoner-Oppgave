@@ -27,8 +27,8 @@ export class CruisesManager {
 
   formProfile = {
     cruise_id: [null],
-    cruise_route_id: [null],
-    cruise_details_id: [null]
+    cruise_route_id: ["", Validators.compose([Validators.required, Validators.pattern("[0-9]{1,5}")])],
+    cruise_details_id: ["", Validators.compose([Validators.required, Validators.pattern("[0-9]{1,5}")])]
   }
 
   constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
@@ -86,6 +86,11 @@ export class CruisesManager {
   resetForm() {
 
     this.cruise_modifications.reset();
+
+    //disse her må settes dersom form.reset() fjerner default verdier for input select og den blir blank
+    this.cruise_modifications.patchValue({ cruise_route_id: "" })
+    this.cruise_modifications.patchValue({ cruise_details_id: "" })
+
     this.submitButtonText = "Register";
     this.selected = -1;
   }

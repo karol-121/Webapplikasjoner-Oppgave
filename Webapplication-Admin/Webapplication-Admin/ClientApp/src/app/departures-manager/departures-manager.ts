@@ -24,7 +24,7 @@ export class DeparturesManager {
 
   formProfile = {
     departure_id: [null],
-    departure_cruise_id: [null],
+    departure_cruise_id: ["", Validators.compose([Validators.required, Validators.pattern("[0-9]{1,5}")])],
     departure_date: [null, Validators.compose([Validators.required, Validators.pattern("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}")])]
   }
 
@@ -79,8 +79,11 @@ export class DeparturesManager {
 
   //funksjon som tilbakestiller formen til dens opprinelig tilstand
   resetForm() {
-
     this.departure_modifications.reset();
+
+    //disse her må settes dersom form.reset() fjerner default verdier for input select og den blir blank
+    this.departure_modifications.patchValue({ departure_cruise_id: "" })
+
     this.submitButtonText = "Register";
     this.selected = -1;
   }

@@ -41,6 +41,7 @@
         <label for="cruise_route">Rute:</label>
         <select class="form-control" id="cruise_route" formControlName="cruise_route_id">
           <option *ngIf="isFetchingRoutes">Henter ruter...</option>
+          <option value="">velg...</option>
           <option *ngFor="let route of routes" value="{{route.id}}">{{route.origin}} - {{route.destination}}</option>
         </select>
       </div>
@@ -48,8 +49,11 @@
         <label for="cruise_details">Detaljer:</label>
         <select class="form-control" id="cruise_details" formControlName="cruise_details_id">
           <option *ngIf="isFetchingDetails">Henter detaljer...</option>
-          <option *ngFor="let details of cruisesdetails" value="{{details.id}}">Maks: {{details.max_Passengers}} Priser: voksen - {{details.passeger_Price}},
-          mindreårig - {{details.passegner_Underage_Price}}, husdyr - {{details.pet_Price}}, motorvogn - {{details.vehicle_Price}}</option>
+          <option value="">velg...</option>
+          <option *ngFor="let details of cruisesdetails" value="{{details.id}}">
+            Maks: {{details.max_Passengers}} Priser: voksen - {{details.passeger_Price}},
+            mindreårig - {{details.passegner_Underage_Price}}, husdyr - {{details.pet_Price}}, motorvogn - {{details.vehicle_Price}}
+          </option>
         </select>
       </div>
     </div>
