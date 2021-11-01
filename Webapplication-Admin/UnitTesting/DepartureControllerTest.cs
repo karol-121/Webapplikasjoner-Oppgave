@@ -122,6 +122,8 @@ namespace UnitTesting
         public async Task PostAuthorized()
         {
             //Arrange
+            var inncomingDeparture = new DepartureBinding { Id = 1, cruiseId = 1, dateString = "" }; //it.isAny<DepartureBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.AddDeparture(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
             var departureController = new DepartureController(mockRep.Object, mockLog.Object);
@@ -131,7 +133,7 @@ namespace UnitTesting
             departureController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await departureController.Post(It.IsAny<DepartureBinding>()) as OkObjectResult;
+            var result = await departureController.Post(inncomingDeparture) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
@@ -143,6 +145,8 @@ namespace UnitTesting
         public async Task PostAuthorizedFail()
         {
             //Arrange
+            var inncomingDeparture = new DepartureBinding { Id = 1, cruiseId = 1, dateString = "" }; //it.isAny<DepartureBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.AddDeparture(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(false);
 
             var departureController = new DepartureController(mockRep.Object, mockLog.Object);
@@ -152,7 +156,7 @@ namespace UnitTesting
             departureController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await departureController.Post(It.IsAny<DepartureBinding>()) as BadRequestObjectResult;
+            var result = await departureController.Post(inncomingDeparture) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
@@ -183,6 +187,8 @@ namespace UnitTesting
         public async Task PutAuthorized()
         {
             //Arrange
+            var inncomingDeparture = new DepartureBinding { Id = 1, cruiseId = 1, dateString = "" }; //it.isAny<DepartureBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.EditDeparture(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
 
             var departureController = new DepartureController(mockRep.Object, mockLog.Object);
@@ -192,7 +198,7 @@ namespace UnitTesting
             departureController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await departureController.Put(It.IsAny<DepartureBinding>()) as OkObjectResult;
+            var result = await departureController.Put(inncomingDeparture) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
@@ -204,6 +210,8 @@ namespace UnitTesting
         public async Task PutAuthorizedFail()
         {
             //Arrange
+            var inncomingDeparture = new DepartureBinding { Id = 1, cruiseId = 1, dateString = "" }; //it.isAny<DepartureBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.EditDeparture(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(false);
 
             var departureController = new DepartureController(mockRep.Object, mockLog.Object);
@@ -213,7 +221,7 @@ namespace UnitTesting
             departureController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await departureController.Put(It.IsAny<DepartureBinding>()) as BadRequestObjectResult;
+            var result = await departureController.Put(inncomingDeparture) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);

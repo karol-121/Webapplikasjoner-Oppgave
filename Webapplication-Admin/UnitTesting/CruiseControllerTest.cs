@@ -122,6 +122,8 @@ namespace UnitTesting
         public async Task PostAuthorized()
         {
             //Arrange
+            var inncomingCruise = new CruiseBinding { Id = 1, detailsId = 1, routeId = 1 }; //it.isAny<CruiseBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.AddCruise(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
 
             var cruiseController = new CruiseController(mockRep.Object, mockLog.Object);
@@ -130,8 +132,9 @@ namespace UnitTesting
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseController.ControllerContext.HttpContext = mockHttpContext.Object;
 
+
             //Act
-            var result = await cruiseController.Post(It.IsAny<CruiseBinding>()) as OkObjectResult;
+            var result = await cruiseController.Post(inncomingCruise) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
@@ -143,6 +146,8 @@ namespace UnitTesting
         public async Task PostAuthorizedFail()
         {
             //Arrange
+            var inncomingCruise = new CruiseBinding { Id = 1, detailsId = 1, routeId = 1 }; //it.isAny<CruiseBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.AddCruise(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(false);
 
             var cruiseController = new CruiseController(mockRep.Object, mockLog.Object);
@@ -152,7 +157,7 @@ namespace UnitTesting
             cruiseController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseController.Post(It.IsAny<CruiseBinding>()) as BadRequestObjectResult;
+            var result = await cruiseController.Post(inncomingCruise) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
@@ -183,6 +188,8 @@ namespace UnitTesting
         public async Task PutAuthorized()
         {
             //Arrange
+            var inncomingCruise = new CruiseBinding { Id = 1, detailsId = 1, routeId = 1 }; //it.isAny<CruiseBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.EditCruise(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
 
             var cruiseController = new CruiseController(mockRep.Object, mockLog.Object);
@@ -192,7 +199,7 @@ namespace UnitTesting
             cruiseController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseController.Put(It.IsAny<CruiseBinding>()) as OkObjectResult;
+            var result = await cruiseController.Put(inncomingCruise) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
@@ -204,6 +211,8 @@ namespace UnitTesting
         public async Task PutAuthorizedFail()
         {
             //Arrange
+            var inncomingCruise = new CruiseBinding { Id = 1, detailsId = 1, routeId = 1 }; //it.isAny<CruiseBindig> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.EditCruise(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(false);
 
             var cruiseController = new CruiseController(mockRep.Object, mockLog.Object);
@@ -213,7 +222,7 @@ namespace UnitTesting
             cruiseController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseController.Put(It.IsAny<CruiseBinding>()) as BadRequestObjectResult;
+            var result = await cruiseController.Put(inncomingCruise) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
