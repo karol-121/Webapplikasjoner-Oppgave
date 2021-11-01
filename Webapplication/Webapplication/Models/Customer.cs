@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
+    //summary: modell på et kunde
     public class Customer
     {
         public int Id { get; set; }

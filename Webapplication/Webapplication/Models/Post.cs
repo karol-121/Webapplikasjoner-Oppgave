@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
+    //summary: modell på et postnummer og posted representasjon 
     public class Post
     {
         [Key]

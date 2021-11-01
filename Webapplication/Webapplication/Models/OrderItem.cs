@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
+    //summary: modell på et ordre element som inneholder informasjon krevet for bestilling
     public class OrderItem
     {
         [RegularExpression(@"^[a-zA-ZÆØÅæøå]{2,25}(( |-)[a-zA-ZÆØÅæøå]{1,25}){0,3}$")]

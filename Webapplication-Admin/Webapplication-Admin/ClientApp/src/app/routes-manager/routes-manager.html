@@ -1,0 +1,70 @@
+<div class="col-md-12">
+  <h2>Administrer ruter</h2>
+
+  <div class="alert alert-danger" role="alert" [hidden]="alertContent === null">
+    {{alertContent}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="dissmissAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="table-heigh-limiter">
+    <div *ngIf="isFetchingData">Henter ruter...</div>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Id:</th>
+          <th>Start:</th>
+          <th>Destinasjon:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let route of routes" (click)="applyForEdit(route)" [class.table-active]="selected === route.id">
+          <td>{{route.id}}</td>
+          <td>{{route.origin}}</td>
+          <td>{{route.destination}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr />
+
+  <form [formGroup]="route_modifications" (ngSubmit)="submitForm()">
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <label for="route_id">Id:</label>
+        <input type="number" class="form-control" id="route_id" formControlName="route_id">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="route_orgin">Start:</label>
+        <input type="text" class="form-control" id="route_orgin" placeholder="f.eks Oslo" [class.is-invalid]="!route_modifications.controls.route_orgin.valid && !route_modifications.controls.route_orgin.pristine" formControlName="route_orgin">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="route_destination">Destinasjon:</label>
+        <input type="text" class="form-control" id="route_destination" placeholder="f.eks Bergen" [class.is-invalid]="!route_modifications.controls.route_destination.valid && !route_modifications.controls.route_destination.pristine" formControlName="route_destination">
+        <div class="invalid-feedback">
+          Feil formatt
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="!route_modifications.valid">{{submitButtonText}}</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <button type="button" class="btn btn-danger btn-block" [disabled]="this.route_modifications.controls.route_id.value === null" (click)="deleteRoute()">Slett</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <button type="reset" class="btn btn-secondary btn-block" (click)="resetForm()">Reset</button>
+      </div>
+
+    </div>
+  </form>
+
+</div>

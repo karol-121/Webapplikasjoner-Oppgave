@@ -1,0 +1,31 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" routerLink="/Dashboard">Oslomet Cruise - Admin panel</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" aria-label="Toggle navigation" (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" [class.show]="isShowing">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/Dashboard">Dashbord</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Manage-Departures">Rutetabell</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Manage-Cruises">Cruiser</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/Manage-Cruisedetails">Cruise detaljer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/Manage-Routes">Ruter</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+</header>

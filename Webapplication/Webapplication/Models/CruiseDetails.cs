@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
+    //summary: modell som definerer detalier til et cruise
     public class CruiseDetails
     {
         public int Id { get; set; }

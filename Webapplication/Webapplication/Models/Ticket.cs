@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Webapplication.Models
 {
+    //summary: modell på hvordan et bilett representeres inn i databasen
     public class Ticket
     {
         public int Id { get; set; }
