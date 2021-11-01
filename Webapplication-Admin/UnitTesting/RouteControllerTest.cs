@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Webapplication.Controllers;
@@ -24,8 +25,30 @@ namespace UnitTesting
 
 
         [Fact]
-        public void GetAllAuthorized()
+        public async Task GetAllAuthorized()
         {
+            //Arrange
+            var routeA = new Route { Id = 1, Origin = "Oslo", Destination = "Bergen", Return_id = 2 };
+            var routeB = new Route { Id = 2, Origin = "Bergen", Destination = "Oslo", Return_id = 1 };
+
+            var routes = new List<Route>();
+            routes.Add(routeA);
+            routes.Add(routeB);
+
+            mockRep.Setup(r => r.GetRoutes()).ReturnsAsync(routes);
+
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Get() as OkObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(routes, (List<Route>)result.Value);
 
         }
 
@@ -48,8 +71,25 @@ namespace UnitTesting
         }
 
         [Fact]
-        public void GetOneAutohrized()
+        public async Task GetOneAutohrized()
         {
+            //Arrange
+            var route = new Route { Id = 1, Origin = "Oslo", Destination = "Bergen", Return_id = 2 };
+
+            mockRep.Setup(r => r.GetRoute(It.IsAny<int>())).ReturnsAsync(route);
+
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Get(It.IsAny<int>()) as OkObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(route, (Route)result.Value);
 
         }
 
@@ -72,21 +112,63 @@ namespace UnitTesting
         }
 
         [Fact]
-        public void PostAutohrized()
+        public async Task PostAutohrized()
         {
+            //Arrange
+            mockRep.Setup(r => r.AddRoute(It.IsAny<Route>())).ReturnsAsync(true);
 
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Post(It.IsAny<Route>()) as OkObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("Sucessfully added the new route", result.Value);
         }
 
         [Fact]
-        public void PostAutohrizedInvalidModel()
+        public async Task PostAutohrizedInvalidModel()
         {
+            //Arrange
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
+            routeController.ModelState.AddModelError("Origin", "The new route cound not be added");
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Post(It.IsAny<Route>()) as BadRequestObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal("The new route cound not be added", result.Value);
         }
 
         [Fact]
-        public void PostAutohrizedFail()
+        public async Task PostAutohrizedFail()
         {
+            //Arrange
+            mockRep.Setup(r => r.AddRoute(It.IsAny<Route>())).ReturnsAsync(false);
 
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Post(It.IsAny<Route>()) as BadRequestObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal("The new route cound not be added", result.Value);
         }
 
         [Fact]
@@ -108,15 +190,64 @@ namespace UnitTesting
         }
 
         [Fact]
-        public void PutAutohrizedInvalidModel()
-        {
 
+        public async Task PutAuthorized()
+        {
+            //Arrange
+            mockRep.Setup(r => r.EditRoute(It.IsAny<Route>())).ReturnsAsync(true);
+
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Put(It.IsAny<Route>()) as OkObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("Sucessfully changed the route", result.Value);
         }
 
         [Fact]
-        public void PutAutohrizedFail()
+        public async Task PutAutohrizedInvalidModel()
         {
+            //Arrange
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
+            routeController.ModelState.AddModelError("Origin", "The new route cound not be added");
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Put(It.IsAny<Route>()) as BadRequestObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal("The new route cound not be added", result.Value);
+        }
+
+        [Fact]
+        public async Task PutAutohrizedFail()
+        {
+            //Arrange
+            mockRep.Setup(r => r.EditRoute(It.IsAny<Route>())).ReturnsAsync(false);
+
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Put(It.IsAny<Route>()) as BadRequestObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal("The route could not be changed", result.Value);
         }
 
         [Fact]
@@ -138,15 +269,43 @@ namespace UnitTesting
         }
 
         [Fact]
-        public void DeleteAutohrized()
+        public async Task DeleteAutohrized()
         {
+            //Arrange
+            mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(true);
 
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Delete(It.IsAny<int>()) as OkObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("Sucessfully removed the route", result.Value);
         }
 
         [Fact]
-        public void DeleteAutohrizedFail()
+        public async Task DeleteAutohrizedFail()
         {
+            //Arrange
+            mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(false);
 
+            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+
+            mockSession[_autorizaionToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            //Act
+            var result = await routeController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
+
+            //Assert
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.Equal("The route could not be removed", result.Value);
         }
 
         [Fact]

@@ -99,7 +99,7 @@ namespace Webapplication.Controllers
 
                 if (await _Local_DB.EditRoute(route))
                 {
-                    return Ok("Sucessfullyy changed the route ");
+                    return Ok("Sucessfully changed the route");
                 }
 
                 return BadRequest("The route could not be changed");
