@@ -27,6 +27,8 @@ namespace UnitTesting
         public async Task Authorize()
         {
             //Arrange
+            var inncomingUser = new UserInfo { Username = "", Password = "" }; //it.isAny<UserInfo> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.AuthenticateAdministrator(It.IsAny<UserInfo>())).ReturnsAsync(true);
 
             var authController = new AuthController(mockRep.Object, mockLog.Object);
@@ -36,7 +38,7 @@ namespace UnitTesting
             authController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await authController.EstabilishAdministratorToken(It.IsAny<UserInfo>()) as OkObjectResult;
+            var result = await authController.EstabilishAdministratorToken(inncomingUser) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
