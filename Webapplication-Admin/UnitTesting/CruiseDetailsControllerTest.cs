@@ -15,7 +15,7 @@ namespace UnitTesting
 {
     public class CruiseDetailsControllerTest
     {
-        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly string _authorizationToken = "authorizationToken";
 
         private readonly Mock<IAppDataRepository> mockRep = new Mock<IAppDataRepository>();
         private readonly Mock<ILogger<CruiseDetailsController>> mockLog = new Mock<ILogger<CruiseDetailsController>>();
@@ -41,7 +41,7 @@ namespace UnitTesting
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -56,17 +56,17 @@ namespace UnitTesting
 
         //summary: sjekk for hent alle objekter ikke logget inn
         [Fact]
-        public async Task GetAllUnautohrized()
+        public async Task GetAllUnauthorized()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseDetailsController.Get() as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Get() as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -75,7 +75,7 @@ namespace UnitTesting
 
         //summary: sjekk for hent et objekt vellykket
         [Fact]
-        public async Task GetOneAutohrized()
+        public async Task GetOneAuthorized()
         {
             //Arrange
             var details = new CruiseDetails { Id = 1, Max_Passengers = 100, Passeger_Price = 200, Passegner_Underage_Price = 150, Pet_Price = 50, Vehicle_Price = 60 };
@@ -84,7 +84,7 @@ namespace UnitTesting
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -99,17 +99,17 @@ namespace UnitTesting
 
         //summary: sjekk for hent et objekt ikke logget inn
         [Fact]
-        public async Task GetOneUnautohrized()
+        public async Task GetOneUnauthorized()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseDetailsController.Get(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Get(It.IsAny<int>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -118,14 +118,14 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt vellykket
         [Fact]
-        public async Task PostAutohrized()
+        public async Task PostAuthorized()
         {
             //Arrange
             mockRep.Setup(r => r.AddCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(true);
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -139,14 +139,14 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt feil inn data
         [Fact]
-        public async Task PostAutohrizedInvalidModel()
+        public async Task PostAuthorizedInvalidModel()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The new cruise details object cound not be added");
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -160,14 +160,14 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt feil ved registrering
         [Fact]
-        public async Task PostAutohrizedFail()
+        public async Task PostAuthorizedFail()
         {
             //Arrange
             mockRep.Setup(r => r.AddCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(false);
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -181,17 +181,17 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt ikke logget inn
         [Fact]
-        public async Task PostUnautohrized()
+        public async Task PostUnauthorized()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseDetailsController.Post(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Post(It.IsAny<CruiseDetails>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -207,7 +207,7 @@ namespace UnitTesting
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -221,14 +221,14 @@ namespace UnitTesting
 
         //summary: sjekk for endre et objekt feil inn data 
         [Fact]
-        public async Task PutAutohrizedInvalidModel()
+        public async Task PutAuthorizedInvalidModel()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The cruise details object could not be changed");
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -242,14 +242,14 @@ namespace UnitTesting
 
         //summary: sjekk for endre et objekt feil ved endring
         [Fact]
-        public async Task PutAutohrizedFail()
+        public async Task PutAuthorizedFail()
         {
             //Arrange
             mockRep.Setup(r => r.EditCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(false);
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -263,17 +263,17 @@ namespace UnitTesting
 
         //summary: sjekk for endre et objekt ikke logget inn
         [Fact]
-        public async Task PutUnautohrized()
+        public async Task PutUnauthorized()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseDetailsController.Put(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Put(It.IsAny<CruiseDetails>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -282,14 +282,14 @@ namespace UnitTesting
 
         //summary: sjekk for slett et objekt vellykket
         [Fact]
-        public async Task DeleteAutohrized()
+        public async Task DeleteAuthorized()
         {
             //Arrange
-            mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(true);
+            mockRep.Setup(r => r.DeleteCruiseDetails(It.IsAny<int>())).ReturnsAsync(true);
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -303,14 +303,14 @@ namespace UnitTesting
 
         //summary: sjekk for slett et objekt feil ved slettning
         [Fact]
-        public async Task DeleteAutohrizedFail()
+        public async Task DeleteAuthorizedFail()
         {
             //Arrange
             mockRep.Setup(r => r.DeleteCruiseDetails(It.IsAny<int>())).ReturnsAsync(false);
 
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -324,17 +324,17 @@ namespace UnitTesting
 
         //summary: sjekk for slett et objekt ikke logget inn
         [Fact]
-        public async Task DeleteUnautohrized()
+        public async Task DeleteUnauthorized()
         {
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await cruiseDetailsController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Delete(It.IsAny<int>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);

@@ -60,7 +60,7 @@ namespace UnitTesting
         
         void ISession.Remove(string key)
         {
-            throw new NotImplementedException();
+            sessionStorage.Remove(key);
         }
 
         Task ISession.CommitAsync(CancellationToken cancellationToken)

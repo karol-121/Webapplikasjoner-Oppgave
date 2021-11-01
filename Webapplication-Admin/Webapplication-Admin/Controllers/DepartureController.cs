@@ -15,7 +15,7 @@ namespace Webapplication.Controllers
     [Route("API/[controller]")]
     public class DepartureController : SharedController
     {
-        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly string _authorizationToken = "authorizationToken";
         private readonly IAppDataRepository _Local_DB; //database objekt
         private ILogger<DepartureController> _Local_Log; //log objekt
 
@@ -31,7 +31,7 @@ namespace Webapplication.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 return Ok(await _Local_DB.GetDepartures());
             }
@@ -47,7 +47,7 @@ namespace Webapplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 return Ok(await _Local_DB.GetDeparture(id));
             }
@@ -67,7 +67,7 @@ namespace Webapplication.Controllers
         public async Task<ActionResult> Post(DepartureBinding departureBinding)
         {
 
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (await _Local_DB.AddDeparture(departureBinding.cruiseId, departureBinding.dateString))
                 {
@@ -91,7 +91,7 @@ namespace Webapplication.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(DepartureBinding departureBinding)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
 
                 if (await _Local_DB.EditDeparture(departureBinding.Id, departureBinding.cruiseId, departureBinding.dateString))
@@ -114,7 +114,7 @@ namespace Webapplication.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (await _Local_DB.DeleteDeparture(id))
                 {

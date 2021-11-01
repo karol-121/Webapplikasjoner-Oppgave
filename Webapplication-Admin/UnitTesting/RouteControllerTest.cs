@@ -15,7 +15,7 @@ namespace UnitTesting
 {
     public class RouteControllerTest
     {
-        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly string _authorizationToken = "authorizationToken";
 
         private readonly Mock<IAppDataRepository> mockRep = new Mock<IAppDataRepository>();
         private readonly Mock<ILogger<RouteController>> mockLog = new Mock<ILogger<RouteController>>();
@@ -41,7 +41,7 @@ namespace UnitTesting
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -56,17 +56,17 @@ namespace UnitTesting
 
         //summary: sjekk for hent alle objekter ikke logget inn
         [Fact]
-        public async Task GetAllUnautohrized()
+        public async Task GetAllUnauthorized()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Get() as BadRequestObjectResult;
+            var result = await routeController.Get() as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -75,7 +75,7 @@ namespace UnitTesting
 
         //summary: sjekk for hent et objekt vellykket
         [Fact]
-        public async Task GetOneAutohrized()
+        public async Task GetOneAuthorized()
         {
             //Arrange
             var route = new Route { Id = 1, Origin = "Oslo", Destination = "Bergen", Return_id = 2 };
@@ -84,7 +84,7 @@ namespace UnitTesting
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -99,17 +99,17 @@ namespace UnitTesting
 
         //summary: sjekk for hent et objekt ikke logget inn
         [Fact]
-        public async Task GetOneUnautohrized()
+        public async Task GetOneUnauthorized()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Get(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await routeController.Get(It.IsAny<int>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -118,14 +118,14 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt vellykket
         [Fact]
-        public async Task PostAutohrized()
+        public async Task PostAuthorized()
         {
             //Arrange
             mockRep.Setup(r => r.AddRoute(It.IsAny<Route>())).ReturnsAsync(true);
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -139,14 +139,14 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt feil inn data
         [Fact]
-        public async Task PostAutohrizedInvalidModel()
+        public async Task PostAuthorizedInvalidModel()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
             routeController.ModelState.AddModelError("Origin", "The new route cound not be added");
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -160,14 +160,14 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt feil ved registrering
         [Fact]
-        public async Task PostAutohrizedFail()
+        public async Task PostAuthorizedFail()
         {
             //Arrange
             mockRep.Setup(r => r.AddRoute(It.IsAny<Route>())).ReturnsAsync(false);
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -181,17 +181,17 @@ namespace UnitTesting
 
         //summary: sjekk for legg inn et objekt ikke logget inn
         [Fact]
-        public async Task PostUnautohrized()
+        public async Task PostUnauthorized()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Post(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await routeController.Post(It.IsAny<Route>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -207,7 +207,7 @@ namespace UnitTesting
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -221,14 +221,14 @@ namespace UnitTesting
 
         //summary: sjekk for endre et objekt feil inn data 
         [Fact]
-        public async Task PutAutohrizedInvalidModel()
+        public async Task PutAuthorizedInvalidModel()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            routeController.ModelState.AddModelError("Origin", "The new route cound not be added");
+            routeController.ModelState.AddModelError("Origin", "The route could not be changed");
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -237,19 +237,19 @@ namespace UnitTesting
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The new route cound not be added", result.Value);
+            Assert.Equal("The route could not be changed", result.Value);
         }
 
         //summary: sjekk for endre et objekt feil ved endring
         [Fact]
-        public async Task PutAutohrizedFail()
+        public async Task PutAuthorizedFail()
         {
             //Arrange
             mockRep.Setup(r => r.EditRoute(It.IsAny<Route>())).ReturnsAsync(false);
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -263,17 +263,17 @@ namespace UnitTesting
 
         //summary: sjekk for endre et objekt ikke logget inn
         [Fact]
-        public async Task PutUnautohrized()
+        public async Task PutUnauthorized()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Put(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await routeController.Put(It.IsAny<Route>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -282,14 +282,14 @@ namespace UnitTesting
 
         //summary: sjekk for slett et objekt vellykket
         [Fact]
-        public async Task DeleteAutohrized()
+        public async Task DeleteAuthorized()
         {
             //Arrange
             mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(true);
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -303,14 +303,14 @@ namespace UnitTesting
 
         //summary: sjekk for slett et objekt feil ved slettning
         [Fact]
-        public async Task DeleteAutohrizedFail()
+        public async Task DeleteAuthorizedFail()
         {
             //Arrange
             mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(false);
 
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "admin";
+            mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
@@ -324,17 +324,17 @@ namespace UnitTesting
 
         //summary: sjekk for slett et objekt ikke logget inn
         [Fact]
-        public async Task DeleteUnautohrized()
+        public async Task DeleteUnauthorized()
         {
             //Arrange
             var routeController = new RouteController(mockRep.Object, mockLog.Object);
 
-            mockSession[_autorizaionToken] = "";
+            mockSession[_authorizationToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             routeController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await routeController.Delete(It.IsAny<int>()) as UnauthorizedObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);

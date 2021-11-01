@@ -14,8 +14,13 @@ namespace UnitTesting
 {
     public class AuthControllerTest
     {
+        private readonly string _authorizationToken = "authorizationToken";
+
         private readonly Mock<IAuthRepository> mockRep = new Mock<IAuthRepository>();
         private readonly Mock<ILogger<AuthController>> mockLog = new Mock<ILogger<AuthController>>();
+
+        private readonly Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
+        private readonly MockHttpSession mockSession = new MockHttpSession();
 
         //summary: sjekk for logg inn administrator vellykket
         [Fact]
@@ -25,6 +30,10 @@ namespace UnitTesting
             mockRep.Setup(r => r.AuthenticateAdministrator(It.IsAny<UserInfo>())).ReturnsAsync(true);
 
             var authController = new AuthController(mockRep.Object, mockLog.Object);
+
+            mockSession[_authorizationToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            authController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
             var result = await authController.EstabilishAdministratorToken(It.IsAny<UserInfo>()) as OkObjectResult;
@@ -59,7 +68,7 @@ namespace UnitTesting
         {
             //Arrange
             mockRep.Setup(r => r.AuthenticateAdministrator(It.IsAny<UserInfo>())).ReturnsAsync(false);
-
+            
             var authController = new AuthController(mockRep.Object, mockLog.Object);
 
             //Act
@@ -67,7 +76,7 @@ namespace UnitTesting
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("wrong username or password", result.Value);
+            Assert.Equal("invalid user information", result.Value);
 
         }
 
@@ -77,6 +86,11 @@ namespace UnitTesting
         {
             //Arrange
             var authController = new AuthController(mockRep.Object, mockLog.Object);
+
+            mockSession[_authorizationToken] = "admin";
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            authController.ControllerContext.HttpContext = mockHttpContext.Object;
+
 
             //Act
             var result = authController.DemolishAdministratorToken() as OkObjectResult;

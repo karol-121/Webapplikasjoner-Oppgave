@@ -13,11 +13,11 @@ namespace Webapplication.Controllers
     [ApiController]
     [Route("API/[action]")]
 
-    //summary: kontroller som sammler endpoints som har med identifikasjon og autorization å gjøre
+    //summary: kontroller som sammler endpoints som har med identifikasjon og authorization å gjøre
     //her finnes det mulighet for admin logg inn og admin logg ut. 
     public class AuthController : SharedController
     {
-        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly string _authorizationToken = "authorizationToken";
 
         private readonly IAuthRepository _Local_DB; //database objekt
 
@@ -29,7 +29,7 @@ namespace Webapplication.Controllers
             _Local_Log = logger;
         }
 
-        //summary: funksjon som etablerer et session verdi etter vellykket logg inn. Denne session verdi brukes i andre kontrollerene for å autorization
+        //summary: funksjon som etablerer et session verdi etter vellykket logg inn. Denne session verdi brukes i andre kontrollerene for å authorization
         //parameters: UserInfo userInfo - objekt som inneholder logg inn detalier som brukernavn og passord
         //returns: Http ok status - ved vellykket identifikasjon, Http bad request status ved feil identifikasjon
         public async Task<ActionResult> EstabilishAdministratorToken(UserInfo userInfo) //change the parameters to userInfor afterwards
@@ -44,8 +44,8 @@ namespace Webapplication.Controllers
 
             if (await _Local_DB.AuthenticateAdministrator(userInfo)) //indetifikasjon 
             {
-                SharedSession.SetString(_autorizaionToken, "admin"); //settes autorization token ved vellykket indtifikasjon
-                _Local_Log.LogInformation("admin autorization token set");
+                SharedSession.SetString(_authorizationToken, "admin"); //settes authorization token ved vellykket indtifikasjon
+                _Local_Log.LogInformation("admin authorization token set");
                 return Ok("sucessfull logg inn");
 
             } else
@@ -58,12 +58,12 @@ namespace Webapplication.Controllers
             
         }
 
-        //summary: funksjon som fjerner autorization token ved førespørsel
+        //summary: funksjon som fjerner authorization token ved førespørsel
         //returns: Http ok status 
         public ActionResult DemolishAdministratorToken()
         {
-            SharedSession.Remove(_autorizaionToken);
-            _Local_Log.LogInformation("admin autorization token removed");
+            SharedSession.Remove(_authorizationToken);
+            _Local_Log.LogInformation("admin authorization token removed");
 
             return Ok("sucessfull logged out");
         }

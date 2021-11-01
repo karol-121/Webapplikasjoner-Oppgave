@@ -14,7 +14,7 @@ namespace Webapplication.Controllers
     [Route("API/[controller]")]
     public class CruiseDetailsController : SharedController
     {
-        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly string _authorizationToken = "authorizationToken";
         private readonly IAppDataRepository _Local_DB; //database objekt
         private ILogger<CruiseDetailsController> _Local_Log; //log objekt
 
@@ -29,7 +29,7 @@ namespace Webapplication.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 return Ok(await _Local_DB.GetCruisesDetails());
             }
@@ -45,7 +45,7 @@ namespace Webapplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 return Ok(await _Local_DB.GetCruiseDetails(id));
             }
@@ -61,7 +61,7 @@ namespace Webapplication.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CruiseDetails details)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (!ModelState.IsValid)
                 {
@@ -88,7 +88,7 @@ namespace Webapplication.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(CruiseDetails details)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (!ModelState.IsValid)
                 {
@@ -115,7 +115,7 @@ namespace Webapplication.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (await _Local_DB.DeleteCruiseDetails(id))
                 {

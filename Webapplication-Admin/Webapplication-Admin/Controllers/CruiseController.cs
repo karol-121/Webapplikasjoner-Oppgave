@@ -15,7 +15,7 @@ namespace Webapplication.Controllers
     [Route("API/[controller]")]
     public class CruiseController : SharedController
     {
-        private readonly string _autorizaionToken = "autorizaionToken";
+        private readonly string _authorizationToken = "authorizationToken";
         private readonly IAppDataRepository _Local_DB; //database objekt
         private ILogger<CruiseController> _Local_Log; //log objekt
 
@@ -31,7 +31,7 @@ namespace Webapplication.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 return Ok(await _Local_DB.GetCruises());
             }
@@ -47,7 +47,7 @@ namespace Webapplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 return Ok(await _Local_DB.GetCruise(id));
             }
@@ -65,7 +65,7 @@ namespace Webapplication.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CruiseBinding cruiseBinding)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (await _Local_DB.AddCruise(cruiseBinding.routeId, cruiseBinding.detailsId))
                 {
@@ -89,7 +89,7 @@ namespace Webapplication.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(CruiseBinding cruiseBinding)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
 
                 if (await _Local_DB.EditCruise(cruiseBinding.Id, cruiseBinding.routeId, cruiseBinding.detailsId))
@@ -112,7 +112,7 @@ namespace Webapplication.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            if (SharedSession.GetString(_autorizaionToken) == "admin")
+            if (SharedSession.GetString(_authorizationToken) == "admin")
             {
                 if (await _Local_DB.DeleteCruise(id))
                 {
