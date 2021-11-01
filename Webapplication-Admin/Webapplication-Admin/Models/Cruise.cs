@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Webapplication.Models
 {
     //summary: model på et cruise, cruise er sammen satt av ruten den går på og detalier som pris, max personer osv.

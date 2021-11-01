@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Webapplication.DAL;
 using Webapplication.Models;
-using Webapplication_Admin.Models;
 
 namespace Webapplication.Controllers
 {
