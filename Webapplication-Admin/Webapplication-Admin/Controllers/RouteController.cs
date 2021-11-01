@@ -16,10 +16,12 @@ namespace Webapplication.Controllers
     {
         private readonly string _autorizaionToken = "autorizaionToken";
         private readonly IAppDataRepository _Local_DB; //database objekt
+        private ILogger<RouteController> _Local_Log; //log objekt
 
-        public RouteController(IAppDataRepository appDataRepository)
+        public RouteController(IAppDataRepository appDataRepository, ILogger<RouteController> logger)
         {
-            _Local_DB = appDataRepository;            
+            _Local_DB = appDataRepository;
+            _Local_Log = logger;
         }
 
         //summary: get funksjon for routes som henter alle routes som finnes i databasen
