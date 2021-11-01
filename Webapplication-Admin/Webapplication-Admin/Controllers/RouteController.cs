@@ -66,7 +66,7 @@ namespace Webapplication.Controllers
             {
                 if(!ModelState.IsValid)
                 {
-                    return BadRequest("The new route cound not be added");
+                    return BadRequest("The new route cound not be added, invalid input");
                 }
 
                 if (await _Local_DB.AddRoute(route)) 
@@ -94,7 +94,7 @@ namespace Webapplication.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest("The route could not be changed");
+                    return BadRequest("The route could not be changed, invalid input");
                 }
 
                 if (await _Local_DB.EditRoute(route))

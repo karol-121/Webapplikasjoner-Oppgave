@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Webapplication.DAL;
 using Microsoft.Extensions.Logging;
 using Webapplication.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Webapplication.Controllers
 {
@@ -68,14 +69,15 @@ namespace Webapplication.Controllers
             return Ok("sucessfull logged out");
         }
 
-        
-        
-        
-        
-        
+
+
+
+
+
         //this endpoint should be deleted toghether with deeper objects in final version
         //this is because this function allows for registring admins that can be used later to logg in
         //there is no requirement that there should be possibillity for creation of admins accounts
+        [ExcludeFromCodeCoverage]
         public async Task<ActionResult> RegisterUser(string u, string p)
         {
             UserInfo user = new UserInfo

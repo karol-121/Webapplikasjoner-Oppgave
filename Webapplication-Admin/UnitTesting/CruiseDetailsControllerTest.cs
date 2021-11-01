@@ -144,7 +144,7 @@ namespace UnitTesting
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The new cruise details object cound not be added");
+            cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The new cruise details object cound not be added, invalid input");
 
             mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -155,7 +155,7 @@ namespace UnitTesting
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The new cruise details object cound not be added", result.Value);
+            Assert.Equal("The new cruise details object cound not be added, invalid input", result.Value);
         }
 
         //summary: sjekk for legg inn et objekt feil ved registrering
@@ -226,7 +226,7 @@ namespace UnitTesting
             //Arrange
             var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The cruise details object could not be changed");
+            cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The cruise details object could not be changed, invalid input");
 
             mockSession[_authorizationToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -237,7 +237,7 @@ namespace UnitTesting
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The cruise details object could not be changed", result.Value);
+            Assert.Equal("The cruise details object could not be changed, invalid input", result.Value);
         }
 
         //summary: sjekk for endre et objekt feil ved endring

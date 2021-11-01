@@ -65,7 +65,7 @@ namespace Webapplication.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest("The new cruise details object cound not be added");
+                    return BadRequest("The new cruise details object cound not be added, invalid input");
                 }
 
                 if (await _Local_DB.AddCruiseDetails(details))
@@ -92,7 +92,7 @@ namespace Webapplication.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest("The cruise details object could not be changed");
+                    return BadRequest("The cruise details object could not be changed, invalid input");
                 }
 
                 if (await _Local_DB.EditCruiseDetails(details))
