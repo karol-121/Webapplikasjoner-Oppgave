@@ -31,9 +31,11 @@ namespace UnitTesting
             var cruiseDetailsA = new CruiseDetails { Id = 1, Max_Passengers = 100, Passeger_Price = 200, Passegner_Underage_Price = 150, Pet_Price = 50, Vehicle_Price = 60 };
             var cruiseDetailsB = new CruiseDetails { Id = 2, Max_Passengers = 200, Passeger_Price = 500, Passegner_Underage_Price = 200, Pet_Price = 250, Vehicle_Price = 150 };
 
-            var details = new List<CruiseDetails>();
-            details.Add(cruiseDetailsA);
-            details.Add(cruiseDetailsB);
+            var details = new List<CruiseDetails>
+            {
+                cruiseDetailsA,
+                cruiseDetailsB
+            };
 
             mockRep.Setup(r => r.GetCruisesDetails()).ReturnsAsync(details);
 

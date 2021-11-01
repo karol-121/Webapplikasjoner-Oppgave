@@ -31,9 +31,11 @@ namespace UnitTesting
             var routeA = new Route { Id = 1, Origin = "Oslo", Destination = "Bergen", Return_id = 2 };
             var routeB = new Route { Id = 2, Origin = "Bergen", Destination = "Oslo", Return_id = 1 };
 
-            var routes = new List<Route>();
-            routes.Add(routeA);
-            routes.Add(routeB);
+            var routes = new List<Route>
+            {
+                routeA,
+                routeB
+            };
 
             mockRep.Setup(r => r.GetRoutes()).ReturnsAsync(routes);
 

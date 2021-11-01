@@ -17,10 +17,12 @@ namespace Webapplication.Controllers
     {
         private readonly string _autorizaionToken = "autorizaionToken";
         private readonly IAppDataRepository _Local_DB; //database objekt
+        private ILogger<CruiseController> _Local_Log; //log objekt
 
-        public CruiseController(IAppDataRepository appDataRepository)
+        public CruiseController(IAppDataRepository appDataRepository, ILogger<CruiseController> logger)
         {
             _Local_DB = appDataRepository;
+            _Local_Log = logger;
         }
 
 
@@ -92,7 +94,7 @@ namespace Webapplication.Controllers
 
                 if (await _Local_DB.EditCruise(cruiseBinding.Id, cruiseBinding.routeId, cruiseBinding.detailsId))
                 {
-                    return Ok("Sucessfullyy changed the cruise");
+                    return Ok("Sucessfully changed the cruise");
                 }
 
                 return BadRequest("The cruise could not be changed");
