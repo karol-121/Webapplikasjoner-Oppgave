@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace Webapplication.Controllers
     {
         private readonly string _autorizaionToken = "autorizaionToken";
         private readonly IAppDataRepository _Local_DB; //database objekt
+        private ILogger<DepartureController> _Local_Log; //log objekt
 
-        public DepartureController (IAppDataRepository appDataRepository)
+        public DepartureController (IAppDataRepository appDataRepository, ILogger<DepartureController> logger)
         {
             _Local_DB = appDataRepository;
+            _Local_Log = logger;
         }
 
 
@@ -93,7 +96,7 @@ namespace Webapplication.Controllers
 
                 if (await _Local_DB.EditDeparture(departureBinding.Id, departureBinding.cruiseId, departureBinding.dateString))
                 {
-                    return Ok("Sucessfullyy changed the departure");
+                    return Ok("Sucessfully changed the departure");
                 }
 
                 return BadRequest("The departure could not be changed");
