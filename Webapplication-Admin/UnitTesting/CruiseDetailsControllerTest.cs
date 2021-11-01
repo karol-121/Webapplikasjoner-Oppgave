@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,12 +13,12 @@ using Xunit;
 
 namespace UnitTesting
 {
-    public class RouteControllerTest
+    public class CruiseDetailsControllerTest
     {
         private readonly string _autorizaionToken = "autorizaionToken";
 
         private readonly Mock<IAppDataRepository> mockRep = new Mock<IAppDataRepository>();
-        private readonly Mock<ILogger<RouteController>> mockLog = new Mock<ILogger<RouteController>>();
+        private readonly Mock<ILogger<CruiseDetailsController>> mockLog = new Mock<ILogger<CruiseDetailsController>>();
 
         private readonly Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
         private readonly MockHttpSession mockSession = new MockHttpSession();
@@ -28,27 +28,27 @@ namespace UnitTesting
         public async Task GetAllAuthorized()
         {
             //Arrange
-            var routeA = new Route { Id = 1, Origin = "Oslo", Destination = "Bergen", Return_id = 2 };
-            var routeB = new Route { Id = 2, Origin = "Bergen", Destination = "Oslo", Return_id = 1 };
+            var cruiseDetailsA = new CruiseDetails { Id = 1, Max_Passengers = 100, Passeger_Price = 200, Passegner_Underage_Price = 150, Pet_Price = 50, Vehicle_Price = 60 };
+            var cruiseDetailsB = new CruiseDetails { Id = 2, Max_Passengers = 200, Passeger_Price = 500, Passegner_Underage_Price = 200, Pet_Price = 250, Vehicle_Price = 150 };
 
-            var routes = new List<Route>();
-            routes.Add(routeA);
-            routes.Add(routeB);
+            var details = new List<CruiseDetails>();
+            details.Add(cruiseDetailsA);
+            details.Add(cruiseDetailsB);
 
-            mockRep.Setup(r => r.GetRoutes()).ReturnsAsync(routes);
+            mockRep.Setup(r => r.GetCruisesDetails()).ReturnsAsync(details);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Get() as OkObjectResult;
+            var result = await cruiseDetailsController.Get() as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal(routes, (List<Route>)result.Value);
+            Assert.Equal(details, (List<CruiseDetails>)result.Value);
 
         }
 
@@ -57,14 +57,14 @@ namespace UnitTesting
         public async Task GetAllUnautohrized()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Get() as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Get() as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -76,22 +76,22 @@ namespace UnitTesting
         public async Task GetOneAutohrized()
         {
             //Arrange
-            var route = new Route { Id = 1, Origin = "Oslo", Destination = "Bergen", Return_id = 2 };
+            var details = new CruiseDetails { Id = 1, Max_Passengers = 100, Passeger_Price = 200, Passegner_Underage_Price = 150, Pet_Price = 50, Vehicle_Price = 60 };
 
-            mockRep.Setup(r => r.GetRoute(It.IsAny<int>())).ReturnsAsync(route);
+            mockRep.Setup(r => r.GetCruiseDetails(It.IsAny<int>())).ReturnsAsync(details);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Get(It.IsAny<int>()) as OkObjectResult;
+            var result = await cruiseDetailsController.Get(It.IsAny<int>()) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal(route, (Route)result.Value);
+            Assert.Equal(details, (CruiseDetails)result.Value);
 
         }
 
@@ -100,14 +100,14 @@ namespace UnitTesting
         public async Task GetOneUnautohrized()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Get(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Get(It.IsAny<int>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -119,20 +119,20 @@ namespace UnitTesting
         public async Task PostAutohrized()
         {
             //Arrange
-            mockRep.Setup(r => r.AddRoute(It.IsAny<Route>())).ReturnsAsync(true);
+            mockRep.Setup(r => r.AddCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(true);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Post(It.IsAny<Route>()) as OkObjectResult;
+            var result = await cruiseDetailsController.Post(It.IsAny<CruiseDetails>()) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal("Sucessfully added the new route", result.Value);
+            Assert.Equal("Sucessfully added the new cruise details object", result.Value);
         }
 
         //summary: sjekk for legg inn et objekt feil inn data
@@ -140,20 +140,20 @@ namespace UnitTesting
         public async Task PostAutohrizedInvalidModel()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            routeController.ModelState.AddModelError("Origin", "The new route cound not be added");
+            cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The new cruise details object cound not be added");
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Post(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Post(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The new route cound not be added", result.Value);
+            Assert.Equal("The new cruise details object cound not be added", result.Value);
         }
 
         //summary: sjekk for legg inn et objekt feil ved registrering
@@ -161,20 +161,20 @@ namespace UnitTesting
         public async Task PostAutohrizedFail()
         {
             //Arrange
-            mockRep.Setup(r => r.AddRoute(It.IsAny<Route>())).ReturnsAsync(false);
+            mockRep.Setup(r => r.AddCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(false);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Post(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Post(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The new route cound not be added", result.Value);
+            Assert.Equal("The new cruise details object cound not be added", result.Value);
         }
 
         //summary: sjekk for legg inn et objekt ikke logget inn
@@ -182,14 +182,14 @@ namespace UnitTesting
         public async Task PostUnautohrized()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Post(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Post(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -201,20 +201,20 @@ namespace UnitTesting
         public async Task PutAuthorized()
         {
             //Arrange
-            mockRep.Setup(r => r.EditRoute(It.IsAny<Route>())).ReturnsAsync(true);
+            mockRep.Setup(r => r.EditCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(true);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Put(It.IsAny<Route>()) as OkObjectResult;
+            var result = await cruiseDetailsController.Put(It.IsAny<CruiseDetails>()) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal("Sucessfully changed the route", result.Value);
+            Assert.Equal("Sucessfullyy changed the cruise details object", result.Value);
         }
 
         //summary: sjekk for endre et objekt feil inn data 
@@ -222,20 +222,20 @@ namespace UnitTesting
         public async Task PutAutohrizedInvalidModel()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
-            routeController.ModelState.AddModelError("Origin", "The new route cound not be added");
+            cruiseDetailsController.ModelState.AddModelError("Max_Passengers", "The cruise details object could not be changed");
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Put(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Put(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The new route cound not be added", result.Value);
+            Assert.Equal("The cruise details object could not be changed", result.Value);
         }
 
         //summary: sjekk for endre et objekt feil ved endring
@@ -243,20 +243,20 @@ namespace UnitTesting
         public async Task PutAutohrizedFail()
         {
             //Arrange
-            mockRep.Setup(r => r.EditRoute(It.IsAny<Route>())).ReturnsAsync(false);
+            mockRep.Setup(r => r.EditCruiseDetails(It.IsAny<CruiseDetails>())).ReturnsAsync(false);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Put(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Put(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The route could not be changed", result.Value);
+            Assert.Equal("The cruise details object could not be changed", result.Value);
         }
 
         //summary: sjekk for endre et objekt ikke logget inn
@@ -264,14 +264,14 @@ namespace UnitTesting
         public async Task PutUnautohrized()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Put(It.IsAny<Route>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Put(It.IsAny<CruiseDetails>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -285,18 +285,18 @@ namespace UnitTesting
             //Arrange
             mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(true);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Delete(It.IsAny<int>()) as OkObjectResult;
+            var result = await cruiseDetailsController.Delete(It.IsAny<int>()) as OkObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal("Sucessfully removed the route", result.Value);
+            Assert.Equal("Sucessfully removed the cruise details object", result.Value);
         }
 
         //summary: sjekk for slett et objekt feil ved slettning
@@ -304,20 +304,20 @@ namespace UnitTesting
         public async Task DeleteAutohrizedFail()
         {
             //Arrange
-            mockRep.Setup(r => r.DeleteRoute(It.IsAny<int>())).ReturnsAsync(false);
+            mockRep.Setup(r => r.DeleteCruiseDetails(It.IsAny<int>())).ReturnsAsync(false);
 
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "admin";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("The route could not be removed", result.Value);
+            Assert.Equal("The cruise details object could not be removed", result.Value);
         }
 
         //summary: sjekk for slett et objekt ikke logget inn
@@ -325,14 +325,14 @@ namespace UnitTesting
         public async Task DeleteUnautohrized()
         {
             //Arrange
-            var routeController = new RouteController(mockRep.Object, mockLog.Object);
+            var cruiseDetailsController = new CruiseDetailsController(mockRep.Object, mockLog.Object);
 
             mockSession[_autorizaionToken] = "";
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
-            routeController.ControllerContext.HttpContext = mockHttpContext.Object;
+            cruiseDetailsController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             //Act
-            var result = await routeController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
+            var result = await cruiseDetailsController.Delete(It.IsAny<int>()) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
@@ -340,3 +340,4 @@ namespace UnitTesting
         }
     }
 }
+

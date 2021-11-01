@@ -17,6 +17,7 @@ namespace UnitTesting
         private readonly Mock<IAuthRepository> mockRep = new Mock<IAuthRepository>();
         private readonly Mock<ILogger<AuthController>> mockLog = new Mock<ILogger<AuthController>>();
 
+        //summary: sjekk for logg inn administrator vellykket
         [Fact]
         public async Task Authorize()
         {
@@ -33,6 +34,7 @@ namespace UnitTesting
             Assert.Equal("sucessfull logg inn", result.Value);
         }
 
+        //summary: sjekk for logg inn administrator feil inn data
         [Fact]
         public async Task AuthorizeInvalidModel()
         {
@@ -51,6 +53,7 @@ namespace UnitTesting
             Assert.Equal("invalid user information", result.Value);
         }
 
+        //summary: sjekk for logg inn administrator feil ved logg inn
         [Fact]
         public async Task AuthorizeFail()
         {
@@ -68,6 +71,7 @@ namespace UnitTesting
 
         }
 
+        //summary: sjekk for logg ut administrator vellykket
         [Fact]
         public void Deauthorize()
         {
