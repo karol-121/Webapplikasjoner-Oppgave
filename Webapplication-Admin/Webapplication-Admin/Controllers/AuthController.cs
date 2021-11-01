@@ -66,14 +66,11 @@ namespace Webapplication.Controllers
             return Ok("sucessfull logged out");
         }
 
-
-
-
-
-
-        //this endpoint should be deleted toghether with deeper objects in final version
-        //this is because this function allows for registring admins that can be used later to logg in
-        //there is no requirement that there should be possibillity for creation of admins accounts
+        //summary: denne endpointen gjør det mulig å registrere en admin bruker. Den er ikke del av oppgaven, den eksisteter som "nødfunksjon"
+        //derfor implementerer den kun "bare minimum", som betyr at har ikke hensiktmessig feil håndtering
+        //her må man passe på å passere inn data som er av riktig format, ellers vil det være umulig å logge seg inn, dersom formatet sjekkes ved logg inn, men ikke her.
+        //parameters: string u - brukernavn, string p - passord
+        //returns: Http ok status - alltid, selv om admin har ikke ble laget
         [ExcludeFromCodeCoverage]
         public async Task<ActionResult> RegisterUser(string u, string p)
         {
@@ -84,7 +81,7 @@ namespace Webapplication.Controllers
             };
 
             await _Local_DB.RegisterAdministrator(user);
-            return Ok("admin should be registered");
+            return Ok("admin maybe has been registered");
         }
     }
 }
