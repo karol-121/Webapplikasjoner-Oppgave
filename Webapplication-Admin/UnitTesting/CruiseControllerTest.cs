@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Webapplication.Controllers;
 using Webapplication.DAL;
 using Webapplication.Models;
-using Webapplication_Admin.Models;
 using Xunit;
 
 namespace UnitTesting

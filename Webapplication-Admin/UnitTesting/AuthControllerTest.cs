@@ -69,16 +69,18 @@ namespace UnitTesting
         public async Task AuthorizeFail()
         {
             //Arrange
+            var inncomingUser = new UserInfo { Username = "", Password = "" }; //it.isAny<UserInfo> fungerer ikke, det blir null reference exception.
+
             mockRep.Setup(r => r.AuthenticateAdministrator(It.IsAny<UserInfo>())).ReturnsAsync(false);
             
             var authController = new AuthController(mockRep.Object, mockLog.Object);
 
             //Act
-            var result = await authController.EstabilishAdministratorToken(It.IsAny<UserInfo>()) as BadRequestObjectResult;
+            var result = await authController.EstabilishAdministratorToken(inncomingUser) as BadRequestObjectResult;
 
             //Assert
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.Equal("invalid user information", result.Value);
+            Assert.Equal("wrong username or password", result.Value);
 
         }
 

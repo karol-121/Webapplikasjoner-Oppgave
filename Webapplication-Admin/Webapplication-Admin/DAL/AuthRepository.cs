@@ -20,7 +20,6 @@ namespace Webapplication.DAL
             _Local_Log = logger;
         }
 
-
         //summary: hjelpe funksjon som genererer hash verdi ut av et passord og salt
         //parameters: string passord - passord streng, byte[] salt - array med bytes som representerer salt 
         //returns: byte[] array som inneholder hash verdi 
@@ -66,13 +65,8 @@ namespace Webapplication.DAL
             }
         }
 
-
-
-
-
-
-        //OOPS: this is for now in order to be able to create user that will be used to logg inn afterwards, this propably will be deleted in final version
-        //thus it is implemented "bare minimum"
+        //summary: dette er en funksjon som registrerer admin bruker slik at det er mulig å logge seg inn. Fordi registrering av brukeren er ikke et krav, denne implementasjon er "bare minimum"
+        //derfor den skal ikke telles som del av løsningen.
         public async Task<bool> RegisterAdministrator(UserInfo userInfo)
         {
             var salt = GenerateSalt();
