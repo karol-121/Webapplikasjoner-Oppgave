@@ -36,7 +36,7 @@ export class CruisesManager {
     this.cruise_modifications.controls.cruise_id.disable(); //angular foretrekker disablering input herfra og ikke direkte i dom
     this.submitButtonText = "Register";
     this.selected = -1;
-    this.alertContent = null; //dersom alertcontet er null, alert vises ikke
+    this.alertContent = null; //dersom alert contet er null, alert vises ikke
   }
 
   //init funksjon

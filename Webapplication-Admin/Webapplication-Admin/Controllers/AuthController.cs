@@ -27,7 +27,7 @@ namespace Webapplication.Controllers
             _Local_Log = logger;
         }
 
-        //summary: funksjon som etablerer et session verdi etter vellykket logg inn. Denne session verdi brukes i andre kontrollerene for å authorization
+        //summary: funksjon som etablerer et session verdi etter vellykket logg inn. Denne session verdi brukes i andre kontrollerene for autorisering
         //parameters: UserInfo userInfo - objekt som inneholder logg inn detalier som brukernavn og passord
         //returns: Http ok status - ved vellykket identifikasjon, Http bad request status ved feil identifikasjon
         public async Task<ActionResult> EstabilishAdministratorToken(UserInfo userInfo) //change the parameters to userInfor afterwards

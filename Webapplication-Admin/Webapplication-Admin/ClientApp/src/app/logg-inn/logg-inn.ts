@@ -34,8 +34,7 @@ export class LoggInn {
     userInfo.username = this.logg_inn_form.value.username;
     userInfo.password = this.logg_inn_form.value.password;
 
-    //her skal det redirectes tilbake der hvorfra logg inn request ble laget,
-    //f.eks dersom noen prøvde å åpne route admin side, og var ikke logget inn, så skal den bli redirected her og så etter innlogging skal den gå tilbake til routes
+    //kall til server
     this.http.post("API/EstabilishAdministratorToken", userInfo)
       .subscribe(body => {}, response => {
 

@@ -54,8 +54,6 @@ namespace Webapplication.Controllers
         }
 
         //summary: post funksjon for departures som lagrer en departure objekt
-        //her passeres det enkle parameterene og ikke objekt dersom dette objektet kun sammensetter andre objekter og enkelte primitiv datatyper
-        //for å legge til disse andre objekter, skal man benytte seg av deres add funksjoner og ikke den her.
         //parameters: DepartureBinding departureBinding - objekt med data nødvendig for registrering av departure objekt
         //returns: Http Ok status - ved vellykket lagring, Http Bad request - ved ikke vellykket lagring, Http unauthorized - ved uaktorisert tilgang 
 
@@ -80,8 +78,6 @@ namespace Webapplication.Controllers
         }
 
         //summary: put funksjon for departure objekter som endrer en bestemt utreise
-        //her passeres det enkle paremeterene og ikke objekt dersom dette objektet kun sammensetter andre objekter og enkle primitiv datatyper
-        //for å endre disse andre objekter, skal man benytte seg av deres endre funksjoner og ikke den her.
         //parameters: DepartureBinding departureBinding - objekt med data nødvendig for endring av departure objekt
         //returns: Http Ok status - ved vellykket endring, Http Bad request - ved ikke vellykket endring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPut]

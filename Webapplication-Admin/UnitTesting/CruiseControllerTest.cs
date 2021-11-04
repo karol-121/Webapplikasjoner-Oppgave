@@ -78,7 +78,7 @@ namespace UnitTesting
         public async Task GetOneAuthorized()
         {
             //Arrange
-            var cruise = new Cruise { Id = 1, CruiseDetails = It.IsAny<CruiseDetails>(), Route = It.IsAny<Route>() }; //det er usikkert om objekter med is.any kan sammenliknes
+            var cruise = new Cruise { Id = 1, CruiseDetails = It.IsAny<CruiseDetails>(), Route = It.IsAny<Route>() };
 
             mockRep.Setup(r => r.GetCruise(It.IsAny<int>())).ReturnsAsync(cruise);
 

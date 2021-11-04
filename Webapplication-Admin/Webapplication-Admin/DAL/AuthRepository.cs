@@ -28,7 +28,7 @@ namespace Webapplication.DAL
             return KeyDerivation.Pbkdf2(password: password, salt: salt, prf: KeyDerivationPrf.HMACSHA512, iterationCount: 1000, numBytesRequested: 32);
         }
 
-        //summary: hjelpe funksjon som genererer salt verdi, dette engentlig brukes kun ved oppretting av nye brukerene
+        //summary: hjelpe funksjon som genererer salt verdi
         //returns: byte[] array som inneholder salt verdi 
         private static byte[] GenerateSalt()
         {

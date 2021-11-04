@@ -54,8 +54,6 @@ namespace Webapplication.Controllers
         }
 
         //summary: post funksjon for cruises som lagrer en cruise 
-        //her passeres det enkle parameterene og ikke objekt dersom dette objektet kun sammensetter andre objekter som allerede eksisterer inn i db
-        //for å legge til disse andre objekter, skal man benytte seg av deres add funksjoner og ikke den her.
         //parameters: CruiseBinding cruiseBinding - objekt med data nødvendig for registrering av cruise objekt
         //returns: Http Ok status - ved vellykket lagring, Http Bad request - ved ikke vellykket lagring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPost]
@@ -78,8 +76,6 @@ namespace Webapplication.Controllers
         }
 
         //summary: put funksjon for cruise som endrer en bestemt cruise
-        //her passeres det enkle paremeterene og ikke objekt dersom dette objektet kun sammensetter andre objekter som allerede eksisterer inn i db
-        //for å endre disse andre objekter, skal man benytte seg av deres endre funksjoner og ikke den her.
         //parameters: CruiseBinding cruiseBinding - objekt med data nødvendig for endring av cruise objekt
         //returns: Http Ok status - ved vellykket endring, Http Bad request - ved ikke vellykket endring, Http unauthorized - ved uaktorisert tilgang 
         [HttpPut]

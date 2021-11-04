@@ -36,6 +36,11 @@ namespace UnitTesting
             }
         }
 
+        void ISession.Remove(string key)
+        {
+            sessionStorage.Remove(key);
+        }
+
         // de underligggende metodene er ikke nødvendige for mocking 
 
         IEnumerable<string> ISession.Keys
@@ -56,12 +61,7 @@ namespace UnitTesting
         void ISession.Clear()
         {
             throw new NotImplementedException();
-        }
-        
-        void ISession.Remove(string key)
-        {
-            sessionStorage.Remove(key);
-        }
+        }    
 
         Task ISession.CommitAsync(CancellationToken cancellationToken)
         {
